@@ -1,6 +1,6 @@
 #include "execute.h"
 
-static void handle_sigint(int signo)
+static void	handle_sigint(int signo)
 {
 	(void)signo;
 	write(STDOUT_FILENO, "\n", 1);
@@ -9,7 +9,7 @@ static void handle_sigint(int signo)
 	rl_redisplay();
 }
 
-void set_signal_handler(void)
+void	set_signal_handler(void)
 {
 	struct sigaction	sa;
 
@@ -33,7 +33,7 @@ void set_signal_handler(void)
 	}
 }
 
-char *readline_input(void)
+char	*readline_input(void)
 {
 	char	*line;
 

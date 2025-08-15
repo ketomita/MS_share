@@ -1,4 +1,4 @@
-#include "execute.h"
+#include "minilibft.h"
 
 static int	word_count(char c, char *str)
 {

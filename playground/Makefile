@@ -5,23 +5,39 @@ FLAGS = -Wall -Wextra -Werror
 
 LIBS = -lreadline
 
-SRCS = input.c execute_for_ast.c ft_split.c ft_putstr_fd.c ft_strjoin.c ft_strlen.c ft_memmove.c lexer.c main.c parser.c
+LIBFT = ./minilibft
+LIBFT-A = $(LIBFT)/minilibft.a
+
+BUILT-IN = ./built-in
+BUILT-IN_A = $(BUILT-IN)/built-in.a
+
+SRCS = input.c exec_fork.c lexer.c main.c parser.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-%.o: %.c
-	$(CC) $(FLAGS) -c $< -o $@
+$(BUILT-IN_A):
+	make -C $(BUILT-IN)
 
-$(NAME): $(OBJS)
-	$(CC) $(FLAGS) $(OBJS) -o $(NAME) $(LIBS)
+$(LIBFT-A):
+	make -C $(LIBFT)
+
+%.o: %.c
+	$(CC) $(FLAGS) -I$(BUILT-IN) -I$(LIBFT) -c $< -o $@
+
+$(NAME): $(BUILT-IN_A) $(LIBFT-A) $(OBJS)
+	$(CC) $(FLAGS) $(OBJS) -o $(NAME) $(LIBS) $(BUILT-IN_A) $(LIBFT-A)
 
 clean:
 	rm -f $(OBJS)
+	make -C $(BUILT-IN) clean
+	make -C $(LIBFT) clean
 
 fclean:
 	rm -f $(OBJS)
 	rm -f $(NAME)
+	make -C $(BUILT-IN) fclean
+	make -C $(LIBFT) fclean
 
 re: fclean all
 

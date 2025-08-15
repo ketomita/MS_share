@@ -10,6 +10,7 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	if (argc != 1)
 		return (1);
+	set_signal_handler();
 	while (1)
 	{
 		input = readline_input();
@@ -17,7 +18,7 @@ int	main(int argc, char *argv[], char *envp[])
 			break ;
 		if (input[strlen(input) - 1] == '\n')
 		input[strlen(input) - 1] = '\0';
-		
+
 		if (strlen(input) == 0)
 		{
 			printf("Enter a command (or press Ctrl+D to exit):\n");
@@ -32,7 +33,7 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 		printf("\n=== TOKENS ===\n");
 		print_tokens(tokens);
-		
+
 		ast = parse(tokens);
 		if (!ast)
 		{
