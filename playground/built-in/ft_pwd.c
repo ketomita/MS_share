@@ -1,8 +1,4 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "built-in.h"
+#include "builtin.h"
 
 int	ft_pwd(void)
 {

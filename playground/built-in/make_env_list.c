@@ -1,44 +1,49 @@
-#include "built-in.h"
+#include "envlist.h"
 
-static t_env	*make_env_node(char *name, char *value)
+static t_env	*split_env(char *envp)
 {
+	char	*eq;
+	char	*name;
+	char	*value;
 	t_env	*node;
 
-	node = (t_env *)malloc(sizeof(t_env));
-	if (!node)
+	eq = ft_strchr(envp, '=');
+	if (!eq)
 		return (NULL);
-	node->name = name;
-	node->value = value;
-	node->prev = NULL;
-	node->next = NULL;
+	name = ft_strndup(envp, eq - envp);
+	value = ft_strdup(eq + 1);
+	if (!name || !value)
+	{
+		free(name);
+		free(value);
+		return (NULL);
+	}
+	node = make_env_node(name, value);
+	if (!node)
+	{
+		free(name);
+		free(value);
+	}
 	return (node);
 }
 
-static int	split_envp(char *envp[], char *name[], char *value[], int size)
+int	init_env_list(t_data *data, char *envp[])
 {
-	int		i;
+	t_env	*node;
+	size_t	i;
 
+	data->env_head = NULL;
+	data->env_tail = NULL;
 	i = 0;
 	while (envp[i])
 	{
-		name = ft_split(envp[i]);
-	}
-}
-
-int	make_env_list(char *envp[], int size)
-{
-	int		i;
-	t_env	*node;
-
-	i = 0;
-	while (i < size)
-	{
-		node = make_env_node();
+		node = split_env(envp[i]);
 		if (!node)
 		{
-			free_list();
-			return (1);
+			free_env_list(data->env_head);
+			return (-1);
 		}
+		append_env_node(&data->env_head, &data->env_tail, node);
 		i++;
 	}
 	return (0);

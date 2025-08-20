@@ -1,77 +1,76 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include "builtin.h"
 
-#include "built-in.h"
-
-static int	change_pwd_oldpwd(char *old_pwd)
+static int	change_pwd_oldpwd(t_data *data, char *old_path)
 {
-	char *current_pwd;
+	char	*pwd;
+	char	*oldpwd;
+	char	*current_path;
 
-	old_pwd = getenv("OLDPWD");
-	current_pwd = getcwd(NULL, 0);
-	if (!current_pwd)
-	{
-		perror("pwd");
-		return (1);
-	}
-	current_pwd = getenv("PWD");
+	oldpwd = ft_strjoin("OLDPWD=", old_path);
+	ft_export(data, oldpwd);
+	free(oldpwd);
+	current_path = getcwd(NULL, 0);
+	pwd = ft_strjoin("PWD=", current_path);
+	ft_export(data, pwd);
+	free(current_path);
+	free(pwd);
 	return (0);
 }
 
-int	ft_cd(char *path)
+int ft_cd(t_data *data, char *path)
 {
-	char	*home_path;
-	char	*joinned_path;
-	char	*current_path;
-	char	*buf_path;
+	char    *old_path;
+	char    *target_path;
+	char    *home_path;
+	int     result;
 
-	home_path = getenv("HOME");
-	current_path = getcwd(NULL, 0);
-	if (!current_path)
+	target_path = NULL;
+	result = 0;
+	old_path = getcwd(NULL, 0);
+	if (!old_path)
 	{
-		perror("pwd");
+		perror("cd: getcwd");
 		return (1);
 	}
 	if (path == NULL)
 	{
-		chdir(home_path);
-		change_pwd_oldpwd(current_path);
-		return (0);
-	}
-	if (*path == '/')
-	{
-		if (chdir(path))
-		perror("cd");
-		return (1);
+		target_path = getenv("HOME");
+		if (!target_path)
+		{
+			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
+			result = 1;
+		}
 	}
 	else if (*path == '~')
 	{
-		path++;
-		joinned_path = ft_strjoin(home_path, path);
-		if (chdir(joinned_path))
+		home_path = getenv("HOME");
+		if (!home_path)
 		{
-			perror("cd");
-			return (1);
+			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
+			result = 1;
 		}
-		free(joinned_path);
+		else
+			target_path = ft_strjoin(home_path, path + 1);
 	}
 	else
+		target_path = path;
+	if (result == 0)
 	{
-		buf_path = ft_strjoin(current_path, "/");
-		joinned_path = ft_strjoin(buf_path, path);
-		free(buf_path);
-		if (chdir(joinned_path))
+		if (chdir(target_path) != 0)
 		{
 			perror("cd");
-			free(joinned_path);
-			return (1);
+			result = 1;
 		}
-		free(joinned_path);
 	}
-	if (change_pwd_oldpwd(current_path))
-		return (1);
-	return (0);
+	if (result == 0)
+	{
+		if (change_pwd_oldpwd(data, old_path))
+			result = 1;
+	}
+	free(old_path);
+	if (path && *path == '~')
+		free(target_path);
+	return (result);
 }
 
 // #include <stdio.h>
@@ -79,7 +78,9 @@ int	ft_cd(char *path)
 // int main(int argc, char *argv[], char *envp[])
 // {
 // 	char *pathname;
+// 	t_data data;
 
+// 	init_env_list(&data, envp);
 // 	pathname = getcwd(NULL, 0);
 // 	if (!pathname)
 // 	{

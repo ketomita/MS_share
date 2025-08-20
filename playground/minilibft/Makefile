@@ -1,5 +1,5 @@
 NAME = minilibft.a
-SRCS = ft_memmove.c ft_putstr_fd.c ft_split.c ft_strcmp.c ft_strjoin.c ft_strlen.c
+SRCS = ft_isalnum.c ft_isalpha.c ft_memmove.c ft_putstr_fd.c ft_split.c ft_strchr.c ft_strcmp.c ft_strjoin.c ft_strlen.c ft_strndup.c ft_substr.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

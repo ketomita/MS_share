@@ -1,5 +1,5 @@
 NAME = built-in.a
-SRCS = ft_cd.c ft_echo.c ft_env.c ft_exit.c ft_pwd.c
+SRCS = ft_cd.c ft_echo.c ft_env.c ft_exit.c ft_pwd.c ft_export.c make_env_list.c env_utils.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

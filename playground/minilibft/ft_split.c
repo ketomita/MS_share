@@ -25,25 +25,6 @@ static int	word_count(char c, char *str)
 	return (count);
 }
 
-static char	*ft_strndup(char *str, int j)
-{
-	int		i;
-	char	*p;
-
-	i = 0;
-	p = malloc(j + 1);
-	if (!p)
-		return (NULL);
-	i = 0;
-	while (i < j)
-	{
-		p[i] = str[i];
-		i++;
-	}
-	p[i] = '\0';
-	return (p);
-}
-
 static void	ft_allfree(char **p, int i)
 {
 	while (0 <= i)

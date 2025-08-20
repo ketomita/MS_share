@@ -1,5 +1,5 @@
 #include "execute.h"
-#include "built-in.h"
+#include "builtin.h"
 #include "minilibft.h"
 
 typedef enum	e_builtin
@@ -57,15 +57,18 @@ static int get_builtin_type(const char *cmd)
 
 static int	execute_builtin(int type, char **cmd_args, char **envp)
 {
+	t_data	data;
+
+	init_env_list(&data, envp);
 	cmd_args++;
 	if (type == ECHO)
 		return (ft_echo((const char**)cmd_args));
 	if (type == CD)
-		return (ft_cd(cmd_args[1]));
+		return (ft_cd(&data, cmd_args[0]));
 	if (type == PWD)
 		return (ft_pwd());
-	// if (type == EXPORT)
-	// 	return (ft_export());
+	if (type == EXPORT)
+		return (ft_export(&data, NULL));
 	// if (type == UNSET)
 	// 	return (ft_unset());
 	if (type == ENV)
