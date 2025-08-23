@@ -39,3 +39,14 @@ void	append_env_node(t_env **head, t_env **tail, t_env *node)
 	}
 	*tail = node;
 }
+
+t_env	*find_env_node(t_env *head, const char *name)
+{
+	while (head)
+	{
+		if (ft_strcmp(head->name, name) == 0)
+			return (head);
+		head = head->next;
+	}
+	return (NULL);
+}

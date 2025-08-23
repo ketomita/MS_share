@@ -13,17 +13,6 @@ static int	print_env_list(t_env *head)
 	return (0);
 }
 
-static t_env	*find_env_node(t_env *head, const char *name)
-{
-	while (head)
-	{
-		if (ft_strcmp(head->name, name) == 0)
-			return (head);
-		head = head->next;
-	}
-	return (NULL);
-}
-
 static int	is_valid_identifier(const char *name, char *var, char *value)
 {
 	if (!name || (!ft_isalpha(*name) && *name != '_'))

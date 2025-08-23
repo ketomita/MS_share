@@ -1,17 +1,23 @@
 #include "builtin.h"
 
-int	ft_env(char *envp[])
+int	ft_env(t_env *env_list)
 {
-	int	i;
+	t_env	*current;
 
-	if (!envp)
+	if (!env_list)
 		return (1);
-	i = 0;
-	while (envp[i] != NULL)
+	current = env_list;
+	while (current)
 	{
-		write(1, envp[i], ft_strlen(envp[i]));
-		write(1, "\n", 1);
-		i++;
+		if (current->name && current->value)
+		{
+
+			ft_putstr_fd(current->name, STDOUT_FILENO);
+			ft_putstr_fd("=", STDOUT_FILENO);
+			ft_putstr_fd(current->value, STDOUT_FILENO);
+			ft_putstr_fd("\n", STDOUT_FILENO);
+		}
+		current = current->next;
 	}
 	return (0);
 }

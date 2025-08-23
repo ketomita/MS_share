@@ -72,7 +72,7 @@ static int	execute_builtin(int type, char **cmd_args, char **envp)
 	// if (type == UNSET)
 	// 	return (ft_unset());
 	if (type == ENV)
-		return (ft_env(envp));
+		return (ft_env(data.env_head));
 	if (type == EXIT)
 		ft_exit(0);
 	ft_putstr_fd("（ビルトイン実行）\n", 1);

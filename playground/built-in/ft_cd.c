@@ -17,14 +17,57 @@ static int	change_pwd_oldpwd(t_data *data, char *old_path)
 	return (0);
 }
 
-int ft_cd(t_data *data, char *path)
+void	set_home_or_target_path(char *path, \
+	char **target_path, int *result, int mode)
 {
-	char    *old_path;
-	char    *target_path;
-	char    *home_path;
-	int     result;
+	char	*home_path;
 
-	target_path = NULL;
+	if (mode == 0)
+	{
+		*target_path = getenv("HOME");
+		if (!(*target_path))
+		{
+			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
+			*result = 1;
+		}
+	}
+	else if (mode == 1)
+	{
+		home_path = getenv("HOME");
+		if (!home_path)
+		{
+			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
+			*result = 1;
+		}
+		else
+			*target_path = ft_strjoin(home_path, path + 1);
+	}
+}
+
+void	set_target_path(t_data *data, \
+	char *path, char **target_path, int *result)
+{
+	t_env	*env_buf;
+
+	if (path == NULL)
+		set_home_or_target_path(path, target_path, result, 0);
+	else if (*path == '~')
+		set_home_or_target_path(path, target_path, result, 1);
+	else if (ft_strcmp(path, "-"))
+	{
+		env_buf = find_env_node(data->env_head, "OLDPWD");
+		*target_path = env_buf->value;
+	}
+	else
+		*target_path = path;
+}
+
+int	ft_cd(t_data *data, char *path)
+{
+	char	*old_path;
+	char	*target_path;
+	int		result;
+
 	result = 0;
 	old_path = getcwd(NULL, 0);
 	if (!old_path)
@@ -32,41 +75,14 @@ int ft_cd(t_data *data, char *path)
 		perror("cd: getcwd");
 		return (1);
 	}
-	if (path == NULL)
+	set_target_path(data, path, &target_path, &result);
+	if (result == 0 && chdir(target_path) != 0)
 	{
-		target_path = getenv("HOME");
-		if (!target_path)
-		{
-			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
-			result = 1;
-		}
+		perror("cd");
+		result = 1;
 	}
-	else if (*path == '~')
-	{
-		home_path = getenv("HOME");
-		if (!home_path)
-		{
-			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
-			result = 1;
-		}
-		else
-			target_path = ft_strjoin(home_path, path + 1);
-	}
-	else
-		target_path = path;
-	if (result == 0)
-	{
-		if (chdir(target_path) != 0)
-		{
-			perror("cd");
-			result = 1;
-		}
-	}
-	if (result == 0)
-	{
-		if (change_pwd_oldpwd(data, old_path))
-			result = 1;
-	}
+	if (result == 0 && change_pwd_oldpwd(data, old_path))
+		result = 1;
 	free(old_path);
 	if (path && *path == '~')
 		free(target_path);
