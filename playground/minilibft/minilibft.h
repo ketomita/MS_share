@@ -9,6 +9,7 @@ void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
+int		ft_isdigit(int c);
 void	*ft_memmove(void *dest, const void *src, size_t n);
 void	ft_putstr_fd(char *s, int fd);
 char	*ft_strchr(const char *s, int c);

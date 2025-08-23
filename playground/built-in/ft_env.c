@@ -11,7 +11,6 @@ int	ft_env(t_env *env_list)
 	{
 		if (current->name && current->value)
 		{
-
 			ft_putstr_fd(current->name, STDOUT_FILENO);
 			ft_putstr_fd("=", STDOUT_FILENO);
 			ft_putstr_fd(current->value, STDOUT_FILENO);

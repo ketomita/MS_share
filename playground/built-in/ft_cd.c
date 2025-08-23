@@ -64,7 +64,7 @@ void	set_target_path(t_data *data, \
 		if (!env_buf)
 		{
 			ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
-        	*result = 1;
+			*result = 1;
 		}
 		else
 			*target_path = env_buf->value;
