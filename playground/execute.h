@@ -9,21 +9,10 @@
 # include <errno.h>
 
 # include "lexer_parser.h"
-
-typedef enum	e_builtin
-{
-	ECHO,
-	CD,
-	PWD,
-	EXPORT,
-	UNSET,
-	ENV,
-	EXIT
-}	t_builtin;
+# include "minilibft.h"
+# include "builtin.h"
 
 void	set_signal_handler(void);
 char	*readline_input(void);
-
-int		execute_ast(t_ast *node, char **envp);
-
+int		execute_ast(t_command_invocation *cmd_list, char **envp);
 #endif

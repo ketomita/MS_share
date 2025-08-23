@@ -43,7 +43,7 @@ char	*readline_input(void)
 		write(STDOUT_FILENO, "exit\n", 5);
 		return (NULL);
 	}
-	if (strlen(line) > 0)
+	if (ft_strlen(line) > 0)
 		add_history(line);
 	return (line);
 }

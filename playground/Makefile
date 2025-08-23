@@ -11,7 +11,7 @@ LIBFT-A = $(LIBFT)/minilibft.a
 BUILT-IN = ./built-in
 BUILT-IN_A = $(BUILT-IN)/built-in.a
 
-SRCS = input.c exec_fork.c lexer.c main.c parser.c
+SRCS = input.c execute.c lexer.c main.c parser.c command_execution.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

@@ -10,13 +10,13 @@ t_ast	*create_ast_node(t_token_type type, const char *value)
 	node->type = type;
 	if (value)
 	{
-		node->value = malloc(strlen(value) + 1);
+		node->value = malloc(ft_strlen(value) + 1);
 		if (!node->value)
 		{
 			free(node);
 			return (NULL);
 		}
-		strcpy(node->value, value);
+		ft_strcpy(node->value, value);
 	}
 	else
 		node->value = NULL;

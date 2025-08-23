@@ -10,13 +10,13 @@ t_token	*create_token(t_token_type type, const char *value)
 	token->type = type;
 	if (value)
 	{
-		token->value = malloc(strlen(value) + 1);
+		token->value = malloc(ft_strlen(value) + 1);
 		if (!token->value)
 		{
 			free(token);
 			return (NULL);
 		}
-		strcpy(token->value, value);
+		ft_strcpy(token->value, value);
 	}
 	else
 		token->value = NULL;
@@ -95,7 +95,7 @@ static int	handle_quotes(const char *input, int pos, char **value, t_token_type 
 	*value = malloc(len + 1);
 	if (!*value)
 		return (-1);
-	strncpy(*value, &input[start], len);
+	ft_strncpy(*value, &input[start], len);
 	(*value)[len] = '\0';
 	if (quote_char == '"')
 		*type = EXPANDABLE_QUOTED;
@@ -114,7 +114,7 @@ static int	handle_redirect(const char *input, int pos, char **value, t_token_typ
 			*value = malloc(3);
 			if (!*value)
 				return (-1);
-			strcpy(*value, "<<");
+			ft_strcpy(*value, "<<");
 			return (pos + 2);
 		}
 		else
@@ -123,7 +123,7 @@ static int	handle_redirect(const char *input, int pos, char **value, t_token_typ
 			*value = malloc(2);
 			if (!*value)
 				return (-1);
-			strcpy(*value, "<");
+			ft_strcpy(*value, "<");
 			return (pos + 1);
 		}
 	}
@@ -135,7 +135,7 @@ static int	handle_redirect(const char *input, int pos, char **value, t_token_typ
 			*value = malloc(3);
 			if (!*value)
 				return (-1);
-			strcpy(*value, ">>");
+			ft_strcpy(*value, ">>");
 			return (pos + 2);
 		}
 		else
@@ -144,7 +144,7 @@ static int	handle_redirect(const char *input, int pos, char **value, t_token_typ
 			*value = malloc(2);
 			if (!*value)
 				return (-1);
-			strcpy(*value, ">");
+			ft_strcpy(*value, ">");
 			return (pos + 1);
 		}
 	}
@@ -158,7 +158,7 @@ static int	handle_pipe(const char *input, int pos, char **value, t_token_type *t
 	*value = malloc(2);
 	if (!*value)
 		return (-1);
-	strcpy(*value, "|");
+	ft_strcpy(*value, "|");
 	return (pos + 1);
 }
 
@@ -168,14 +168,14 @@ static int	handle_word(const char *input, int pos, char **value, t_token_type *t
 	int	len;
 
 	start = pos;
-	while (input[pos] && !is_whitespace(input[pos]) 
+	while (input[pos] && !is_whitespace(input[pos])
 		&& !is_special_char(input[pos]) && !is_quote(input[pos]))
 		pos++;
 	len = pos - start;
 	*value = malloc(len + 1);
 	if (!*value)
 		return (-1);
-	strncpy(*value, &input[start], len);
+	ft_strncpy(*value, &input[start], len);
 	(*value)[len] = '\0';
 	*type = EXPANDABLE;
 	return (pos);
@@ -235,11 +235,11 @@ void	print_tokens(t_token *head)
 {
 	const char	*type_names[] = {
 		"EXPANDABLE",
-		"EXPANDABLE_QUOTED", 
+		"EXPANDABLE_QUOTED",
 		"NON_EXPANDABLE",
 		"PIPE",
 		"REDIRECT_IN",
-		"REDIRECT_OUT", 
+		"REDIRECT_OUT",
 		"REDIRECT_APPEND",
 		"REDIRECT_HEREDOC",
 		"EOF_TOKEN"
@@ -248,10 +248,10 @@ void	print_tokens(t_token *head)
 	while (head)
 	{
 		if (head->value)
-			printf("Type: %-17s Value: %s\n", 
+			printf("Type: %-17s Value: %s\n",
 				type_names[head->type], head->value);
 		else
-			printf("Type: %-17s Value: %s\n", 
+			printf("Type: %-17s Value: %s\n",
 				type_names[head->type], "(null)");
 		head = head->next;
 	}
