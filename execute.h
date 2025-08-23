@@ -1,17 +1,29 @@
 #ifndef EXECUTE_H
-#define EXECUTE_H
+# define EXECUTE_H
 
-#include <stddef.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <signal.h>
+# include <fcntl.h>
+# include <wait.h>
+# include <errno.h>
 
-size_t	ft_strlen(const char *str);
-void	*ft_memmove(void *dest, const void *src, size_t n);
-void	ft_putstr_fd(char *s, int fd);
-char	**ft_split(char *str, char c);
-char	*ft_strjoin(char const *s1, char const *s2);
+# include "lexer_parser.h"
+
+typedef enum	e_builtin
+{
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT
+}	t_builtin;
 
 void	set_signal_handler(void);
 char	*readline_input(void);
 
-int	execute_part(char *str[], char *envp[], int count);
+int		execute_ast(t_ast *node, char **envp);
 
 #endif
