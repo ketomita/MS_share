@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"minilibft.h": "c",
+		"envlist.h": "c",
+		"builtin.h": "c"
+	}
+}

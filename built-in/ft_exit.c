@@ -1,4 +1,6 @@
-int	ft_exit(int status)
+#include "builtin.h"
+
+void	ft_exit(int status)
 {
 	if (status >= 256)
 		exit(status % 256);
