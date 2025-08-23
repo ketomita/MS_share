@@ -2,17 +2,6 @@
 #include "builtin.h"
 #include "minilibft.h"
 
-typedef enum	e_builtin
-{
-	ECHO,
-	CD,
-	PWD,
-	EXPORT,
-	UNSET,
-	ENV,
-	EXIT
-}	t_builtin;
-
 static void	free_split_array(char **array)
 {
 	int	i;

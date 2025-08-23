@@ -10,6 +10,17 @@
 
 # include "lexer_parser.h"
 
+typedef enum	e_builtin
+{
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT
+}	t_builtin;
+
 void	set_signal_handler(void);
 char	*readline_input(void);
 
