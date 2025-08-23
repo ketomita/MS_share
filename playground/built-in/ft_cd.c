@@ -10,6 +10,11 @@ static int	change_pwd_oldpwd(t_data *data, char *old_path)
 	ft_export(data, oldpwd);
 	free(oldpwd);
 	current_path = getcwd(NULL, 0);
+	if (!current_path)
+	{
+		perror("cd: getcwd");
+		return (1);
+	}
 	pwd = ft_strjoin("PWD=", current_path);
 	ft_export(data, pwd);
 	free(current_path);
@@ -53,10 +58,16 @@ void	set_target_path(t_data *data, \
 		set_home_or_target_path(path, target_path, result, 0);
 	else if (*path == '~')
 		set_home_or_target_path(path, target_path, result, 1);
-	else if (ft_strcmp(path, "-"))
+	else if (ft_strcmp(path, "-") == 0)
 	{
 		env_buf = find_env_node(data->env_head, "OLDPWD");
-		*target_path = env_buf->value;
+		if (!env_buf)
+		{
+			ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
+        	*result = 1;
+		}
+		else
+			*target_path = env_buf->value;
 	}
 	else
 		*target_path = path;
@@ -86,6 +97,8 @@ int	ft_cd(t_data *data, char *path)
 	free(old_path);
 	if (path && *path == '~')
 		free(target_path);
+	if (path && ft_strcmp(path, "-") == 0 && result == 0)
+		ft_pwd();
 	return (result);
 }
 
