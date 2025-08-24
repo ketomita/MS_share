@@ -8,8 +8,8 @@ int	main(int argc, char *argv[], char *envp[])
 	t_ast	*ast;
 	size_t	len;
 
-	printf("Lexer & Parser Test Program\n");
-	printf("Enter a command (or press Ctrl+D to exit):\n");
+	// printf("Lexer & Parser Test Program\n");
+	// printf("Enter a command (or press Ctrl+D to exit):\n");
 
 	input = NULL;
 	len = 0;
@@ -27,11 +27,11 @@ int	main(int argc, char *argv[], char *envp[])
 
 		if (ft_strlen(input) == 0)
 		{
-			printf("Enter a command (or press Ctrl+D to exit):\n");
+		// 	printf("Enter a command (or press Ctrl+D to exit):\n");
 			continue;
 		}
 
-		printf("\n--- Input: %s ---\n", input);
+		// printf("\n--- Input: %s ---\n", input);
 
 		tokens = tokenize(input);
 		if (!tokens)
@@ -41,8 +41,8 @@ int	main(int argc, char *argv[], char *envp[])
 			continue;
 		}
 
-		printf("\n=== TOKENS ===\n");
-		print_tokens(tokens);
+		// printf("\n=== TOKENS ===\n");
+		// print_tokens(tokens);
 
 		ast = parse(tokens);
 		if (!ast)
@@ -53,8 +53,8 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			t_command_invocation *cmd;
 
-			printf("\n=== AST ===\n");
-			print_ast(ast, 0);
+			// printf("\n=== AST ===\n");
+			// print_ast(ast, 0);
 
 			cmd = ast_to_command_invocation(ast);
 			if (!cmd)
@@ -63,8 +63,8 @@ int	main(int argc, char *argv[], char *envp[])
 			}
 			else
 			{
-				printf("\n=== 🚀 コマンド実行構造体 ===\n");
-				print_command_invocation(cmd, 0);
+				// printf("\n=== 🚀 コマンド実行構造体 ===\n");
+				// print_command_invocation(cmd, 0);
 				execute_ast(cmd, envp);
 				free_command_invocation(cmd);
 			}
@@ -73,10 +73,10 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 
 		free_tokens(tokens);
-		printf("\nEnter a command (or press Ctrl+D to exit):\n");
+		// printf("\nEnter a command (or press Ctrl+D to exit):\n");
 	}
 	free(input);
 	rl_clear_history();
-	printf("\nGoodbye!\n");
+	// printf("\nGoodbye!\n");
 	return (0);
 }

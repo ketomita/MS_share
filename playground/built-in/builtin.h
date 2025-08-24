@@ -6,7 +6,7 @@
 # include <unistd.h>
 # include <stdbool.h>
 
-# include "envlist.h"
+# include "../envlist/envlist.h"
 
 int		ft_echo(const char **str);
 int		ft_cd(t_data *data, char *path);
