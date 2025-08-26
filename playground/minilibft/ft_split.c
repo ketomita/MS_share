@@ -2,9 +2,9 @@
 
 static int	word_count(char c, char *str)
 {
-	int	i;
-	int	count;
-	int	flag;
+	size_t	i;
+	size_t	count;
+	int		flag;
 
 	if (!str)
 		return (0);
@@ -25,7 +25,7 @@ static int	word_count(char c, char *str)
 	return (count);
 }
 
-static void	ft_allfree(char **p, int i)
+static void	ft_allfree(char **p, size_t i)
 {
 	while (0 <= i)
 	{
@@ -36,10 +36,10 @@ static void	ft_allfree(char **p, int i)
 	return ;
 }
 
-static char	**main_split(char *str, char c, char **p, int k)
+static char	**main_split(char *str, char c, char **p, size_t k)
 {
-	int	i;
-	int	j;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
 	j = 0;
@@ -67,8 +67,8 @@ static char	**main_split(char *str, char c, char **p, int k)
 
 char	**ft_split(char *str, char c)
 {
-	char	**p;
-	int		k;
+	char		**p;
+	size_t		k;
 
 	if (!str)
 		return (NULL);

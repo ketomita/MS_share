@@ -2,10 +2,10 @@
 
 void	ft_putstr_fd(char *s, int fd)
 {
-	size_t	len;
-	int		buf1;
-	int		buf2;
-	int		i;
+	size_t		len;
+	size_t		buf1;
+	size_t		buf2;
+	size_t		i;
 
 	if (!s)
 		return ;

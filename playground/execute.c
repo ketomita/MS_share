@@ -7,7 +7,7 @@ void	free_split(char **str)
 	if (!str)
 		return ;
 	i = 0;
-	while(str[i])
+	while (str[i])
 		free(str[i++]);
 	free(str);
 }
@@ -30,7 +30,6 @@ bool	is_builtin(const char *cmd)
 		return (true);
 	if (ft_strcmp(cmd, "exit") == 0)
 		return (true);
-
 	return (false);
 }
 
@@ -46,14 +45,14 @@ bool	is_special_builtin(const char *cmd)
 		return (true);
 	if (ft_strcmp(cmd, "exit") == 0)
 		return (true);
-
 	return (false);
 }
 
 int	dispatch_builtin(char **args, t_data data)
 {
-	const char *cmd = args[0];
+	const char	*cmd;
 
+	cmd = args[0];
 	if (ft_strcmp(cmd, "echo") == 0)
 		return (ft_echo((const char **)(args + 1)));
 	if (ft_strcmp(cmd, "cd") == 0)
@@ -82,35 +81,47 @@ static void	restore_fds(int stdin_backup, int stdout_backup)
 	close(stdout_backup);
 }
 
-static char	*find_command_path(const char *cmd, char **envp)
+static int	prepro_cmd_path(char **envp, char ***paths)
 {
+	size_t	i;
 	char	*path_env;
 
-	if (ft_strchr(cmd, '/'))
-	{
-		if (access(cmd, X_OK) == 0)
-			return (ft_strdup(cmd));
-		return (NULL);
-	}
 	path_env = NULL;
-	for (int i = 0; envp[i]; i++)
+	i = 0;
+	while (envp && envp[i])
 	{
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
 			path_env = envp[i] + 5;
-			break;
+			break ;
 		}
+		i++;
 	}
 	if (!path_env)
-		return (NULL);
-
-	char **paths = ft_split(path_env, ':');
-	char *full_path;
-	char *tmp;
-	for (int i = 0; paths[i]; i++)
 	{
-		tmp = ft_strjoin(paths[i], "/");
-		full_path = ft_strjoin(tmp, cmd);
+		*paths = NULL;
+		return (0);
+	}
+	*paths = ft_split(path_env, ':');
+	if (!*paths)
+		return (1);
+	return (0);
+}
+
+static char	*prepare_cmd_path(char *cmd, char **paths)
+{
+	size_t	i;
+	char	*tmp;
+	char	*full_path;
+
+	i = 0;
+	if (!paths)
+		return (NULL);
+	while (paths[i])
+	{
+		full_path = ft_strjoin(paths[i], "/");
+		tmp = full_path;
+		full_path = ft_strjoin(full_path, cmd);
 		free(tmp);
 		if (access(full_path, X_OK) == 0)
 		{
@@ -118,9 +129,27 @@ static char	*find_command_path(const char *cmd, char **envp)
 			return (full_path);
 		}
 		free(full_path);
+		i++;
 	}
 	free_split(paths);
 	return (NULL);
+}
+
+static char	*find_command_path(char *cmd, char **envp)
+{
+	char	**paths;
+
+	if (!cmd || !*cmd)
+		return (NULL);
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
+		return (NULL);
+	}
+	if (prepro_cmd_path(envp, &paths))
+		return (NULL);
+	return (prepare_cmd_path(cmd, paths));
 }
 
 /**
@@ -144,7 +173,6 @@ static int	apply_redirections(t_command_invocation *cmd)
 		close(fd);
 		redir = redir->next;
 	}
-
 	redir = cmd->output_redirections;
 	while (redir)
 	{
@@ -152,7 +180,6 @@ static int	apply_redirections(t_command_invocation *cmd)
 			fd = open(redir->file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
 			fd = open(redir->file_path, O_WRONLY | O_CREAT | O_APPEND, 0644);
-
 		if (fd == -1)
 		{
 			perror(redir->file_path);
@@ -170,20 +197,29 @@ static int	apply_redirections(t_command_invocation *cmd)
  */
 static int	execute_builtin(t_command_invocation *cmd, t_data data)
 {
-	int	stdin_backup = dup(STDIN_FILENO);
-	int	stdout_backup = dup(STDOUT_FILENO);
+	int	stdin_backup;
+	int	stdout_backup;
 	int	result;
 
+	stdin_backup = dup(STDIN_FILENO);
+	stdout_backup = dup(STDOUT_FILENO);
 	if (apply_redirections(cmd) == -1)
 	{
 		restore_fds(stdin_backup, stdout_backup);
 		return (1);
 	}
-
 	result = dispatch_builtin((char **)cmd->exec_and_args, data);
-
 	restore_fds(stdin_backup, stdout_backup);
 	return (result);
+}
+
+static void ft_put_execve_error(char *str)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(": ", 2);
+	perror(NULL);
+	exit(127);
 }
 
 /**
@@ -191,7 +227,7 @@ static int	execute_builtin(t_command_invocation *cmd, t_data data)
  */
 static void	execute_child_process(t_command_invocation *cmd, char **envp, int in_fd, int out_fd, t_data data)
 {
-	char *path;
+	char	*path;
 
 	if (in_fd != STDIN_FILENO)
 	{
@@ -203,24 +239,19 @@ static void	execute_child_process(t_command_invocation *cmd, char **envp, int in
 		dup2(out_fd, STDOUT_FILENO);
 		close(out_fd);
 	}
-
 	if (apply_redirections(cmd) == -1)
 		exit(1);
-
 	if (is_builtin(cmd->exec_and_args[0]))
 		exit(dispatch_builtin((char **)cmd->exec_and_args, data));
 	else
 	{
-		path = find_command_path(cmd->exec_and_args[0], envp);
+		path = find_command_path((char *)cmd->exec_and_args[0], envp);
 		if (path)
 		{
 			execve(path, (char **)cmd->exec_and_args, envp);
 			free(path);
 		}
-		ft_putstr_fd("minishell: command not found: ", 2);
-		ft_putstr_fd((char *)cmd->exec_and_args[0], 2);
-		ft_putstr_fd("\n", 2);
-		exit(127);
+		ft_put_execve_error((char *)cmd->exec_and_args[0]);
 	}
 }
 
@@ -262,12 +293,16 @@ static pid_t	execute_simple_command(t_command_invocation *cmd, char **envp, int 
  */
 static int	execute_pipeline(t_command_invocation *cmd_list, char **envp, t_data data)
 {
-	int						status = 0;
+	int						status;
 	int						pipe_fd[2];
-	int						in_fd = STDIN_FILENO; // 最初のコマンドの入力は標準入力
-	pid_t					last_pid = -1;
-	t_command_invocation	*current_cmd = cmd_list;
+	int						in_fd;
+	pid_t					last_pid;
+	t_command_invocation	*current_cmd;
 
+	status = 0;
+	in_fd = STDIN_FILENO; // 最初のコマンドの入力は標準入力
+	last_pid = -1;
+	current_cmd = cmd_list;
 	while (current_cmd)
 	{
 		// 次のコマンドがある場合（パイプが必要な場合）
@@ -294,16 +329,14 @@ static int	execute_pipeline(t_command_invocation *cmd_list, char **envp, t_data 
 		}
 		current_cmd = current_cmd->piped_command;
 	}
-
 	// 最後の子プロセスの終了を待ち、そのステータスを取得
 	if (last_pid > 0)
 	{
 		waitpid(last_pid, &status, 0);
 		// 他のすべての子プロセスを待つ（ゾンビプロセス防止）
 		while (wait(NULL) != -1 || errno != ECHILD)
-		;
+			;
 	}
-
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (status); // シグナル終了などの場合

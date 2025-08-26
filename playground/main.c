@@ -30,7 +30,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (ft_strlen(input) == 0)
 		{
 		// 	printf("Enter a command (or press Ctrl+D to exit):\n");
-			continue;
+			continue ;
 		}
 
 		// printf("\n--- Input: %s ---\n", input);
@@ -40,7 +40,7 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			printf("Tokenization failed!\n");
 			printf("Enter a command (or press Ctrl+D to exit):\n");
-			continue;
+			continue ;
 		}
 
 		// printf("\n=== TOKENS ===\n");
@@ -53,7 +53,7 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 		else
 		{
-			t_command_invocation *cmd;
+			t_command_invocation	*cmd;
 
 			// printf("\n=== AST ===\n");
 			// print_ast(ast, 0);
