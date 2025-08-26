@@ -29,7 +29,7 @@ $(ENVLIST_A):
 	make -C $(ENVLIST)
 
 %.o: %.c
-	$(CC) $(FLAGS) -I$(BUILT-IN) -I$(LIBFT) -I$(ENVLIST_A) -c $< -o $@
+	$(CC) $(FLAGS) -I$(BUILT-IN) -I$(LIBFT) -I$(ENVLIST) -c $< -o $@
 
 $(NAME): $(BUILT-IN_A) $(LIBFT-A) $(ENVLIST_A) $(OBJS)
 	$(CC) $(FLAGS) $(OBJS) -o $(NAME) $(LIBS) $(BUILT-IN_A) $(LIBFT-A) $(ENVLIST_A)

@@ -7,6 +7,7 @@ int	main(int argc, char *argv[], char *envp[])
 	t_token	*tokens;
 	t_ast	*ast;
 	size_t	len;
+	t_data	data;
 
 	// printf("Lexer & Parser Test Program\n");
 	// printf("Enter a command (or press Ctrl+D to exit):\n");
@@ -17,6 +18,7 @@ int	main(int argc, char *argv[], char *envp[])
 	if (argc != 1)
 		return (1);
 	set_signal_handler();
+	init_env_list(&data, envp);
 	while (1)
 	{
 		input = readline_input();
@@ -65,10 +67,13 @@ int	main(int argc, char *argv[], char *envp[])
 			{
 				// printf("\n=== 🚀 コマンド実行構造体 ===\n");
 				// print_command_invocation(cmd, 0);
-				execute_ast(cmd, envp);
+				data.ast = ast;
+				data.cmd = cmd;
+				data.input = input;
+				data.tokens = tokens;
+				execute_ast(cmd, envp, data);
 				free_command_invocation(cmd);
 			}
-
 			free_ast(ast);
 		}
 

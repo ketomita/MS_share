@@ -14,5 +14,5 @@
 
 void	set_signal_handler(void);
 char	*readline_input(void);
-int		execute_ast(t_command_invocation *cmd_list, char **envp);
+int		execute_ast(t_command_invocation *cmd_list, char **envp, t_data data);
 #endif

@@ -44,6 +44,16 @@ static long long	ft_atoll(const char *str)
 	return (result * sign);
 }
 
+void	free_all_resources(t_data *data)
+{
+	free_env_list(data->env_head);
+	free_command_invocation(data->cmd);
+	free_ast(data->ast);
+	free_tokens(data->tokens);
+	free(data->input);
+	rl_clear_history();
+}
+
 int ft_exit(t_data *data, char **args)
 {
 	int			arg_count;
@@ -56,7 +66,7 @@ int ft_exit(t_data *data, char **args)
 	(void)data;
 	if (arg_count == 1)
 	{
-		// free_all_resources(data); // 環境変数や履歴などを全て解放
+		free_all_resources(data); // 環境変数や履歴などを全て解放
 		// exit(g_last_exit_status); // グローバル変数やdata構造体で保持している最後の終了ステータス
 		exit (111);
 	}
@@ -66,7 +76,7 @@ int ft_exit(t_data *data, char **args)
 		if (is_numeric_string(args[1]))
 		{
 			status = ft_atoll(args[1]);
-			// free_all_resources(data);
+			free_all_resources(data);
 			exit((unsigned char)status);
 		}
 		else
@@ -74,7 +84,7 @@ int ft_exit(t_data *data, char **args)
 			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(args[1], STDERR_FILENO);
 			ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-			// free_all_resources(data);
+			free_all_resources(data);
 			exit(2);
 		}
 	}
@@ -85,7 +95,7 @@ int ft_exit(t_data *data, char **args)
 			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(args[1], STDERR_FILENO);
 			ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-			// free_all_resources(data);
+			free_all_resources(data);
 			exit(255);
 		}
 		else

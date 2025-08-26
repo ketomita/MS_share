@@ -40,9 +40,3 @@ int	ft_echo(const char **str)
 		write(1, "\n", 1);
 	return (0);
 }
-
-// int main(int argc, char *argv[])
-// {
-// 	(void)argc;
-// 	return (ft_echo((const char **)argv + 1));
-// }

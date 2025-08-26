@@ -8,7 +8,7 @@
 # include <stdbool.h>
 # include <sys/types.h>
 
-# include "minilibft.h"
+# include "./minilibft/minilibft.h"
 
 typedef enum e_token_type {
 	EXPANDABLE,         // 通常の文字列

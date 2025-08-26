@@ -1,5 +1,17 @@
 #include "execute.h"
 
+void	free_split(char **str)
+{
+	size_t	i;
+
+	if (!str)
+		return ;
+	i = 0;
+	while(str[i])
+		free(str[i++]);
+	free(str);
+}
+
 bool	is_builtin(const char *cmd)
 {
 	if (cmd == NULL)
@@ -38,12 +50,9 @@ bool	is_special_builtin(const char *cmd)
 	return (false);
 }
 
-int	dispatch_builtin(char **args, char **envp)
+int	dispatch_builtin(char **args, t_data data)
 {
-	t_data	data;
 	const char *cmd = args[0];
-
-	init_env_list(&data, envp);
 
 	if (ft_strcmp(cmd, "echo") == 0)
 		return (ft_echo((const char **)(args + 1)));
@@ -54,11 +63,11 @@ int	dispatch_builtin(char **args, char **envp)
 	if (ft_strcmp(cmd, "export") == 0)
 		return (ft_export(&data, args[1]));
 	if (ft_strcmp(cmd, "unset") == 0)
-		 return (ft_unset(&data, args[1]));
+		return (ft_unset(&data, args[1]));
 	if (ft_strcmp(cmd, "env") == 0)
 		return (ft_env(data.env_head));
 	if (ft_strcmp(cmd, "exit") == 0)
-		 return (ft_exit(&data, args));
+		return (ft_exit(&data, args));
 	return (1);
 }
 
@@ -83,7 +92,6 @@ static char	*find_command_path(const char *cmd, char **envp)
 			return (ft_strdup(cmd));
 		return (NULL);
 	}
-
 	path_env = NULL;
 	for (int i = 0; envp[i]; i++)
 	{
@@ -106,12 +114,12 @@ static char	*find_command_path(const char *cmd, char **envp)
 		free(tmp);
 		if (access(full_path, X_OK) == 0)
 		{
-			// free_split(paths);
+			free_split(paths);
 			return (full_path);
 		}
 		free(full_path);
 	}
-	// free_split(paths);
+	free_split(paths);
 	return (NULL);
 }
 
@@ -160,7 +168,7 @@ static int	apply_redirections(t_command_invocation *cmd)
 /**
  * @brief （親プロセスで実行する）ビルトインコマンドの処理
  */
-static int	execute_builtin(t_command_invocation *cmd, char **envp)
+static int	execute_builtin(t_command_invocation *cmd, t_data data)
 {
 	int	stdin_backup = dup(STDIN_FILENO);
 	int	stdout_backup = dup(STDOUT_FILENO);
@@ -172,7 +180,7 @@ static int	execute_builtin(t_command_invocation *cmd, char **envp)
 		return (1);
 	}
 
-	result = dispatch_builtin((char **)cmd->exec_and_args, envp);
+	result = dispatch_builtin((char **)cmd->exec_and_args, data);
 
 	restore_fds(stdin_backup, stdout_backup);
 	return (result);
@@ -181,7 +189,7 @@ static int	execute_builtin(t_command_invocation *cmd, char **envp)
 /**
  * @brief 子プロセス内で行う処理（入出力の設定とコマンド実行）
  */
-static void	execute_child_process(t_command_invocation *cmd, char **envp, int in_fd, int out_fd)
+static void	execute_child_process(t_command_invocation *cmd, char **envp, int in_fd, int out_fd, t_data data)
 {
 	char *path;
 
@@ -200,7 +208,7 @@ static void	execute_child_process(t_command_invocation *cmd, char **envp, int in
 		exit(1);
 
 	if (is_builtin(cmd->exec_and_args[0]))
-		exit(dispatch_builtin((char **)cmd->exec_and_args, envp));
+		exit(dispatch_builtin((char **)cmd->exec_and_args, data));
 	else
 	{
 		path = find_command_path(cmd->exec_and_args[0], envp);
@@ -222,7 +230,7 @@ static void	execute_child_process(t_command_invocation *cmd, char **envp, int in
  * @param out_fd このコマンドが書き込むべき出力ファイルディスクリプタ
  * @return pid_t 子プロセスのPID、またはビルトイン用のステータス
  */
-static pid_t	execute_simple_command(t_command_invocation *cmd, char **envp, int in_fd, int out_fd)
+static pid_t	execute_simple_command(t_command_invocation *cmd, char **envp, int in_fd, int out_fd, t_data data)
 {
 	pid_t	pid;
 
@@ -232,7 +240,7 @@ static pid_t	execute_simple_command(t_command_invocation *cmd, char **envp, int 
 	// パイプがなく、かつcd, export, unset, exitのような親プロセスで実行すべきビルトインの場合
 	if (in_fd == STDIN_FILENO && out_fd == STDOUT_FILENO && is_special_builtin(cmd->exec_and_args[0]))
 	{
-		return (execute_builtin(cmd, envp));
+		return (execute_builtin(cmd, data));
 	}
 
 	pid = fork();
@@ -243,7 +251,7 @@ static pid_t	execute_simple_command(t_command_invocation *cmd, char **envp, int 
 	}
 	if (pid == 0) // 子プロセス
 	{
-		execute_child_process(cmd, envp, in_fd, out_fd);
+		execute_child_process(cmd, envp, in_fd, out_fd, data);
 	}
 
 	return (pid);
@@ -252,7 +260,7 @@ static pid_t	execute_simple_command(t_command_invocation *cmd, char **envp, int 
 /**
  * @brief パイプライン全体を処理する
  */
-static int	execute_pipeline(t_command_invocation *cmd_list, char **envp)
+static int	execute_pipeline(t_command_invocation *cmd_list, char **envp, t_data data)
 {
 	int						status = 0;
 	int						pipe_fd[2];
@@ -271,7 +279,7 @@ static int	execute_pipeline(t_command_invocation *cmd_list, char **envp)
 				return (1); // エラー
 			}
 			// コマンドを実行（入力はin_fd, 出力はpipe_fd[1]）
-			last_pid = execute_simple_command(current_cmd, envp, in_fd, pipe_fd[1]);
+			last_pid = execute_simple_command(current_cmd, envp, in_fd, pipe_fd[1], data);
 			close(pipe_fd[1]); // 子プロセスが複製したので親は不要
 			if (in_fd != STDIN_FILENO)
 				close(in_fd); // 前のパイプの読み取り口を閉じる
@@ -280,7 +288,7 @@ static int	execute_pipeline(t_command_invocation *cmd_list, char **envp)
 		else // パイプラインの最後のコマンド
 		{
 			// コマンドを実行（入力はin_fd, 出力は標準出力）
-			last_pid = execute_simple_command(current_cmd, envp, in_fd, STDOUT_FILENO);
+			last_pid = execute_simple_command(current_cmd, envp, in_fd, STDOUT_FILENO, data);
 			if (in_fd != STDIN_FILENO)
 				close(in_fd);
 		}
@@ -308,9 +316,9 @@ static int	execute_pipeline(t_command_invocation *cmd_list, char **envp)
  * @param envp 環境変数
  * @return int 最後のコマンドの終了ステータス
  */
-int	execute_ast(t_command_invocation *cmd_list, char **envp)
+int	execute_ast(t_command_invocation *cmd_list, char **envp, t_data data)
 {
 	if (!cmd_list)
 		return (0);
-	return (execute_pipeline(cmd_list, envp));
+	return (execute_pipeline(cmd_list, envp, data));
 }

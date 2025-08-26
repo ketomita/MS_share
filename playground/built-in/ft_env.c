@@ -20,10 +20,3 @@ int	ft_env(t_env *env_list)
 	}
 	return (0);
 }
-
-// int main(int argc, char *argv[], char *envp[])
-// {
-// 	(void)argc;
-// 	(void)argv;
-// 	return (ft_env(envp));
-// }

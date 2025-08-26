@@ -101,33 +101,3 @@ int	ft_cd(t_data *data, char *path)
 		ft_pwd();
 	return (result);
 }
-
-// #include <stdio.h>
-
-// int main(int argc, char *argv[], char *envp[])
-// {
-// 	char *pathname;
-// 	t_data data;
-
-// 	init_env_list(&data, envp);
-// 	pathname = getcwd(NULL, 0);
-// 	if (!pathname)
-// 	{
-// 		perror("pwd");
-// 		return (1);
-// 	}
-// 	write(1, pathname, ft_strlen(pathname));
-// 	write(1, "\n", 1);
-// 	free(pathname);
-// 	printf("%d", ft_cd(argv[1], envp));
-// 	pathname = getcwd(NULL, 0);
-// 	if (!pathname)
-// 	{
-// 		perror("pwd");
-// 		return (1);
-// 	}
-// 	write(1, pathname, ft_strlen(pathname));
-// 	write(1, "\n", 1);
-// 	free(pathname);
-// 	return (0);
-// }
