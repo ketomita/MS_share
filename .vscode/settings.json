@@ -2,6 +2,7 @@
 	"files.associations": {
 		"minilibft.h": "c",
 		"builtin.h": "c",
-		"envlist.h": "c"
+		"envlist.h": "c",
+		"lexer_parser.h": "c"
 	}
 }

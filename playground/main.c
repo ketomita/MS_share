@@ -73,6 +73,10 @@ int	main(int argc, char **argv, char **envp)
 			{
 				// printf("\n=== 🚀 コマンド実行構造体 (変数展開済み) ===\n");
 				// print_command_invocation(cmd, 0);
+				data.ast = ast;
+				data.cmd = cmd;
+				data.input = input;
+				data.tokens = tokens;
 				execute_ast(cmd, envp, data);
 				free_command_invocation(cmd);
 			}
