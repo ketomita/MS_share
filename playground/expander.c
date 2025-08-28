@@ -24,7 +24,7 @@ static char	*get_env_value(const char *var_name, int name_len, t_env *env_list)
 	env_node = find_env_node(env_list, name);
 	free(name);
 	if (!env_node || !env_node->value)
-		return (malloc(1));
+		return (NULL);
 	result = malloc(ft_strlen(env_node->value) + 1);
 	if (!result)
 		return (NULL);
