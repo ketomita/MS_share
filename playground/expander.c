@@ -49,7 +49,7 @@ static int	calculate_expanded_length(const char *str, t_env *env_list)
 			env_value = get_env_value(&str[i + 1], var_name_len, env_list);
 			if (env_value)
 			{
-				total_len += strlen(env_value);
+				total_len += ft_strlen(env_value);
 				free(env_value);
 			}
 			i += var_name_len + 1;

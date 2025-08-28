@@ -12,13 +12,13 @@ t_cmd_redirection	*create_redirection(t_redirect_type type, const char *file_pat
 	redir->next = NULL;
 	if (file_path)
 	{
-		redir->file_path = malloc(strlen(file_path) + 1);
+		redir->file_path = malloc(ft_strlen(file_path) + 1);
 		if (!redir->file_path)
 		{
 			free(redir);
 			return (NULL);
 		}
-		strcpy(redir->file_path, file_path);
+		ft_strcpy(redir->file_path, file_path);
 	}
 	else
 		redir->file_path = NULL;
