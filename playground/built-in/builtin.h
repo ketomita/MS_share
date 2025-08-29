@@ -9,7 +9,7 @@
 # include "../envlist/envlist.h"
 
 int		ft_echo(const char **str);
-int		ft_cd(t_data *data, char *path);
+int		ft_cd(t_data *data, char **args);
 int		ft_pwd(void);
 int		ft_env(t_env *env_list);
 int		ft_exit(t_data *data, char **args);

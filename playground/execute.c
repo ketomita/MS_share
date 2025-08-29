@@ -56,7 +56,7 @@ int	dispatch_builtin(char **args, t_data data)
 	if (ft_strcmp(cmd, "echo") == 0)
 		return (ft_echo((const char **)(args + 1)));
 	if (ft_strcmp(cmd, "cd") == 0)
-		return (ft_cd(&data, args[1]));
+		return (ft_cd(&data, args));
 	if (ft_strcmp(cmd, "pwd") == 0)
 		return (ft_pwd());
 	if (ft_strcmp(cmd, "export") == 0)
@@ -261,7 +261,7 @@ static void	execute_child_process(t_command_invocation *cmd, char **envp, int in
  * @param out_fd このコマンドが書き込むべき出力ファイルディスクリプタ
  * @return pid_t 子プロセスのPID、またはビルトイン用のステータス
  */
-static pid_t	execute_simple_command(t_command_invocation *cmd, char **envp, int in_fd, int out_fd, t_data data)
+static pid_t	execute_simple_command(t_command_invocation *cmd, char **envp, int in_fd, int out_fd, t_data data, int *status)
 {
 	pid_t	pid;
 
@@ -271,7 +271,8 @@ static pid_t	execute_simple_command(t_command_invocation *cmd, char **envp, int 
 	// パイプがなく、かつcd, export, unset, exitのような親プロセスで実行すべきビルトインの場合
 	if (in_fd == STDIN_FILENO && out_fd == STDOUT_FILENO && is_special_builtin(cmd->exec_and_args[0]))
 	{
-		return (execute_builtin(cmd, data));
+		*status = execute_builtin(cmd, data);
+		return (0);
 	}
 
 	pid = fork();
@@ -314,7 +315,7 @@ static int	execute_pipeline(t_command_invocation *cmd_list, char **envp, t_data 
 				return (1); // エラー
 			}
 			// コマンドを実行（入力はin_fd, 出力はpipe_fd[1]）
-			last_pid = execute_simple_command(current_cmd, envp, in_fd, pipe_fd[1], data);
+			last_pid = execute_simple_command(current_cmd, envp, in_fd, pipe_fd[1], data, &status);
 			close(pipe_fd[1]); // 子プロセスが複製したので親は不要
 			if (in_fd != STDIN_FILENO)
 				close(in_fd); // 前のパイプの読み取り口を閉じる
@@ -323,7 +324,7 @@ static int	execute_pipeline(t_command_invocation *cmd_list, char **envp, t_data 
 		else // パイプラインの最後のコマンド
 		{
 			// コマンドを実行（入力はin_fd, 出力は標準出力）
-			last_pid = execute_simple_command(current_cmd, envp, in_fd, STDOUT_FILENO, data);
+			last_pid = execute_simple_command(current_cmd, envp, in_fd, STDOUT_FILENO, data, &status);
 			if (in_fd != STDIN_FILENO)
 				close(in_fd);
 		}

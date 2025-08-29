@@ -49,11 +49,31 @@ void	set_home_or_target_path(char *path, \
 	}
 }
 
-void	set_target_path(t_data *data, \
-	char *path, char **target_path, int *result)
+size_t	count_args(char **args)
+{
+	size_t	i;
+
+	i = 0;
+	if (!args)
+		return (0);
+	while(args[i])
+		i++;
+	return (i);
+}
+
+char	*set_target_path(t_data *data, \
+	char **args, char **target_path, int *result)
 {
 	t_env	*env_buf;
+	char	*path;
 
+	if (count_args(args) > 2)
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		path = NULL;
+		*result = 1;
+	}
+	path = args[1];
 	if (path == NULL)
 		set_home_or_target_path(path, target_path, result, 0);
 	else if (*path == '~')
@@ -71,13 +91,15 @@ void	set_target_path(t_data *data, \
 	}
 	else
 		*target_path = path;
+	return (path);
 }
 
-int	ft_cd(t_data *data, char *path)
+int	ft_cd(t_data *data, char **args)
 {
 	char	*old_path;
 	char	*target_path;
 	int		result;
+	char	*path;
 
 	result = 0;
 	old_path = getcwd(NULL, 0);
@@ -86,7 +108,7 @@ int	ft_cd(t_data *data, char *path)
 		perror("cd: getcwd");
 		return (1);
 	}
-	set_target_path(data, path, &target_path, &result);
+	path = set_target_path(data, args, &target_path, &result);
 	if (result == 0 && chdir(target_path) != 0)
 	{
 		perror("cd");
