@@ -1,5 +1,7 @@
 #include "lexer_parser.h"
 
+extern volatile __sig_atomic_t	g_status;
+
 static int	get_var_name_length(const char *str)
 {
 	int	len;
@@ -38,12 +40,23 @@ static int	calculate_expanded_length(const char *str, t_env *env_list)
 	int		i;
 	int		var_name_len;
 	char	*env_value;
+	char	*status_str;
 
 	total_len = 0;
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && str[i + 1] && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
+		if (str[i] == '$' && str[i + 1] == '?')
+		{
+			status_str = ft_itoa(g_status);
+			if (status_str)
+			{
+				total_len += ft_strlen(status_str);
+				free(status_str);
+			}
+			i += 2;
+		}
+		else if (str[i] == '$' && str[i + 1] && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
 		{
 			var_name_len = get_var_name_length(&str[i + 1]);
 			env_value = get_env_value(&str[i + 1], var_name_len, env_list);
@@ -71,6 +84,7 @@ char	*expand_variables(const char *str, t_env *env_list)
 	int		j;
 	int		var_name_len;
 	int		env_value_len;
+	char	*status_str;
 
 	if (!str)
 		return (NULL);
@@ -81,7 +95,18 @@ char	*expand_variables(const char *str, t_env *env_list)
 	j = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && str[i + 1] && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
+		if (str[i] == '$' && str[i + 1] == '?')
+		{
+			status_str = ft_itoa(g_status);
+			if (status_str)
+			{
+				ft_strcpy(&result[j], status_str);
+				j += ft_strlen(status_str);
+				free(status_str);
+			}
+			i += 2;
+		}
+		else if (str[i] == '$' && str[i + 1] && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
 		{
 			var_name_len = get_var_name_length(&str[i + 1]);
 			env_value = get_env_value(&str[i + 1], var_name_len, env_list);
@@ -107,11 +132,13 @@ char	*expand_variables(const char *str, t_env *env_list)
 
 char	*expand_token_value(const char *value, t_token_type type, t_env *env_list)
 {
+	char	*result;
+
 	if (!value)
 		return (NULL);
 	if (type == NON_EXPANDABLE)
 	{
-		char *result = malloc(ft_strlen(value) + 1);
+		result = malloc(ft_strlen(value) + 1);
 		if (!result)
 			return (NULL);
 		ft_strcpy(result, value);

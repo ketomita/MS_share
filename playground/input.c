@@ -1,12 +1,19 @@
 #include "execute.h"
 
+extern volatile sig_atomic_t g_status;
+
+static void	set_status(int status)
+{
+	g_status = status;
+}
+
 static void	handle_sigint(int signo)
 {
-	(void)signo;
 	write(STDOUT_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
+	set_status(128 + signo);
 }
 
 void	set_signal_handler(void)

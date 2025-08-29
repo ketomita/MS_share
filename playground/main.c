@@ -1,6 +1,8 @@
 #include "lexer_parser.h"
 #include "execute.h"
 
+volatile sig_atomic_t g_status;
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*input;
@@ -17,6 +19,8 @@ int	main(int argc, char **argv, char **envp)
 		printf("環境変数の初期化に失敗しました\n");
 		return (1);
 	}
+
+	g_status = 0;
 
 	set_signal_handler();
 
@@ -77,7 +81,7 @@ int	main(int argc, char **argv, char **envp)
 				data.cmd = cmd;
 				data.input = input;
 				data.tokens = tokens;
-				execute_ast(cmd, envp, data);
+				g_status = execute_ast(cmd, envp, data);
 				free_command_invocation(cmd);
 			}
 
