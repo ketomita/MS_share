@@ -25,5 +25,6 @@ char		*ft_strndup(const char *s1, size_t n);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 char		**ft_split(char *str, char c);
 char		*ft_itoa(int n);
+size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize);
 
 #endif

@@ -1,18 +1,6 @@
 #include "builtin.h"
 
-static void	ft_putstr(const char *s)
-{
-	size_t	len;
-
-	if (!s)
-		return ;
-	len = 0;
-	while (s[len] != '\0')
-		len++;
-	write(1, s, len);
-}
-
-static int	check_opt(const char **str)
+static int	check_opt(char **str)
 {
 	int	i;
 
@@ -22,7 +10,7 @@ static int	check_opt(const char **str)
 	return (i);
 }
 
-int	ft_echo(const char **str)
+int	ft_echo(char **str)
 {
 	int		start;
 	int		i;
@@ -31,12 +19,12 @@ int	ft_echo(const char **str)
 	i = start;
 	while (str[i])
 	{
-		ft_putstr(str[i]);
+		ft_putstr_fd(str[i], STDOUT_FILENO);
 		if (str[i + 1])
-			write(1, " ", 1);
+			write(1, " ", STDOUT_FILENO);
 		i++;
 	}
 	if (start == 0)
-		write(1, "\n", 1);
+		write(1, "\n", STDOUT_FILENO);
 	return (0);
 }

@@ -54,7 +54,7 @@ int	dispatch_builtin(char **args, t_data data)
 
 	cmd = args[0];
 	if (ft_strcmp(cmd, "echo") == 0)
-		return (ft_echo((const char **)(args + 1)));
+		return (ft_echo(args + 1));
 	if (ft_strcmp(cmd, "cd") == 0)
 		return (ft_cd(&data, args));
 	if (ft_strcmp(cmd, "pwd") == 0)
@@ -215,10 +215,7 @@ static int	execute_builtin(t_command_invocation *cmd, t_data data)
 
 static void ft_put_execve_error(char *str)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd(": ", 2);
-	perror(NULL);
+	perror(str);
 	exit(127);
 }
 

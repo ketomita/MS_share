@@ -18,7 +18,7 @@ t_cmd_redirection	*create_redirection(t_redirect_type type, const char *file_pat
 			free(redir);
 			return (NULL);
 		}
-		ft_strcpy(redir->file_path, file_path);
+		ft_strlcpy(redir->file_path, file_path, ft_strlen(file_path) + 1);
 	}
 	else
 		redir->file_path = NULL;
@@ -209,10 +209,24 @@ static t_command_invocation	*convert_simple_command(t_ast *ast, t_env *env_list)
 	return (cmd);
 }
 
+// 修正箇所　連続パイプの対応
+static t_command_invocation	*find_last_command(t_command_invocation *cmd)
+{
+	t_command_invocation	*current;
+
+	if (!cmd)
+		return (NULL);
+	current = cmd;
+	while (current->piped_command)
+		current = current->piped_command;
+	return (current);
+}
+
 t_command_invocation	*ast_to_command_invocation(t_ast *ast, t_env *env_list)
 {
 	t_command_invocation	*cmd;
 	t_command_invocation	*piped_cmd;
+	t_command_invocation	*last_cmd;
 
 	if (!ast)
 		return (NULL);
@@ -228,7 +242,8 @@ t_command_invocation	*ast_to_command_invocation(t_ast *ast, t_env *env_list)
 			free_command_invocation(cmd);
 			return (NULL);
 		}
-		cmd->piped_command = piped_cmd;
+		last_cmd = find_last_command(cmd);
+		last_cmd->piped_command = piped_cmd;
 		return (cmd);
 	}
 

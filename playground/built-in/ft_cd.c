@@ -1,5 +1,20 @@
 #include "builtin.h"
 
+static void	put_error_message(int *result, t_error_type type)
+{
+	if (type == HOME)
+		ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
+	else if (type == ARGS)
+		ft_putstr_fd("minishell: cd: too many arguments\n", STDERR_FILENO);
+	else if (type == OLDPWD)
+		ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
+	else if (type == GETCWD)
+		perror("cd: getcwd");
+	else if (type == CHDIR)
+		perror("cd: chdir");
+	*result = 1;
+}
+
 static int	change_pwd_oldpwd(t_data *data, char *old_path)
 {
 	char	*pwd;
@@ -22,7 +37,7 @@ static int	change_pwd_oldpwd(t_data *data, char *old_path)
 	return (0);
 }
 
-void	set_home_or_target_path(char *path, \
+static void	set_home_or_target_path(char *path, \
 	char **target_path, int *result, int mode)
 {
 	char	*home_path;
@@ -31,37 +46,19 @@ void	set_home_or_target_path(char *path, \
 	{
 		*target_path = getenv("HOME");
 		if (!(*target_path))
-		{
-			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
-			*result = 1;
-		}
+			put_error_message(result, HOME);
 	}
 	else if (mode == 1)
 	{
 		home_path = getenv("HOME");
 		if (!home_path)
-		{
-			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
-			*result = 1;
-		}
+			put_error_message(result, HOME);
 		else
 			*target_path = ft_strjoin(home_path, path + 1);
 	}
 }
 
-size_t	count_args(char **args)
-{
-	size_t	i;
-
-	i = 0;
-	if (!args)
-		return (0);
-	while(args[i])
-		i++;
-	return (i);
-}
-
-char	*set_target_path(t_data *data, \
+static char	*set_target_path(t_data *data, \
 	char **args, char **target_path, int *result)
 {
 	t_env	*env_buf;
@@ -69,9 +66,8 @@ char	*set_target_path(t_data *data, \
 
 	if (count_args(args) > 2)
 	{
-		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		put_error_message(result, ARGS);
 		path = NULL;
-		*result = 1;
 	}
 	path = args[1];
 	if (path == NULL)
@@ -82,10 +78,7 @@ char	*set_target_path(t_data *data, \
 	{
 		env_buf = find_env_node(data->env_head, "OLDPWD");
 		if (!env_buf)
-		{
-			ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
-			*result = 1;
-		}
+			put_error_message(result, OLDPWD);
 		else
 			*target_path = env_buf->value;
 	}
@@ -104,16 +97,10 @@ int	ft_cd(t_data *data, char **args)
 	result = 0;
 	old_path = getcwd(NULL, 0);
 	if (!old_path)
-	{
-		perror("cd: getcwd");
-		return (1);
-	}
+		put_error_message(&result, GETCWD);
 	path = set_target_path(data, args, &target_path, &result);
 	if (result == 0 && chdir(target_path) != 0)
-	{
-		perror("cd");
-		result = 1;
-	}
+		put_error_message(&result, CHDIR);
 	if (result == 0 && change_pwd_oldpwd(data, old_path))
 		result = 1;
 	free(old_path);

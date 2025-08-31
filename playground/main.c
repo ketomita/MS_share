@@ -1,14 +1,13 @@
 #include "lexer_parser.h"
 #include "execute.h"
 
-volatile sig_atomic_t g_status;
+volatile sig_atomic_t	g_status;
 
 int	main(int argc, char **argv, char **envp)
 {
 	char	*input;
 	t_token	*tokens;
 	t_ast	*ast;
-	size_t	len;
 	t_data	data;
 
 	(void)argc;
@@ -22,15 +21,13 @@ int	main(int argc, char **argv, char **envp)
 
 	g_status = 0;
 
-	set_signal_handler();
-
 	// printf("Lexer & Parser Test Program with Variable Expansion\n");
 	// printf("Enter a command (or press Ctrl+D to exit):\n");
 
 	input = NULL;
-	len = 0;
 	while (1)
 	{
+		set_signal_handler();
 		input = readline_input();
 		if (input == NULL)
 			break;

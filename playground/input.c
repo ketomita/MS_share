@@ -48,7 +48,7 @@ char	*readline_input(void)
 	if (line == NULL)
 	{
 		write(STDOUT_FILENO, "exit\n", 5);
-		return (NULL);
+		exit(g_status);
 	}
 	if (ft_strlen(line) > 0)
 		add_history(line);

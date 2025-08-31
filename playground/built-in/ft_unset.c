@@ -1,6 +1,6 @@
 #include "builtin.h"
 
-t_env	*find_prev_node(t_env *head, t_env *target_node)
+static t_env	*find_prev_node(t_env *head, t_env *target_node)
 {
 	t_env	*current;
 
@@ -12,7 +12,7 @@ t_env	*find_prev_node(t_env *head, t_env *target_node)
 	return (current);
 }
 
-void	free_env_node(t_env *node)
+static void	free_env_node(t_env *node)
 {
 	if (!node)
 		return ;
