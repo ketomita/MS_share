@@ -42,8 +42,8 @@ static void	correct_args_exit(t_data *data, char **args, int arg_count)
 
 	if (arg_count == 1)
 	{
-		free_all_resources(data); // 環境変数や履歴などを全て解放
-		// exit(g_last_exit_status); // グローバル変数やdata構造体で保持している最後の終了ステータス
+		free_all_resources(data);
+		exit(g_status);
 		exit (0);
 	}
 	if (arg_count == 2)

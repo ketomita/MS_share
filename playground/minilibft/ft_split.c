@@ -27,7 +27,7 @@ static int	word_count(char c, char *str)
 
 static void	ft_allfree(char **p, size_t i)
 {
-	while (0 <= i)
+	while (0 < i)
 	{
 		free(p[i]);
 		i--;

@@ -13,31 +13,33 @@ static int	print_env_list(t_env *head)
 	return (0);
 }
 
-static int	is_valid_identifier(const char *name, char *var, char *value)
+static int	is_valid_identifier(const char *name)
 {
-	if (!name || (!ft_isalpha(*name) && *name != '_'))
+	const char	*p;
+
+	p = name;
+	if (!p || (!ft_isalpha(*p) && *p != '_'))
+		return (0);
+	p++;
+	while (*p)
+	{
+		if (!ft_isalnum(*p) && *p != '_')
+			return (0);
+		p++;
+	}
+	return (1);
+}
+
+static int	put_error_and_free(char *name, char *value, char *var)
+{
+	if (var)
 	{
 		ft_putstr_fd("export: `", 2);
 		ft_putstr_fd(var, 2);
 		ft_putstr_fd("': not a valid identifier\n", 2);
-		free((char *)name);
-		free(value);
-		return (0);
 	}
-	name++;
-	while (*name)
-	{
-		if (!ft_isalnum(*name) && *name != '_')
-		{
-			ft_putstr_fd("export: `", 2);
-			ft_putstr_fd(var, 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-			free((char *)name);
-			free(value);
-			return (0);
-		}
-		name++;
-	}
+	free(name);
+	free(value);
 	return (1);
 }
 
@@ -77,8 +79,6 @@ int	ft_export(t_data *data, char *var)
 
 	if (!var)
 		return (print_env_list(data->env_head));
-	name = NULL;
-	value = NULL;
 	eq_ptr = ft_strchr(var, '=');
 	if (eq_ptr)
 	{
@@ -86,14 +86,13 @@ int	ft_export(t_data *data, char *var)
 		value = ft_strdup(eq_ptr + 1);
 	}
 	else
-		name = ft_strdup(var);
-	if (!name || (eq_ptr && !value))
 	{
-		free(name);
-		free(value);
-		return (1);
+		name = ft_strdup(var);
+		value = NULL;
 	}
-	if (!is_valid_identifier(name, var, value))
-		return (1);
+	if (!name || (eq_ptr && !value))
+		return (put_error_and_free(name, value, NULL));
+	if (!is_valid_identifier(name))
+		return (put_error_and_free(name, value, var));
 	return (update_or_add_env(data, name, value));
 }

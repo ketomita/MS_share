@@ -1,7 +1,5 @@
 #include "lexer_parser.h"
 
-extern volatile __sig_atomic_t	g_status;
-
 static int	get_var_name_length(const char *str)
 {
 	int	len;

@@ -7,8 +7,11 @@
 # include <string.h>
 # include <stdbool.h>
 # include <sys/types.h>
+# include <signal.h>
 
 # include "./minilibft/minilibft.h"
+
+extern volatile sig_atomic_t g_status;
 
 typedef enum e_token_type {
 	EXPANDABLE,         // 通常の文字列

@@ -1,6 +1,6 @@
 #include "execute.h"
 
-extern volatile sig_atomic_t g_status;
+
 
 static void	set_status(int status)
 {
