@@ -9,6 +9,7 @@ int	main(int argc, char **argv, char **envp)
 	t_token	*tokens;
 	t_ast	*ast;
 	t_data	data;
+	char	*full_input;
 
 	(void)argc;
 	(void)argv;
@@ -25,18 +26,20 @@ int	main(int argc, char **argv, char **envp)
 	// printf("Enter a command (or press Ctrl+D to exit):\n");
 
 	input = NULL;
+	set_signal_handler();
+
 	while (1)
 	{
-		set_signal_handler();
 		input = readline_input();
 		if (input == NULL)
 			break;
-		if (input[ft_strlen(input) - 1] == '\n')
-			input[ft_strlen(input) - 1] = '\0';
-
+		full_input = handle_multiline_input(input);
+		free(input);
+		input = full_input;
 		if (ft_strlen(input) == 0)
 		{
 			// printf("Enter a command (or press Ctrl+D to exit):\n");
+			free(input);
 			continue;
 		}
 
@@ -87,11 +90,10 @@ int	main(int argc, char **argv, char **envp)
 
 		free_tokens(tokens);
 		// printf("\nEnter a command (or press Ctrl+D to exit):\n");
+		free(input);
 	}
-
-	free(input);
 	free_env_list(data.env_head);
 	rl_clear_history();
 	// printf("\nGoodbye!\n");
-	return (0);
+	return (g_status);
 }

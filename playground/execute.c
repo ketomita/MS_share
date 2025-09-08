@@ -152,6 +152,34 @@ static char	*find_command_path(char *cmd, char **envp)
 	return (prepare_cmd_path(cmd, paths));
 }
 
+static int	handle_heredoc(const char *delimiter)
+{
+	int		pipe_fd[2];
+	char	*line;
+
+	if (pipe(pipe_fd) == -1)
+	{
+		perror("pipe");
+		return (-1);
+	}
+	// 親プロセスが子プロセスの終了を待つ必要はないため、forkは不要
+	// readlineを直接使う
+	while (1)
+	{
+		line = readline("> ");
+		if (!line || ft_strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break;
+		}
+		write(pipe_fd[1], line, ft_strlen(line));
+		write(pipe_fd[1], "\n", 1);
+		free(line);
+	}
+	close(pipe_fd[1]); // 書き込み側を閉じる
+	return (pipe_fd[0]); // 読み込み側のfdを返す
+}
+
 /**
  * @brief リダイレクトを適用する
  */
@@ -163,7 +191,10 @@ static int	apply_redirections(t_command_invocation *cmd)
 	redir = cmd->input_redirections;
 	while (redir)
 	{
-		fd = open(redir->file_path, O_RDONLY);
+		if (redir->type == REDIR_HEREDOC)
+			fd = handle_heredoc(redir->file_path);
+		else
+			fd = open(redir->file_path, O_RDONLY);
 		if (fd == -1)
 		{
 			perror(redir->file_path);
