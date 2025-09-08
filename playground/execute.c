@@ -426,6 +426,11 @@ static int	execute_pipeline(t_command_invocation *cmd_list, char **envp, t_data 
 	}
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
+	else if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGPIPE)
+			ft_putstr_fd("Broken pipe\n", STDERR_FILENO);
+	}
 	return (status); // シグナル終了などの場合
 }
 
