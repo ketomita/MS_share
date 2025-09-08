@@ -36,6 +36,9 @@ int	main(int argc, char **argv, char **envp)
 		full_input = handle_multiline_input(input);
 		free(input);
 		input = full_input;
+
+		if (input == NULL)
+			continue;
 		if (ft_strlen(input) == 0)
 		{
 			// printf("Enter a command (or press Ctrl+D to exit):\n");
@@ -50,6 +53,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			printf("Tokenization failed!\n");
 			printf("Enter a command (or press Ctrl+D to exit):\n");
+			free(input);
 			continue;
 		}
 
@@ -60,6 +64,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!ast)
 		{
 			printf("Parsing failed!\n");
+			free(input);
 		}
 		else
 		{
@@ -72,6 +77,7 @@ int	main(int argc, char **argv, char **envp)
 			if (!cmd)
 			{
 				printf("AST to command_invocation conversion failed!\n");
+				free(input);
 			}
 			else
 			{

@@ -152,9 +152,34 @@ static char	*find_command_path(char *cmd, char **envp)
 	return (prepare_cmd_path(cmd, paths));
 }
 
+void	set_parent_signal_handlers(void)
+{
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	{
+		perror("sigemptyset");
+		exit(EXIT_FAILURE);
+	}
+	sa.sa_flags = 0;
+	sa.sa_handler = SIG_IGN; // シグナルを無視する
+	if (sigaction(SIGINT, &sa, NULL) == -1)
+	{
+		perror("sigaction");
+		exit(EXIT_FAILURE);
+	}
+	if (sigaction(SIGQUIT, &sa, NULL) == -1)
+	{
+		perror("sigaction");
+		exit(EXIT_FAILURE);
+	}
+}
+
 static int	handle_heredoc(const char *delimiter)
 {
 	int		pipe_fd[2];
+	pid_t	pid;
+	int		status;
 	char	*line;
 
 	if (pipe(pipe_fd) == -1)
@@ -162,22 +187,54 @@ static int	handle_heredoc(const char *delimiter)
 		perror("pipe");
 		return (-1);
 	}
-	// 親プロセスが子プロセスの終了を待つ必要はないため、forkは不要
-	// readlineを直接使う
-	while (1)
+	pid = fork();
+	if (pid == -1)
 	{
-		line = readline("> ");
-		if (!line || ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			break;
-		}
-		write(pipe_fd[1], line, ft_strlen(line));
-		write(pipe_fd[1], "\n", 1);
-		free(line);
+		perror("fork");
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		return (-1);
 	}
-	close(pipe_fd[1]); // 書き込み側を閉じる
-	return (pipe_fd[0]); // 読み込み側のfdを返す
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_IGN);
+
+		close(pipe_fd[0]);
+		while (1)
+		{
+			line = readline("> ");
+			if (!line || ft_strcmp(line, delimiter) == 0)
+			{
+				free(line);
+				break;
+			}
+			write(pipe_fd[1], line, ft_strlen(line));
+			write(pipe_fd[1], "\n", 1);
+			free(line);
+		}
+		close(pipe_fd[1]);
+		exit(0);
+	}
+
+	set_parent_signal_handlers();
+
+	close(pipe_fd[1]);
+	waitpid(pid, &status, 0);
+
+	set_signal_handler(); //シグナル設定を元に戻す
+
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+		{
+			g_status = 130;
+			close(pipe_fd[0]);
+			write(STDOUT_FILENO, "\n", 1);
+			return (-1);
+		}
+	}
+	return (pipe_fd[0]);
 }
 
 /**
