@@ -1,6 +1,6 @@
 #include "builtin.h"
 
-size_t	count_args(char **args)
+size_t	count_builtin_args(char **args)
 {
 	size_t	i;
 

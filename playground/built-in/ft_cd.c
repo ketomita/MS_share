@@ -64,7 +64,7 @@ static char	*set_target_path(t_data *data, \
 	t_env	*env_buf;
 	char	*path;
 
-	if (count_args(args) > 2)
+	if (count_builtin_args(args) > 2)
 	{
 		put_error_message(result, ARGS);
 		path = NULL;

@@ -64,7 +64,7 @@ int	ft_exit(t_data *data, char **args)
 	int			arg_count;
 
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
-	arg_count = count_args(args);
+	arg_count = count_builtin_args(args);
 	correct_args_exit(data, args, arg_count);
 	if (arg_count > 2)
 	{

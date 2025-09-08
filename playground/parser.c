@@ -72,7 +72,7 @@ static t_ast	*parse_redirection(t_parser *parser)
 		free_ast(redirect_node);
 		return (NULL);
 	}
-	redirect_node->right = file_node;
+	redirect_node->left = file_node;
 	advance_token(parser);
 	return (redirect_node);
 }

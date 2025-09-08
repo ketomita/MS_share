@@ -102,11 +102,6 @@ static int	count_args(t_ast *node)
 		if (node->type == EXPANDABLE || node->type == EXPANDABLE_QUOTED || 
 			node->type == NON_EXPANDABLE)
 			count++;
-		else if (is_redirect_token(node->type))
-		{
-			if (node->right)
-				node = node->right;
-		}
 		node = node->right;
 	}
 	return (count);
@@ -140,11 +135,6 @@ static const char	**create_args_array(t_ast *node, t_env *env_list)
 			args[i] = expanded_value;
 			i++;
 		}
-		else if (is_redirect_token(node->type))
-		{
-			if (node->right)
-				node = node->right;
-		}
 		node = node->right;
 	}
 	args[i] = NULL;
@@ -162,9 +152,9 @@ static void	process_redirections(t_ast *node, t_command_invocation *cmd, t_env *
 		if (is_redirect_token(node->type))
 		{
 			redir_type = token_to_redirect_type(node->type);
-			if (node->right && node->right->value)
+			if (node->left && node->left->value)
 			{
-				expanded_path = expand_token_value(node->right->value, node->right->type, env_list);
+				expanded_path = expand_token_value(node->left->value, node->left->type, env_list);
 				if (expanded_path)
 				{
 					redir = create_redirection(redir_type, expanded_path);
@@ -178,8 +168,6 @@ static void	process_redirections(t_ast *node, t_command_invocation *cmd, t_env *
 					}
 				}
 			}
-			if (node->right)
-				node = node->right;
 		}
 		node = node->right;
 	}
