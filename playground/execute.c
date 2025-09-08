@@ -156,7 +156,8 @@ void	set_parent_signal_handlers(void)
 {
 	struct sigaction	sa;
 
-	sigemptyset(&sa.sa_mask);
+
+	if (sigemptyset(&sa.sa_mask) != 0)
 	{
 		perror("sigemptyset");
 		exit(EXIT_FAILURE);
