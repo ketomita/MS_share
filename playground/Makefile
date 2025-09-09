@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror
 
 LIBS = -lreadline
 
@@ -14,7 +14,7 @@ BUILT-IN_A = $(BUILT-IN)/built-in.a
 ENVLIST = ./envlist
 ENVLIST_A = $(ENVLIST)/envlist.a
 
-SRCS = input.c execute.c lexer.c main.c parser.c command_execution.c expander.c
+SRCS = input.c execute.c lexer.c main.c parser.c command_execution.c expander.c redirection.c signal.c path.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

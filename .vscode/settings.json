@@ -3,6 +3,9 @@
 		"minilibft.h": "c",
 		"builtin.h": "c",
 		"envlist.h": "c",
-		"lexer_parser.h": "c"
+		"lexer_parser.h": "c",
+		"execute.h": "c",
+		"redirection.h": "c",
+		"signal.h": "c"
 	}
 }
