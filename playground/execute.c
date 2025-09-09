@@ -163,7 +163,7 @@ void	set_parent_signal_handlers(void)
 		exit(EXIT_FAILURE);
 	}
 	sa.sa_flags = 0;
-	sa.sa_handler = SIG_IGN; // シグナルを無視する
+	sa.sa_handler = SIG_IGN;
 	if (sigaction(SIGINT, &sa, NULL) == -1)
 	{
 		perror("sigaction");
@@ -229,7 +229,7 @@ static int	handle_heredoc(const char *delimiter)
 	{
 		if (WTERMSIG(status) == SIGINT)
 		{
-			g_status = 130;
+			// g_status = 130;
 			close(pipe_fd[0]);
 			write(STDOUT_FILENO, "\n", 1);
 			return (-1);
@@ -286,9 +286,9 @@ static int	apply_redirections(t_command_invocation *cmd)
  */
 static int	execute_builtin(t_command_invocation *cmd, t_data data)
 {
-	int	stdin_backup;
-	int	stdout_backup;
-	int	result;
+	int stdin_backup;
+	int stdout_backup;
+	int result;
 
 	stdin_backup = dup(STDIN_FILENO);
 	stdout_backup = dup(STDOUT_FILENO);
@@ -314,6 +314,11 @@ static void ft_put_execve_error(char *str)
 static void	execute_child_process(t_command_invocation *cmd, char **envp, int in_fd, int out_fd, t_data data)
 {
 	char	*path;
+
+	// 子プロセスではシグナルをデフォルトの動作に戻す
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGPIPE, SIG_DFL);
 
 	if (in_fd != STDIN_FILENO)
 	{
@@ -342,96 +347,125 @@ static void	execute_child_process(t_command_invocation *cmd, char **envp, int in
 }
 
 /**
- * @brief 単一コマンドを適切な方法（親or子プロセス）で実行する
- * @param in_fd このコマンドが読み込むべき入力ファイルディスクリプタ
- * @param out_fd このコマンドが書き込むべき出力ファイルディスクリプタ
- * @return pid_t 子プロセスのPID、またはビルトイン用のステータス
- */
-static pid_t	execute_simple_command(t_command_invocation *cmd, char **envp, int in_fd, int out_fd, t_data data, int *status)
-{
-	pid_t	pid;
-
-	if (!cmd || !cmd->exec_and_args || !cmd->exec_and_args[0])
-		return (0);
-
-	// パイプがなく、かつcd, export, unset, exitのような親プロセスで実行すべきビルトインの場合
-	if (in_fd == STDIN_FILENO && out_fd == STDOUT_FILENO && is_special_builtin(cmd->exec_and_args[0]))
-	{
-		*status = execute_builtin(cmd, data);
-		return (0);
-	}
-
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		return (-1);
-	}
-	if (pid == 0) // 子プロセス
-	{
-		execute_child_process(cmd, envp, in_fd, out_fd, data);
-	}
-
-	return (pid);
-}
-
-/**
  * @brief パイプライン全体を処理する
+ * @note ファイルディスクリプタ管理を修正し、デッドロックを回避
  */
 static int	execute_pipeline(t_command_invocation *cmd_list, char **envp, t_data data)
 {
 	int						status;
 	int						pipe_fd[2];
 	int						in_fd;
-	pid_t					last_pid;
+	pid_t					pid;
 	t_command_invocation	*current_cmd;
+	pid_t					last_pid;
+	int						cmd_count;
+	pid_t					*pids;
+	int						i;
+
+	// パイプがなく、かつcd, export, unset, exitのような親プロセスで実行すべきビルトインの場合
+	if (cmd_list && !cmd_list->piped_command && is_special_builtin(cmd_list->exec_and_args[0]))
+	{
+		return (execute_builtin(cmd_list, data));
+	}
+
+	// コマンドの数を数える
+	cmd_count = 0;
+	current_cmd = cmd_list;
+	while(current_cmd)
+	{
+		cmd_count++;
+		current_cmd = current_cmd->piped_command;
+	}
+	pids = malloc(sizeof(pid_t) * cmd_count);
+	if (!pids)
+	{
+		perror("malloc");
+		return (1);
+	}
 
 	status = 0;
-	in_fd = STDIN_FILENO; // 最初のコマンドの入力は標準入力
+	in_fd = STDIN_FILENO;
 	last_pid = -1;
 	current_cmd = cmd_list;
+	i = 0;
 	while (current_cmd)
 	{
-		// 次のコマンドがある場合（パイプが必要な場合）
+		int out_fd = STDOUT_FILENO;
 		if (current_cmd->piped_command)
 		{
 			if (pipe(pipe_fd) == -1)
 			{
 				perror("pipe");
-				return (1); // エラー
+				free(pids);
+				return (1);
 			}
-			// コマンドを実行（入力はin_fd, 出力はpipe_fd[1]）
-			last_pid = execute_simple_command(current_cmd, envp, in_fd, pipe_fd[1], data, &status);
-			close(pipe_fd[1]); // 子プロセスが複製したので親は不要
-			if (in_fd != STDIN_FILENO)
-				close(in_fd); // 前のパイプの読み取り口を閉じる
-			in_fd = pipe_fd[0]; // 次のコマンドの入力は今回のパイプの読み取り口
+			out_fd = pipe_fd[1];
 		}
-		else // パイプラインの最後のコマンド
+		pid = fork();
+		if (pid == -1)
 		{
-			// コマンドを実行（入力はin_fd, 出力は標準出力）
-			last_pid = execute_simple_command(current_cmd, envp, in_fd, STDOUT_FILENO, data, &status);
-			if (in_fd != STDIN_FILENO)
-				close(in_fd);
+			perror("fork");
+			// TODO: エラー処理
+			if (out_fd != STDOUT_FILENO) close(out_fd);
+			if (in_fd != STDIN_FILENO) close(in_fd);
+			free(pids);
+			return (1);
 		}
+
+		if (pid == 0) // 子プロセス
+		{
+			if (current_cmd->piped_command)
+				close(pipe_fd[0]);
+			execute_child_process(current_cmd, envp, in_fd, out_fd, data);
+		}
+		pids[i++] = pid;
+		last_pid = pid;
+		if (in_fd != STDIN_FILENO)
+			close(in_fd);
+		if (out_fd != STDOUT_FILENO)
+			close(out_fd);
+
+		if (current_cmd->piped_command)
+			in_fd = pipe_fd[0];
+
 		current_cmd = current_cmd->piped_command;
 	}
-	// 最後の子プロセスの終了を待ち、そのステータスを取得
-	if (last_pid > 0)
+
+	i = 0;
+	while (i < cmd_count)
 	{
-		waitpid(last_pid, &status, 0);
-		// 他のすべての子プロセスを待つ（ゾンビプロセス防止）
-		while (wait(NULL) != -1 || errno != ECHILD)
-			;
+		int waited_pid;
+		int child_status;
+
+		waited_pid = waitpid(-1, &child_status, 0);
+		if (waited_pid == last_pid)
+			status = child_status;
+		if (waited_pid == -1)
+		{
+			if (errno != ECHILD)
+				perror("waitpid");
+			break;
+		}
+		i++;
 	}
+
+	free(pids);
+
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGPIPE)
+		{
 			ft_putstr_fd("Broken pipe\n", STDERR_FILENO);
+		}
+		else if (WTERMSIG(status) == SIGINT || WTERMSIG(status) == SIGQUIT)
+		{
+			// 親シェル側で改行などを表示するため、ここでは何もしないことも多い
+		}
+		return (128 + WTERMSIG(status));
 	}
-	return (status); // シグナル終了などの場合
+	return (status);
 }
 
 /**
@@ -443,7 +477,24 @@ static int	execute_pipeline(t_command_invocation *cmd_list, char **envp, t_data 
  */
 int	execute_ast(t_command_invocation *cmd_list, char **envp, t_data data)
 {
+	int	status;
+
 	if (!cmd_list)
 		return (0);
-	return (execute_pipeline(cmd_list, envp, data));
+
+	// 子プロセスを待つ間、親はシグナルを無視する設定にする
+	struct sigaction sa_ign, sa_old_int, sa_old_quit;
+	sa_ign.sa_handler = SIG_IGN;
+	sigemptyset(&sa_ign.sa_mask);
+	sa_ign.sa_flags = 0;
+	sigaction(SIGINT, &sa_ign, &sa_old_int);
+	sigaction(SIGQUIT, &sa_ign, &sa_old_quit);
+
+	status = execute_pipeline(cmd_list, envp, data);
+
+	// 親のシグナルハンドラを元に戻す
+	sigaction(SIGINT, &sa_old_int, NULL);
+	sigaction(SIGQUIT, &sa_old_quit, NULL);
+
+	return (status);
 }

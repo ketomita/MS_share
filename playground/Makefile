@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g
 
 LIBS = -lreadline
 
