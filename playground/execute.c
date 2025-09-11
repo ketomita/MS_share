@@ -111,64 +111,69 @@ static void	execute_child_process(t_command_invocation *cmd, \
 			free(path);
 		}
 		perror((char *)cmd->exec_and_args[0]);
-		exit(127);
+		exit(COMMAND_NOT_FOUND);
 	}
 }
 
-static void	test()
+static int	prepare_pipe(t_fds *fds, pid_t *pids)
 {
+	if (pipe(fds->pipe_fd) == -1)
+	{
+		perror("pipe");
+		free(pids);
+		return (-1);
+	}
+	fds->out_fd = fds->pipe_fd[1];
+	return (0);
+}
 
+static int	put_fork_error(t_fds fds, pid_t *pids)
+{
+	perror("fork");
+	// TODO: エラー処理
+	set_close_fd(fds, PARENTS);
+	free(pids);
+	return (-1);
+}
+
+static void	prepro_execute_child_process(t_fds fds, \
+			t_command_invocation *current_cmd, char **envp, t_data data)
+{
+	if (current_cmd->piped_command)
+		close(fds.pipe_fd[0]);
+	set_default_signal();
+	set_close_fd(fds, CHILDREN);
+	execute_child_process(current_cmd, envp, data);
 }
 
 static pid_t	execute_current_cmd(t_command_invocation *current_cmd, \
 				pid_t *pids, char **envp, t_data data)
 {
 	t_fds	fds;
-	pid_t	last_pid;
 	int		i;
 	pid_t	pid;
 
 	i = 0;
 	fds.in_fd = STDIN_FILENO;
-	last_pid = -1;
+	if (!current_cmd)
+		return (-1);
 	while (current_cmd)
 	{
-		out_fd = STDOUT_FILENO;
-		if (current_cmd->piped_command)
-		{
-			if (pipe(fds.pipe_fd) == -1)
-			{
-				perror("pipe");
-				free(pids);
-				return (-1);
-			}
-			out_fd = fds.pipe_fd[1];
-		}
+		fds.out_fd = STDOUT_FILENO;
+		if (current_cmd->piped_command && prepare_pipe(&fds, pids))
+			return (-1);
 		pid = fork();
 		if (pid == -1)
-		{
-			perror("fork");
-			// TODO: エラー処理
-			set_close_fd(fds, PARENTS);
-			free(pids);
-			return (-1);
-		}
+			return (put_fork_error(fds, pids));
 		if (pid == 0)
-		{
-			if (current_cmd->piped_command)
-				close(fds.pipe_fd[0]);
-			set_default_signal();
-			set_close_fd(fds, CHILDREN);
-			execute_child_process(current_cmd, envp, data);
-		}
+			prepro_execute_child_process(fds, current_cmd, envp, data);
 		pids[i++] = pid;
-		last_pid = pid;
 		set_close_fd(fds, PARENTS);
 		if (current_cmd->piped_command)
 			fds.in_fd = fds.pipe_fd[0];
 		current_cmd = current_cmd->piped_command;
 	}
-	return (last_pid);
+	return (pid);
 }
 
 static void	wait_children(int cmd_count, int *status, pid_t last_pid)

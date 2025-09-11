@@ -12,6 +12,8 @@
 # include "minilibft.h"
 # include "builtin.h"
 
+# define COMMAND_NOT_FOUND 127
+
 extern volatile sig_atomic_t	g_status;
 
 typedef enum	e_builtin
