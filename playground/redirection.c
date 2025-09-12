@@ -69,7 +69,7 @@ static int	handle_heredoc(const char *delimiter)
 	return (pipe_fd[0]);
 }
 
-static int	apply_redirections_input(t_command_invocation *cmd)
+int	apply_redirections_input(t_command_invocation *cmd)
 {
 	int					fd;
 	t_cmd_redirection	*redir;
@@ -93,7 +93,7 @@ static int	apply_redirections_input(t_command_invocation *cmd)
 	return (0);
 }
 
-static int	apply_redirections_output(t_command_invocation *cmd)
+int	apply_redirections_output(t_command_invocation *cmd)
 {
 	int					fd;
 	t_cmd_redirection	*redir;
@@ -114,14 +114,5 @@ static int	apply_redirections_output(t_command_invocation *cmd)
 		close(fd);
 		redir = redir->next;
 	}
-	return (0);
-}
-
-int	apply_redirections(t_command_invocation *cmd)
-{
-	if (apply_redirections_input(cmd))
-		return (-1);
-	if (apply_redirections_output(cmd))
-		return (-1);
 	return (0);
 }

@@ -17,6 +17,7 @@ int		ft_export(t_data *data, char *var);
 int		ft_unset(t_data *data, char *var);
 
 size_t	count_builtin_args(char **args);
+int		dispatch_builtin(char **args, t_data data);
 
 typedef enum e_error
 {

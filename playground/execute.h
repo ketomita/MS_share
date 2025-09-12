@@ -16,7 +16,7 @@
 
 extern volatile sig_atomic_t	g_status;
 
-typedef enum	e_builtin
+typedef enum e_builtin
 {
 	BUILTIN,
 	BUILTIN_PARENT,
@@ -24,25 +24,38 @@ typedef enum	e_builtin
 	NOR
 }	t_builtin;
 
-typedef enum	e_proctype
+typedef enum e_proctype
 {
 	PARENTS,
 	CHILDREN
 }	t_proctype;
 
-typedef struct	s_fds
+typedef struct s_fds
 {
 	int	in_fd;
 	int	out_fd;
 	int	pipe_fd[2];
 }	t_fds;
 
-int		apply_redirections(t_command_invocation *cmd);
+int		apply_redirections_input(t_command_invocation *cmd);
+int		apply_redirections_output(t_command_invocation *cmd);
 char	*find_command_path(char *cmd, char **envp);
 
 void	set_signal_handler(void);
 void	set_parent_signal_handlers(void);
 
+void	prepro_execute_child_process(t_fds fds, \
+	t_command_invocation *current_cmd, char **envp, t_data data);
+
+int		execute_builtin(t_command_invocation *cmd, t_data data);
+
 char	*readline_input(void);
 int		execute_ast(t_command_invocation *cmd_list, char **envp, t_data data);
+
+pid_t	*prepare_pids(t_command_invocation *current_cmd, int *cmd_count);
+int		check_status(int status);
+void	wait_children(int cmd_count, int *status, pid_t last_pid);
+int		put_fork_error(t_fds fds, pid_t *pids);
+void	set_close_fd(t_fds fds, t_proctype type);
+
 #endif

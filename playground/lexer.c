@@ -188,7 +188,7 @@ static int	handle_concatenated_word(const char *input, int pos, char **value, t_
 		else
 		{
 			start_pos = pos;
-			while (input[pos] && !is_whitespace(input[pos]) 
+			while (input[pos] && !is_whitespace(input[pos])
 				&& !is_special_char(input[pos]) && !is_quote(input[pos]))
 				pos++;
 			temp = ft_substr(input, start_pos, pos - start_pos);
@@ -276,11 +276,11 @@ void	print_tokens(t_token *head)
 {
 	const char	*type_names[] = {
 		"EXPANDABLE",
-		"EXPANDABLE_QUOTED", 
+		"EXPANDABLE_QUOTED",
 		"NON_EXPANDABLE",
 		"PIPE",
 		"REDIRECT_IN",
-		"REDIRECT_OUT", 
+		"REDIRECT_OUT",
 		"REDIRECT_APPEND",
 		"REDIRECT_HEREDOC",
 		"EOF_TOKEN"
@@ -289,10 +289,10 @@ void	print_tokens(t_token *head)
 	while (head)
 	{
 		if (head->value)
-			printf("Type: %-17s Value: %s\n", 
+			printf("Type: %-17s Value: %s\n",
 				type_names[head->type], head->value);
 		else
-			printf("Type: %-17s Value: %s\n", 
+			printf("Type: %-17s Value: %s\n",
 				type_names[head->type], "(null)");
 		head = head->next;
 	}
@@ -308,7 +308,6 @@ static bool	has_unclosed_quote(const char *str)
 	in_single_quote = false;
 	in_double_quote = false;
 	i = 0;
-	
 	while (str[i])
 	{
 		if (str[i] == '\'' && !in_double_quote)
@@ -317,7 +316,6 @@ static bool	has_unclosed_quote(const char *str)
 			in_double_quote = !in_double_quote;
 		i++;
 	}
-	
 	return (in_single_quote || in_double_quote);
 }
 
@@ -330,7 +328,6 @@ char	*handle_multiline_input(const char *initial_input)
 
 	if (!initial_input)
 		return (NULL);
-		
 	result = ft_strdup(initial_input);
 	if (!result)
 		return (NULL);
@@ -342,10 +339,10 @@ char	*handle_multiline_input(const char *initial_input)
 			free(result);
 			return (NULL);
 		}
-		if (strlen(line) == 0)
+		if (ft_strlen(line) == 0)
 		{
 			free(line);
-			continue;
+			continue ;
 		}
 		temp = ft_strjoin(result, "\n");
 		if (!temp)
@@ -355,14 +352,11 @@ char	*handle_multiline_input(const char *initial_input)
 			return (NULL);
 		}
 		free(result);
-		
 		result = ft_strjoin(temp, line);
 		free(temp);
 		free(line);
-		
 		if (!result)
 			return (NULL);
 	}
-	
 	return (result);
 }

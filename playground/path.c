@@ -78,6 +78,18 @@ char	*find_command_path(char *cmd, char **envp)
 			return (ft_strdup(cmd));
 		return (NULL);
 	}
+	if (ft_strcmp(cmd, "./") == 0)
+	{
+		if (access(cmd, X_OK) == 0)
+		{
+			ft_putstr_fd(cmd, 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			return (NULL);
+		}
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+		return (NULL);
+	}
 	if (prepro_cmd_path(envp, &paths))
 		return (NULL);
 	return (prepare_cmd_path(cmd, paths));

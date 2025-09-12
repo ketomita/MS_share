@@ -14,7 +14,9 @@ BUILT-IN_A = $(BUILT-IN)/built-in.a
 ENVLIST = ./envlist
 ENVLIST_A = $(ENVLIST)/envlist.a
 
-SRCS = input.c execute.c lexer.c main.c parser.c command_execution.c expander.c redirection.c signal.c path.c
+SRCS = input.c execute.c lexer.c main.c parser.c command_execution.c \
+		expander.c redirection.c signal.c path.c execute_builtin.c \
+		execute_utils.c execve.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
