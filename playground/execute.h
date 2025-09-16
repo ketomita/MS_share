@@ -7,6 +7,7 @@
 # include <fcntl.h>
 # include <wait.h>
 # include <errno.h>
+# include <sys/stat.h>
 
 # include "lexer_parser.h"
 # include "minilibft.h"
@@ -44,8 +45,8 @@ char	*find_command_path(char *cmd, char **envp);
 void	set_signal_handler(void);
 void	set_parent_signal_handlers(void);
 
-void	prepro_execute_child_process(t_fds fds, \
-	t_command_invocation *current_cmd, char **envp, t_data data);
+void	prepro_execute_child_process(t_fds fds, t_command_invocation *current_cmd, \
+		char **envp, t_data data);
 
 int		execute_builtin(t_command_invocation *cmd, t_data data);
 
@@ -54,8 +55,8 @@ int		execute_ast(t_command_invocation *cmd_list, char **envp, t_data data);
 
 pid_t	*prepare_pids(t_command_invocation *current_cmd, int *cmd_count);
 int		check_status(int status);
-void	wait_children(int cmd_count, int *status, pid_t last_pid);
-int		put_fork_error(t_fds fds, pid_t *pids);
+void	wait_children(int cmd_count, pid_t *pids, int *status, pid_t last_pid);
+int		put_fork_error(pid_t *pids);
 void	set_close_fd(t_fds fds, t_proctype type);
 
 #endif

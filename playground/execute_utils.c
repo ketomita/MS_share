@@ -16,35 +16,19 @@ void	set_close_fd(t_fds fds, t_proctype type)
 	}
 }
 
-int	put_fork_error(t_fds fds, pid_t *pids)
-{
-	perror("fork");
-	// TODO: エラー処理
-	set_close_fd(fds, PARENTS);
-	free(pids);
-	return (-1);
-}
-
-void	wait_children(int cmd_count, int *status, pid_t last_pid)
+int	put_fork_error(pid_t *pids)
 {
 	int	i;
-	int	waited_pid;
-	int	child_status;
 
+	perror("minishell: fork");
 	i = 0;
-	while (i < cmd_count)
+	while (pids[i] != -1)
 	{
-		waited_pid = waitpid(-1, &child_status, 0);
-		if (waited_pid == last_pid)
-			*status = child_status;
-		if (waited_pid == -1)
-		{
-			if (errno != ECHILD)
-				perror("waitpid");
-			break ;
-		}
+		kill(pids[i], SIGKILL);
 		i++;
 	}
+	free(pids);
+	return (-1);
 }
 
 int	check_status(int status)
@@ -55,7 +39,7 @@ int	check_status(int status)
 	{
 		if (WTERMSIG(status) == SIGPIPE)
 		{
-			ft_putstr_fd("Broken pipe\n", STDERR_FILENO);
+			ft_putstr_fd(" Broken pipe\n", STDERR_FILENO);
 		}
 		else if (WTERMSIG(status) == SIGINT || WTERMSIG(status) == SIGQUIT)
 		{
@@ -64,6 +48,33 @@ int	check_status(int status)
 		return (128 + WTERMSIG(status));
 	}
 	return (status);
+}
+
+void	wait_children(int cmd_count, pid_t *pids, int *status, pid_t last_pid)
+{
+	int		i;
+	pid_t	waited_pid;
+	int		child_status;
+
+	i = 0;
+	while (i < cmd_count && pids[i] != -1)
+	{
+		waited_pid = waitpid(pids[i], &child_status, 0);
+		if (waited_pid == -1)
+		{
+			if (errno != ECHILD)
+				perror("waitpid");
+			break ;
+		}
+		if (waited_pid == last_pid)
+			*status = child_status;
+		else
+		{
+			if (WIFSIGNALED(child_status))
+				check_status(child_status);
+		}
+		i++;
+	}
 }
 
 pid_t	*prepare_pids(t_command_invocation *current_cmd, int *cmd_count)

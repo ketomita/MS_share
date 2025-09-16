@@ -21,12 +21,11 @@ static t_builtin	is_builtin(const char *cmd)
 	return (TRANSIENT);
 }
 
-static int	prepare_pipe(t_fds *fds, pid_t *pids)
+static int	prepare_pipe(t_fds *fds)
 {
 	if (pipe(fds->pipe_fd) == -1)
 	{
 		perror("pipe");
-		free(pids);
 		return (-1);
 	}
 	fds->out_fd = fds->pipe_fd[1];
@@ -41,25 +40,40 @@ static pid_t	execute_current_cmd(t_command_invocation *current_cmd, \
 	pid_t	pid;
 
 	i = 0;
+	pid = -1;
 	fds.in_fd = STDIN_FILENO;
-	if (!current_cmd)
-		return (-1);
 	while (current_cmd)
 	{
+		if (!current_cmd->exec_and_args || !current_cmd->exec_and_args[0] || \
+			!*((char *)current_cmd->exec_and_args[0]))
+		{
+			current_cmd = current_cmd->piped_command;
+			continue;
+		}
 		fds.out_fd = STDOUT_FILENO;
-		if (current_cmd->piped_command && prepare_pipe(&fds, pids))
-			return (-1);
+		if (current_cmd->piped_command && prepare_pipe(&fds))
+			return (free(pids), -1);
 		pid = fork();
 		if (pid == -1)
-			return (put_fork_error(fds, pids));
+		{
+			if (fds.in_fd != STDIN_FILENO) close(fds.in_fd);
+			if (fds.out_fd != STDOUT_FILENO) close(fds.out_fd);
+			return (put_fork_error(pids));
+		}
 		if (pid == 0)
 			prepro_execute_child_process(fds, current_cmd, envp, data);
 		pids[i++] = pid;
-		set_close_fd(fds, PARENTS);
+		if (fds.in_fd != STDIN_FILENO)
+			close(fds.in_fd);
+		if (fds.out_fd != STDOUT_FILENO)
+			close(fds.out_fd);
 		if (current_cmd->piped_command)
 			fds.in_fd = fds.pipe_fd[0];
 		current_cmd = current_cmd->piped_command;
 	}
+	if (fds.in_fd != STDIN_FILENO)
+		close(fds.in_fd);
+	pids[i] = -1;
 	return (pid);
 }
 
@@ -83,7 +97,8 @@ static int	execute_pipeline(t_command_invocation *cmd_list, \
 	status = 0;
 	current_cmd = cmd_list;
 	last_pid = execute_current_cmd(current_cmd, pids, envp, data);
-	wait_children(cmd_count, &status, last_pid);
+	if (last_pid != -1)
+		wait_children(cmd_count, pids, &status, last_pid);
 	free(pids);
 	return (check_status(status));
 }
