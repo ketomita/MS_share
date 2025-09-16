@@ -98,7 +98,10 @@ static t_ast	*parse_simple_command(t_parser *parser)
 				return (NULL);
 			}
 			if (!cmd_node)
+			{
 				cmd_node = redirect_node;
+				last_arg = redirect_node;
+			}
 			else
 			{
 				if (last_arg)

@@ -38,6 +38,13 @@ typedef struct s_fds
 	int	pipe_fd[2];
 }	t_fds;
 
+typedef struct s_child_status {
+    pid_t pid;
+    int   status;
+} t_child_status;
+
+int		handle_heredoc(const char *delimiter);
+
 int		apply_redirections_input(t_command_invocation *cmd);
 int		apply_redirections_output(t_command_invocation *cmd);
 char	*find_command_path(char *cmd, char **envp);
@@ -55,8 +62,8 @@ int		execute_ast(t_command_invocation *cmd_list, char **envp, t_data data);
 
 pid_t	*prepare_pids(t_command_invocation *current_cmd, int *cmd_count);
 int		check_status(int status);
-void	wait_children(int cmd_count, pid_t *pids, int *status, pid_t last_pid);
+void	wait_and_collect_statuses(int cmd_count, pid_t *pids, t_child_status *statuses);
 int		put_fork_error(pid_t *pids);
-void	set_close_fd(t_fds fds, t_proctype type);
+void	ft_close_fd(t_fds fds, t_proctype type);
 
 #endif

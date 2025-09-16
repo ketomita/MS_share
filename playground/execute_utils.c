@@ -1,6 +1,6 @@
 #include "execute.h"
 
-void	set_close_fd(t_fds fds, t_proctype type)
+void	ft_close_fd(t_fds fds, t_proctype type)
 {
 	if (fds.in_fd != STDIN_FILENO)
 	{
@@ -50,29 +50,14 @@ int	check_status(int status)
 	return (status);
 }
 
-void	wait_children(int cmd_count, pid_t *pids, int *status, pid_t last_pid)
+void	wait_and_collect_statuses(int cmd_count, pid_t *pids, t_child_status *statuses)
 {
-	int		i;
-	pid_t	waited_pid;
-	int		child_status;
+	int i;
 
 	i = 0;
-	while (i < cmd_count && pids[i] != -1)
+	while (i < cmd_count)
 	{
-		waited_pid = waitpid(pids[i], &child_status, 0);
-		if (waited_pid == -1)
-		{
-			if (errno != ECHILD)
-				perror("waitpid");
-			break ;
-		}
-		if (waited_pid == last_pid)
-			*status = child_status;
-		else
-		{
-			if (WIFSIGNALED(child_status))
-				check_status(child_status);
-		}
+		statuses[i].pid = waitpid(pids[i], &statuses[i].status, 0);
 		i++;
 	}
 }

@@ -32,7 +32,7 @@ static void	execute_child_process(t_command_invocation *cmd, \
 	if (apply_redirections_input(cmd) || apply_redirections_output(cmd))
 		exit(1);
 	builtin_type = is_builtin(cmd->exec_and_args[0]);
-	if (builtin_type == BUILTIN || builtin_type == BUILTIN_PARENT)
+	if (builtin_type == BUILTIN)
 		exit(dispatch_builtin((char **)cmd->exec_and_args, data));
 	command = (char *)cmd->exec_and_args[0];
 	if (ft_strchr(command, '/'))
@@ -88,6 +88,6 @@ void	prepro_execute_child_process(t_fds fds, \
 	if (current_cmd->piped_command)
 		close(fds.pipe_fd[0]);
 	reset_default_signal();
-	set_close_fd(fds, CHILDREN);
+	ft_close_fd(fds, CHILDREN);
 	execute_child_process(current_cmd, envp, data);
 }

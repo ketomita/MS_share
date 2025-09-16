@@ -48,7 +48,7 @@ static int	fork_heredoc(const char *delimiter, int pipe_fd[], int *status)
 	return (0);
 }
 
-static int	handle_heredoc(const char *delimiter)
+int	handle_heredoc(const char *delimiter)
 {
 	int		pipe_fd[2];
 	int		status;
@@ -71,48 +71,60 @@ static int	handle_heredoc(const char *delimiter)
 
 int	apply_redirections_input(t_command_invocation *cmd)
 {
-	int					fd;
-	t_cmd_redirection	*redir;
+    int                 last_fd;
+    t_cmd_redirection   *redir;
 
-	redir = cmd->input_redirections;
-	while (redir)
-	{
-		if (redir->type == REDIR_HEREDOC)
-			fd = handle_heredoc(redir->file_path);
-		else
-			fd = open(redir->file_path, O_RDONLY);
-		if (fd == -1)
-		{
-			perror(redir->file_path);
-			return (-1);
-		}
-		dup2(fd, STDIN_FILENO);
-		close(fd);
-		redir = redir->next;
-	}
-	return (0);
+    last_fd = -1;
+    redir = cmd->input_redirections;
+    while (redir)
+    {
+        if (last_fd != -1)
+            close(last_fd);
+        if (redir->type == REDIR_HEREDOC)
+            last_fd = redir->fd;
+        else
+            last_fd = open(redir->file_path, O_RDONLY);
+        if (last_fd == -1)
+        {
+            perror(redir->file_path);
+            return (-1);
+        }
+        redir = redir->next;
+    }
+    if (last_fd != -1)
+    {
+        dup2(last_fd, STDIN_FILENO);
+        close(last_fd);
+    }
+    return (0);
 }
 
 int	apply_redirections_output(t_command_invocation *cmd)
 {
-	int					fd;
+	int					last_fd;
 	t_cmd_redirection	*redir;
 
+	last_fd = -1;
 	redir = cmd->output_redirections;
 	while (redir)
 	{
+		if (last_fd != -1)
+			close(last_fd);
 		if (redir->type == REDIR_OUTPUT)
-			fd = open(redir->file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			last_fd = open(redir->file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
-			fd = open(redir->file_path, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (fd == -1)
+			last_fd = open(redir->file_path, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (last_fd == -1)
 		{
 			perror(redir->file_path);
 			return (-1);
 		}
-		dup2(fd, STDOUT_FILENO);
-		close(fd);
 		redir = redir->next;
+	}
+	if (last_fd != -1)
+	{
+		dup2(last_fd, STDOUT_FILENO);
+		close(last_fd);
 	}
 	return (0);
 }
