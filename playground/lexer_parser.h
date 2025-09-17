@@ -69,9 +69,8 @@ typedef struct s_cmd_redirection
 
 typedef struct s_command_invocation
 {
-	t_cmd_redirection			*output_redirections;
+	t_cmd_redirection			*redirections;
 	struct s_command_invocation	*piped_command;
-	t_cmd_redirection			*input_redirections;
 	const char					**exec_and_args;
 	pid_t						pid;
 }	t_command_invocation;

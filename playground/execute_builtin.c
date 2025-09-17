@@ -16,12 +16,7 @@ int	execute_builtin(t_command_invocation *cmd, t_data data)
 
 	stdin_backup = dup(STDIN_FILENO);
 	stdout_backup = dup(STDOUT_FILENO);
-	if (apply_redirections_input(cmd))
-	{
-		restore_fds(stdin_backup, stdout_backup);
-		return (1);
-	}
-	if (apply_redirections_output(cmd))
+	if (apply_redirections(cmd))
 	{
 		restore_fds(stdin_backup, stdout_backup);
 		return (1);

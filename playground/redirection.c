@@ -60,7 +60,6 @@ int	handle_heredoc(const char *delimiter)
 	{
 		if (WTERMSIG(status) == SIGINT)
 		{
-			// g_status = 130;
 			close(pipe_fd[0]);
 			write(STDOUT_FILENO, "\n", 1);
 			return (-1);
@@ -69,62 +68,70 @@ int	handle_heredoc(const char *delimiter)
 	return (pipe_fd[0]);
 }
 
-int	apply_redirections_input(t_command_invocation *cmd)
+static void	apply_redirection(t_cmd_redirection *redir, \
+			int *last_input_fd, int *last_output_fd)
 {
-    int                 last_fd;
-    t_cmd_redirection   *redir;
-
-    last_fd = -1;
-    redir = cmd->input_redirections;
-    while (redir)
-    {
-        if (last_fd != -1)
-            close(last_fd);
-        if (redir->type == REDIR_HEREDOC)
-            last_fd = redir->fd;
-        else
-            last_fd = open(redir->file_path, O_RDONLY);
-        if (last_fd == -1)
-        {
-            perror(redir->file_path);
-            return (-1);
-        }
-        redir = redir->next;
-    }
-    if (last_fd != -1)
-    {
-        dup2(last_fd, STDIN_FILENO);
-        close(last_fd);
-    }
-    return (0);
+	if (redir->type == REDIR_INPUT || redir->type == REDIR_HEREDOC)
+	{
+		if (*last_input_fd != -1)
+			close(*last_input_fd);
+		if (redir->type == REDIR_HEREDOC)
+			*last_input_fd = redir->fd;
+		else
+			*last_input_fd = open(redir->file_path, O_RDONLY);
+	}
+	else if (redir->type == REDIR_OUTPUT || redir->type == REDIR_APPEND)
+	{
+		if (*last_output_fd != -1)
+			close(*last_output_fd);
+		if (redir->type == REDIR_OUTPUT)
+			*last_output_fd = open(redir->file_path, \
+				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else
+			*last_output_fd = open(redir->file_path, \
+				O_WRONLY | O_CREAT | O_APPEND, 0644);
+	}
 }
 
-int	apply_redirections_output(t_command_invocation *cmd)
+static void	restore_std_fd(int last_input_fd, int last_output_fd)
 {
-	int					last_fd;
-	t_cmd_redirection	*redir;
+	if (last_input_fd != -1)
+	{
+		dup2(last_input_fd, STDIN_FILENO);
+		close(last_input_fd);
+	}
+	if (last_output_fd != -1)
+	{
+		dup2(last_output_fd, STDOUT_FILENO);
+		close(last_output_fd);
+	}
+}
 
-	last_fd = -1;
-	redir = cmd->output_redirections;
+int	apply_redirections(t_command_invocation *cmd)
+{
+	t_cmd_redirection	*redir;
+	int					last_input_fd;
+	int					last_output_fd;
+
+	last_input_fd = -1;
+	last_output_fd = -1;
+	redir = cmd->redirections;
 	while (redir)
 	{
-		if (last_fd != -1)
-			close(last_fd);
-		if (redir->type == REDIR_OUTPUT)
-			last_fd = open(redir->file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else
-			last_fd = open(redir->file_path, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (last_fd == -1)
+		apply_redirection(redir, &last_input_fd, &last_output_fd);
+		if ((redir->type != REDIR_HEREDOC && last_input_fd == -1 && \
+			(redir->type == REDIR_INPUT)) || (last_output_fd == -1 && \
+			(redir->type == REDIR_OUTPUT || redir->type == REDIR_APPEND)))
 		{
 			perror(redir->file_path);
+			if (last_input_fd != -1)
+				close(last_input_fd);
+			if (last_output_fd != -1)
+				close(last_output_fd);
 			return (-1);
 		}
 		redir = redir->next;
 	}
-	if (last_fd != -1)
-	{
-		dup2(last_fd, STDOUT_FILENO);
-		close(last_fd);
-	}
+	restore_std_fd(last_input_fd, last_output_fd);
 	return (0);
 }

@@ -29,11 +29,17 @@ static void	execute_child_process(t_command_invocation *cmd, \
 	struct stat	s;
 	t_builtin	builtin_type;
 
-	if (apply_redirections_input(cmd) || apply_redirections_output(cmd))
+	if (apply_redirections(cmd))
 		exit(1);
 	builtin_type = is_builtin(cmd->exec_and_args[0]);
 	if (builtin_type == BUILTIN)
 		exit(dispatch_builtin((char **)cmd->exec_and_args, data));
+	if (builtin_type == BUILTIN_PARENT)
+	{
+		if (cmd->exec_and_args[1] != NULL)
+			exit(127);
+		exit(0);
+	}
 	command = (char *)cmd->exec_and_args[0];
 	if (ft_strchr(command, '/'))
 		path = ft_strdup(command);

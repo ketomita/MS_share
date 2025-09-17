@@ -63,8 +63,7 @@ void	free_command_invocation(t_command_invocation *cmd)
 
 	if (!cmd)
 		return ;
-	free_redirections(cmd->input_redirections);
-	free_redirections(cmd->output_redirections);
+	free_redirections(cmd->redirections);
 	if (cmd->exec_and_args)
 	{
 		i = 0;
@@ -160,12 +159,7 @@ static void	process_redirections(t_ast *node, t_command_invocation *cmd, t_env *
 					redir = create_redirection(redir_type, expanded_path);
 					free(expanded_path);
 					if (redir)
-					{
-						if (redir_type == REDIR_INPUT || redir_type == REDIR_HEREDOC)
-							add_redirection(&cmd->input_redirections, redir);
-						else
-							add_redirection(&cmd->output_redirections, redir);
-					}
+						add_redirection(&cmd->redirections, redir);
 				}
 			}
 		}
@@ -180,8 +174,7 @@ static t_command_invocation	*convert_simple_command(t_ast *ast, t_env *env_list)
 	cmd = malloc(sizeof(t_command_invocation));
 	if (!cmd)
 		return (NULL);
-	cmd->input_redirections = NULL;
-	cmd->output_redirections = NULL;
+	cmd->redirections = NULL;
 	cmd->piped_command = NULL;
 	cmd->pid = -1;
 

@@ -50,9 +50,10 @@ int	check_status(int status)
 	return (status);
 }
 
-void	wait_and_collect_statuses(int cmd_count, pid_t *pids, t_child_status *statuses)
+void	wait_and_collect_statuses(int cmd_count, pid_t *pids, \
+		t_child_status *statuses)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < cmd_count)

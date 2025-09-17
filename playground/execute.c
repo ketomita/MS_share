@@ -80,7 +80,7 @@ int	preprocess_heredocs(t_command_invocation *cmd_list)
 	current_cmd = cmd_list;
 	while (current_cmd)
 	{
-		redir = current_cmd->input_redirections;
+		redir = current_cmd->redirections;
 		while (redir)
 		{
 			if (redir->type == REDIR_HEREDOC)
