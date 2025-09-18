@@ -22,6 +22,7 @@ typedef enum e_token_type {
 	REDIRECT_OUT,       // >
 	REDIRECT_APPEND,    // >>
 	REDIRECT_HEREDOC,   // <<
+	NODE_COMMAND,
 	EOF_TOKEN           // 終端
 } t_token_type;
 

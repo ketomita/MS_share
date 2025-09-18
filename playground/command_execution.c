@@ -171,22 +171,22 @@ static t_command_invocation	*convert_simple_command(t_ast *ast, t_env *env_list)
 {
 	t_command_invocation	*cmd;
 
+	if (ast->type != NODE_COMMAND)
+		return (NULL);
 	cmd = malloc(sizeof(t_command_invocation));
 	if (!cmd)
 		return (NULL);
 	cmd->redirections = NULL;
 	cmd->piped_command = NULL;
 	cmd->pid = -1;
-
-	cmd->exec_and_args = create_args_array(ast, env_list);
-	if (!cmd->exec_and_args)
+	cmd->exec_and_args = create_args_array(ast->left, env_list);
+	process_redirections(ast->right, cmd, env_list);
+	if (!cmd->exec_and_args || !cmd->exec_and_args[0])
 	{
-		free(cmd);
+		if (!cmd->redirections)
+			free_command_invocation(cmd);
 		return (NULL);
 	}
-
-	process_redirections(ast, cmd, env_list);
-
 	return (cmd);
 }
 
@@ -227,8 +227,9 @@ t_command_invocation	*ast_to_command_invocation(t_ast *ast, t_env *env_list)
 		last_cmd->piped_command = piped_cmd;
 		return (cmd);
 	}
-
-	return (convert_simple_command(ast, env_list));
+	else if (ast->type == NODE_COMMAND)
+		return (convert_simple_command(ast, env_list));
+	return (NULL);
 }
 
 // デバック

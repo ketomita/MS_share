@@ -61,7 +61,8 @@ static t_ast	*parse_redirection(t_parser *parser)
 		return (NULL);
 	advance_token(parser);
 	if (parser->current->type != EXPANDABLE
-		&& parser->current->type != EXPANDABLE_QUOTED)
+		&& parser->current->type != EXPANDABLE_QUOTED \
+		&& parser->current->type != NON_EXPANDABLE)
 	{
 		free_ast(redirect_node);
 		return (NULL);
@@ -77,66 +78,71 @@ static t_ast	*parse_redirection(t_parser *parser)
 	return (redirect_node);
 }
 
+static void	append_node(t_ast **list_head, t_ast **list_tail, t_ast *new_node)
+{
+	if (*list_head == NULL)
+	{
+		*list_head = new_node;
+		*list_tail = new_node;
+	}
+	else
+	{
+		(*list_tail)->right = new_node;
+		*list_tail = new_node;
+	}
+}
+
 static t_ast	*parse_simple_command(t_parser *parser)
 {
 	t_ast	*cmd_node;
-	t_ast	*arg_node;
-	t_ast	*redirect_node;
-	t_ast	*last_arg;
+	t_ast	*arg_list_head = NULL;
+	t_ast	*redirect_list_head = NULL;
+	t_ast	*last_arg = NULL;
+	t_ast	*last_redirect = NULL;
+	t_ast	*new_node;
 
-	cmd_node = NULL;
-	last_arg = NULL;
-	while (parser->current && parser->current->type != EOF_TOKEN
-		&& parser->current->type != PIPE)
+	cmd_node = create_ast_node(NODE_COMMAND, NULL);
+	if (!cmd_node)
+		return (NULL);
+
+	while (parser->current && parser->current->type != EOF_TOKEN && parser->current->type != PIPE)
 	{
 		if (is_redirect_token(parser->current->type))
 		{
-			redirect_node = parse_redirection(parser);
-			if (!redirect_node)
+			new_node = parse_redirection(parser);
+			if (!new_node)
 			{
+				free_ast(arg_list_head);
 				free_ast(cmd_node);
 				return (NULL);
 			}
-			if (!cmd_node)
-			{
-				cmd_node = redirect_node;
-				last_arg = redirect_node;
-			}
-			else
-			{
-				if (last_arg)
-					last_arg->right = redirect_node;
-				else
-					cmd_node->left = redirect_node;
-				last_arg = redirect_node;
-			}
+			append_node(&redirect_list_head, &last_redirect, new_node);
 		}
-		else if (parser->current->type == EXPANDABLE
-			|| parser->current->type == EXPANDABLE_QUOTED
-			|| parser->current->type == NON_EXPANDABLE)
+		else if (parser->current->type == EXPANDABLE || \
+				parser->current->type == EXPANDABLE_QUOTED || \
+				parser->current->type == NON_EXPANDABLE)
 		{
-			arg_node = create_ast_node(parser->current->type,
-					parser->current->value);
-			if (!arg_node)
+			new_node = create_ast_node(parser->current->type, parser->current->value);
+			if (!new_node)
 			{
+				free_ast(arg_list_head);
+				free_ast(redirect_list_head);
 				free_ast(cmd_node);
 				return (NULL);
 			}
-			if (!cmd_node)
-			{
-				cmd_node = arg_node;
-				last_arg = arg_node;
-			}
-			else
-			{
-				last_arg->right = arg_node;
-				last_arg = arg_node;
-			}
+			append_node(&arg_list_head, &last_arg, new_node);
 			advance_token(parser);
 		}
 		else
-			break ;
+			break;
 	}
+	if (!arg_list_head && !redirect_list_head)
+	{
+		free_ast(cmd_node);
+		return (NULL);
+	}
+	cmd_node->left = arg_list_head;
+	cmd_node->right = redirect_list_head;
 	return (cmd_node);
 }
 
@@ -191,7 +197,7 @@ void	print_ast(t_ast *node, int level)
 {
 	const char *type_names[] = {"EXPANDABLE", "EXPANDABLE_QUOTED",
 		"NON_EXPANDABLE", "PIPE", "REDIRECT_IN", "REDIRECT_OUT",
-		"REDIRECT_APPEND", "REDIRECT_HEREDOC", "EOF_TOKEN"};
+		"REDIRECT_APPEND", "REDIRECT_HEREDOC", "NODE_COMMAND", "EOF_TOKEN"};
 	int i;
 
 	if (!node)
