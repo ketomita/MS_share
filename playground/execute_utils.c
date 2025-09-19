@@ -72,7 +72,7 @@ pid_t	*prepare_pids(t_command_invocation *current_cmd, int *cmd_count)
 		(*cmd_count)++;
 		current_cmd = current_cmd->piped_command;
 	}
-	pids = malloc(sizeof(pid_t) * (*cmd_count));
+	pids = malloc(sizeof(pid_t) * (*cmd_count + 1));
 	if (!pids)
 	{
 		perror("malloc");

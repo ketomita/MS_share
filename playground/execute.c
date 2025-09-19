@@ -99,7 +99,6 @@ int	preprocess_heredocs(t_command_invocation *cmd_list)
 static int	execute_pipeline(t_command_invocation *cmd_list, \
 			char **envp, t_data data)
 {
-	int						status;
 	t_command_invocation	*current_cmd;
 	pid_t					*pids;
 	pid_t					last_pid;
@@ -118,7 +117,6 @@ static int	execute_pipeline(t_command_invocation *cmd_list, \
 	statuses = malloc(sizeof(t_child_status) * cmd_count);
 	if (!pids)
 		return (1);
-	status = 0;
 	current_cmd = cmd_list;
 	last_pid = execute_current_cmd(current_cmd, pids, envp, data);
 	if (last_pid != -1)
@@ -142,6 +140,7 @@ static int	execute_pipeline(t_command_invocation *cmd_list, \
 		final_status_code = check_status(last_cmd_status);
 	}
 	free(pids);
+	free(statuses);
 	return (final_status_code);
 }
 
