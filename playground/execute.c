@@ -104,7 +104,7 @@ static int	execute_pipeline(t_command_invocation *cmd_list, \
 	pid_t					last_pid;
 	int						cmd_count;
 	t_child_status			*statuses;
-	int 					final_status_code = 0;
+	int						final_status_code = 0;
 
 	if (preprocess_heredocs(cmd_list) != 0)
 		return (1);
@@ -122,7 +122,7 @@ static int	execute_pipeline(t_command_invocation *cmd_list, \
 	if (last_pid != -1)
 	{
 		wait_and_collect_statuses(cmd_count, pids, statuses);
-		int last_cmd_status = 0;
+		int	last_cmd_status = 0;
 		for (int i = 0; i < cmd_count; i++)
 		{
 			if (statuses[i].pid == last_pid)
@@ -131,7 +131,7 @@ static int	execute_pipeline(t_command_invocation *cmd_list, \
 				break;
 			}
 		}
-		int last_cmd_failed = (WIFSIGNALED(last_cmd_status) || (WIFEXITED(last_cmd_status) && WEXITSTATUS(last_cmd_status) != 0));
+		int	last_cmd_failed = (WIFSIGNALED(last_cmd_status) || (WIFEXITED(last_cmd_status) && WEXITSTATUS(last_cmd_status) != 0));
 		for (int i = 0; i < cmd_count; i++)
 		{
 			if (!last_cmd_failed && WIFSIGNALED(statuses[i].status))

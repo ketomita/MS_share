@@ -18,6 +18,8 @@ int		ft_unset(t_data *data, char *var);
 
 size_t	count_builtin_args(char **args);
 int		dispatch_builtin(char **args, t_data data);
+void	free_all_resources(t_data *data);
+t_env	**envcpy_and_get_size(t_env *head, size_t *size);
 
 typedef enum e_error
 {

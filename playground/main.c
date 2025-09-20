@@ -15,7 +15,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (init_env_list(&data, envp) == -1)
 	{
-		ft_putstr_fd("環境変数の初期化に失敗しました\n", 2);
+		ft_putstr_fd("環境変数の初期化に失敗しました\n", STDERR_FILENO);
 		return (1);
 	}
 	g_status = 0;
@@ -37,14 +37,14 @@ int	main(int argc, char **argv, char **envp)
 		tokens = tokenize(input);
 		if (!tokens)
 		{
-			ft_putstr_fd("Tokenization failed!\n", 2);
+			ft_putstr_fd("Tokenization failed!\n", STDERR_FILENO);
 			free(input);
 			continue ;
 		}
 		ast = parse(tokens);
 		if (!ast)
 		{
-			ft_putstr_fd("Parsing failed!\n", 2);
+			ft_putstr_fd("Parsing failed!\n", STDERR_FILENO);
 			free_tokens(tokens);
 			free(input);
 			continue ;
@@ -53,7 +53,7 @@ int	main(int argc, char **argv, char **envp)
 		cmd = ast_to_command_invocation(ast, data.env_head);
 		if (!cmd)
 		{
-			ft_putstr_fd("AST to command_invocation conversion failed!\n", 2);
+			ft_putstr_fd("AST to command_invocation conversion failed!\n", STDERR_FILENO);
 			free_ast(ast);
 			free_tokens(tokens);
 			free(input);

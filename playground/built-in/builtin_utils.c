@@ -33,3 +33,41 @@ int	dispatch_builtin(char **args, t_data data)
 		return (ft_exit(&data, args));
 	return (1);
 }
+
+void	free_all_resources(t_data *data)
+{
+	free_env_list(data->env_head);
+	free_command_invocation(data->cmd);
+	free_ast(data->ast);
+	free_tokens(data->tokens);
+	free(data->input);
+	rl_clear_history();
+}
+
+t_env	**envcpy_and_get_size(t_env *head, size_t *size)
+{
+	t_env	**env_array;
+	t_env	*current;
+	size_t	i;
+
+	*size = 0;
+	current = head;
+	while (current)
+	{
+		(*size)++;
+		current = current->next;
+	}
+	if (*size == 0)
+		return (NULL);
+	env_array = (t_env **)malloc(sizeof(t_env *) * *size);
+	if (!env_array)
+		return (NULL);
+	i = 0;
+	current = head;
+	while (current)
+	{
+		env_array[i++] = current;
+		current = current->next;
+	}
+	return (env_array);
+}

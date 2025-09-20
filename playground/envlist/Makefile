@@ -1,5 +1,5 @@
 NAME = envlist.a
-SRCS = make_env_list.c env_utils.c
+SRCS = make_env_list.c env_utils.c ft_qsort.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

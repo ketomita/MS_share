@@ -13,4 +13,6 @@ void	append_env_node(t_env **head, t_env **tail, t_env *node);
 t_env	*find_env_node(t_env *head, const char *name);
 
 int		init_env_list(t_data *data, char *envp[]);
+
+void	ft_qsort(t_env **arr, int low, int high);
 #endif

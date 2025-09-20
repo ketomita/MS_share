@@ -13,7 +13,7 @@
 # include "minilibft.h"
 # include "builtin.h"
 
-# define COMMAND_NOT_FOUND 127
+# define STATUS_COMMAND_NOT_FOUND 127
 
 extern volatile sig_atomic_t	g_status;
 
@@ -44,10 +44,19 @@ typedef struct s_child_status
 	int		status;
 }	t_child_status;
 
+typedef enum e_execve_error
+{
+	COMMAND_NOT_FOUND,
+	COMMAND_NOT_FOUND_PATH,
+	IS_A_DIRECTORY,
+	PERMISSION_DENIED,
+	EXECVE_ERROR
+}	t_execve_error;
+
 int		handle_heredoc(const char *delimiter);
 
 int		apply_redirections(t_command_invocation *cmd);
-char	*find_command_path(char *cmd, char **envp);
+char	*find_command_path(char *cmd, t_env *env_list);
 
 void	set_signal_handler(void);
 void	set_parent_signal_handlers(void);

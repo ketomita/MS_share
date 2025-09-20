@@ -17,16 +17,6 @@ static bool	is_numeric_string(const char *str)
 	return (true);
 }
 
-static void	free_all_resources(t_data *data)
-{
-	free_env_list(data->env_head);
-	free_command_invocation(data->cmd);
-	free_ast(data->ast);
-	free_tokens(data->tokens);
-	free(data->input);
-	rl_clear_history();
-}
-
 static void	put_exit_error(t_data *data, char *str, int exit_status)
 {
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
@@ -63,7 +53,8 @@ int	ft_exit(t_data *data, char **args)
 {
 	int			arg_count;
 
-	ft_putstr_fd("exit\n", STDOUT_FILENO);
+	if (isatty(STDIN_FILENO))
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
 	arg_count = count_builtin_args(args);
 	correct_args_exit(data, args, arg_count);
 	if (arg_count > 2)

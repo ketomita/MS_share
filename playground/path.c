@@ -12,33 +12,6 @@ static void	free_split(char **str)
 	free(str);
 }
 
-static int	prepro_cmd_path(char **envp, char ***paths)
-{
-	size_t	i;
-	char	*path_env;
-
-	path_env = NULL;
-	i = 0;
-	while (envp && envp[i])
-	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-		{
-			path_env = envp[i] + 5;
-			break ;
-		}
-		i++;
-	}
-	if (!path_env)
-	{
-		*paths = NULL;
-		return (0);
-	}
-	*paths = ft_split(path_env, ':');
-	if (!*paths)
-		return (1);
-	return (0);
-}
-
 static char	*prepare_cmd_path(char *cmd, char **paths)
 {
 	size_t	i;
@@ -65,14 +38,26 @@ static char	*prepare_cmd_path(char *cmd, char **paths)
 	free_split(paths);
 	return (NULL);
 }
-
-char	*find_command_path(char *cmd, char **envp)
+char	*find_command_path(char *cmd, t_env *env_list)
 {
 	char	**paths;
+	char	*path_env_value;
+	t_env	*path_node;
 
 	if (!cmd || !*cmd)
 		return (NULL);
-	if (prepro_cmd_path(envp, &paths))
-		return (NULL);
+	path_node = find_env_node(env_list, "PATH");
+	if (path_node == NULL)
+		path_env_value = NULL;
+	else
+		path_env_value = path_node->value;
+	if (path_env_value == NULL)
+		paths = NULL;
+	else
+	{
+		paths = ft_split(path_env_value, ':');
+		if (!paths)
+			return (NULL);
+	}
 	return (prepare_cmd_path(cmd, paths));
 }

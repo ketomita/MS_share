@@ -2,14 +2,26 @@
 
 static int	print_env_list(t_env *head)
 {
-	while (head)
+	size_t	size;
+	t_env	**env_array;
+	size_t	i;
+
+	env_array = envcpy_and_get_size(head, &size);
+	if (!env_array)
+		return (0);
+	if (size > 1)
+		ft_qsort(env_array, 0, size - 1);
+	i = 0;
+	while (i < size)
 	{
-		if (head->value)
-			printf("declare -x %s=\"%s\"\n", head->name, head->value);
+		if (env_array[i]->value)
+			printf("declare -x %s=\"%s\"\n", \
+				env_array[i]->name, env_array[i]->value);
 		else
-			printf("declare -x %s\n", head->name);
-		head = head->next;
+			printf("declare -x %s\n", env_array[i]->name);
+		i++;
 	}
+	free(env_array);
 	return (0);
 }
 
@@ -34,9 +46,9 @@ static int	put_error_and_free(char *name, char *value, char *var)
 {
 	if (var)
 	{
-		ft_putstr_fd("export: `", 2);
-		ft_putstr_fd(var, 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
+		ft_putstr_fd("export: `", STDERR_FILENO);
+		ft_putstr_fd(var, STDERR_FILENO);
+		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 	}
 	free(name);
 	free(value);

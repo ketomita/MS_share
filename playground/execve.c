@@ -21,6 +21,32 @@ t_builtin	is_builtin(const char *cmd)
 	return (TRANSIENT);
 }
 
+static void	ft_put_error(char *command, char *path, t_execve_error type)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	if (type == COMMAND_NOT_FOUND)
+	{
+		ft_putstr_fd(command, STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		exit(127);
+	}
+	else if (type == COMMAND_NOT_FOUND_PATH)
+	{
+		perror(path);
+		free(path);
+		exit(127);
+	}
+	else if (type == IS_A_DIRECTORY)
+	{
+		ft_putstr_fd(path, STDERR_FILENO);
+		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
+	}
+	else if (type == PERMISSION_DENIED || type == EXECVE_ERROR)
+		perror(path);
+	free(path);
+	exit(126);
+}
+
 static void	execute_child_process(t_command_invocation *cmd, \
 			char **envp, t_data data)
 {
@@ -36,49 +62,25 @@ static void	execute_child_process(t_command_invocation *cmd, \
 		exit(dispatch_builtin((char **)cmd->exec_and_args, data));
 	if (builtin_type == BUILTIN_PARENT)
 	{
-		if (cmd->exec_and_args[1] != NULL)
-			exit(127);
+		if (ft_strcmp(cmd->exec_and_args[0], "exit") == 0)
+			dispatch_builtin((char **)cmd->exec_and_args, data);
 		exit(0);
 	}
 	command = (char *)cmd->exec_and_args[0];
 	if (ft_strchr(command, '/'))
 		path = ft_strdup(command);
 	else
-		path = find_command_path(command, envp);
+		path = find_command_path(command, data.env_head);
 	if (!path)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(command, 2);
-		ft_putstr_fd(": command not found\n", 2);
-		exit(127);
-	}
+		ft_put_error(command, path, COMMAND_NOT_FOUND);
 	if (access(path, F_OK) != 0)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		perror(path);
-		free(path);
-		exit(127);
-	}
+		ft_put_error(command, path, COMMAND_NOT_FOUND_PATH);
 	if (stat(path, &s) == 0 && S_ISDIR(s.st_mode))
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(path, 2);
-		ft_putstr_fd(": Is a directory\n", 2);
-		free(path);
-		exit(126);
-	}
+		ft_put_error(command, path, IS_A_DIRECTORY);
 	if (access(path, X_OK) != 0)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		perror(path);
-		free(path);
-		exit(126);
-	}
+		ft_put_error(command, path, PERMISSION_DENIED);
 	execve(path, (char **)cmd->exec_and_args, envp);
-	ft_putstr_fd("minishell: ", 2);
-	perror(path);
-	free(path);
-	exit(126);
+	ft_put_error(command, path, EXECVE_ERROR);
 }
 
 static void	reset_default_signal(void)
