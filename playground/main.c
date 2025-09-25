@@ -21,6 +21,7 @@ int	main(int argc, char **argv, char **envp)
 	g_status = 0;
 	input = NULL;
 	set_signal_handler();
+	set_shlvl(&data);
 	while (1)
 	{
 		input = readline_input();
@@ -63,7 +64,7 @@ int	main(int argc, char **argv, char **envp)
 		data.cmd = cmd;
 		data.input = input;
 		data.tokens = tokens;
-		g_status = execute_ast(cmd, envp, data);
+		g_status = execute_ast(cmd, envp, &data);
 
 		free_command_invocation(cmd);
 		free_ast(ast);

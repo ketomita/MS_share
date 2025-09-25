@@ -62,12 +62,12 @@ void	set_signal_handler(void);
 void	set_parent_signal_handlers(void);
 
 void	prepro_execute_child_process(t_fds fds, \
-		t_command_invocation *current_cmd, char **envp, t_data data);
+		t_command_invocation *current_cmd, char **envp, t_data *data);
 
 int		execute_builtin(t_command_invocation *cmd, t_data data);
 
 char	*readline_input(void);
-int		execute_ast(t_command_invocation *cmd_list, char **envp, t_data data);
+int		execute_ast(t_command_invocation *cmd_list, char **envp, t_data *data);
 
 pid_t	*prepare_pids(t_command_invocation *current_cmd, int *cmd_count);
 int		check_status(int status);
@@ -75,5 +75,7 @@ void	wait_and_collect_statuses(int cmd_count, \
 		pid_t *pids, t_child_status *statuses);
 int		put_fork_error(pid_t *pids);
 void	ft_close_fd(t_fds fds, t_proctype type);
+
+void	set_shlvl(t_data *data);
 
 #endif

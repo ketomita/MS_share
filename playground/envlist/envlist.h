@@ -15,4 +15,7 @@ t_env	*find_env_node(t_env *head, const char *name);
 int		init_env_list(t_data *data, char *envp[]);
 
 void	ft_qsort(t_env **arr, int low, int high);
+
+char	**convert_env_list_to_array(t_env *head);
+
 #endif

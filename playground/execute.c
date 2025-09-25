@@ -33,7 +33,7 @@ static int	prepare_pipe(t_fds *fds)
 }
 
 static pid_t	execute_current_cmd(t_command_invocation *current_cmd, \
-				pid_t *pids, char **envp, t_data data)
+				pid_t *pids, char **envp, t_data *data)
 {
 	t_fds	fds;
 	int		i;
@@ -97,7 +97,7 @@ int	preprocess_heredocs(t_command_invocation *cmd_list)
 }
 
 static int	execute_pipeline(t_command_invocation *cmd_list, \
-			char **envp, t_data data)
+			char **envp, t_data *data)
 {
 	t_command_invocation	*current_cmd;
 	pid_t					*pids;
@@ -110,7 +110,7 @@ static int	execute_pipeline(t_command_invocation *cmd_list, \
 		return (1);
 	if (cmd_list && !cmd_list->piped_command && \
 		is_builtin(cmd_list->exec_and_args[0]) == BUILTIN_PARENT)
-		return (execute_builtin(cmd_list, data));
+		return (execute_builtin(cmd_list, *data));
 	current_cmd = cmd_list;
 	cmd_count = 0;
 	pids = prepare_pids(current_cmd, &cmd_count);
@@ -179,7 +179,7 @@ static char	**rebuild_args_without_empty_strings(char **args)
 	return (new_args);
 }
 
-int	execute_ast(t_command_invocation *cmd_list, char **envp, t_data data)
+int	execute_ast(t_command_invocation *cmd_list, char **envp, t_data *data)
 {
 	int						status;
 	struct sigaction		sa_ign;
