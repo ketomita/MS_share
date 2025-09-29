@@ -64,8 +64,7 @@ static void	ft_put_error(char *command, char *path, char **env_array, t_execve_e
 	exit(126);
 }
 
-static void	execute_child_process(t_command_invocation *cmd, \
-			char **envp, t_data *data)
+static void	execute_child_process(t_command_invocation *cmd, t_data *data)
 {
 	char		*command;
 	char		*path;
@@ -103,12 +102,11 @@ static void	reset_default_signal(void)
 	signal(SIGPIPE, SIG_DFL);
 }
 
-void	prepro_execute_child_process(t_fds fds, \
-	t_command_invocation *current_cmd, char **envp, t_data *data)
+void	prepro_execute_child_process(t_fds fds, t_command_invocation *current_cmd, t_data *data)
 {
 	if (current_cmd->piped_command)
 		close(fds.pipe_fd[0]);
 	reset_default_signal();
 	ft_close_fd(fds, CHILDREN);
-	execute_child_process(current_cmd, envp, data);
+	execute_child_process(current_cmd, data);
 }

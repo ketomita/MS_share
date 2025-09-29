@@ -64,7 +64,7 @@ int	main(int argc, char **argv, char **envp)
 		data.cmd = cmd;
 		data.input = input;
 		data.tokens = tokens;
-		g_status = execute_ast(cmd, envp, &data);
+		g_status = execute_ast(cmd, &data);
 
 		free_command_invocation(cmd);
 		free_ast(ast);

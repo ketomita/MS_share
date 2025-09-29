@@ -61,13 +61,12 @@ char	*find_command_path(char *cmd, t_env *env_list);
 void	set_signal_handler(void);
 void	set_parent_signal_handlers(void);
 
-void	prepro_execute_child_process(t_fds fds, \
-		t_command_invocation *current_cmd, char **envp, t_data *data);
+void	prepro_execute_child_process(t_fds fds, t_command_invocation *current_cmd, t_data *data);
 
 int		execute_builtin(t_command_invocation *cmd, t_data data);
 
 char	*readline_input(void);
-int		execute_ast(t_command_invocation *cmd_list, char **envp, t_data *data);
+int		execute_ast(t_command_invocation *cmd_list, t_data *data);
 
 pid_t	*prepare_pids(t_command_invocation *current_cmd, int *cmd_count);
 int		check_status(int status);

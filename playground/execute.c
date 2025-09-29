@@ -33,7 +33,7 @@ static int	prepare_pipe(t_fds *fds)
 }
 
 static pid_t	execute_current_cmd(t_command_invocation *current_cmd, \
-				pid_t *pids, char **envp, t_data *data)
+				pid_t *pids, t_data *data)
 {
 	t_fds	fds;
 	int		i;
@@ -59,7 +59,7 @@ static pid_t	execute_current_cmd(t_command_invocation *current_cmd, \
 			return (put_fork_error(pids));
 		}
 		if (pid == 0)
-			prepro_execute_child_process(fds, current_cmd, envp, data);
+			prepro_execute_child_process(fds, current_cmd, data);
 		pids[i++] = pid;
 		ft_close_fd(fds, PARENTS);
 		if (current_cmd->piped_command)
@@ -96,8 +96,7 @@ int	preprocess_heredocs(t_command_invocation *cmd_list)
 	return (0);
 }
 
-static int	execute_pipeline(t_command_invocation *cmd_list, \
-			char **envp, t_data *data)
+static int	execute_pipeline(t_command_invocation *cmd_list, t_data *data)
 {
 	t_command_invocation	*current_cmd;
 	pid_t					*pids;
@@ -118,7 +117,7 @@ static int	execute_pipeline(t_command_invocation *cmd_list, \
 	if (!pids)
 		return (1);
 	current_cmd = cmd_list;
-	last_pid = execute_current_cmd(current_cmd, pids, envp, data);
+	last_pid = execute_current_cmd(current_cmd, pids, data);
 	if (last_pid != -1)
 	{
 		wait_and_collect_statuses(cmd_count, pids, statuses);
@@ -179,7 +178,7 @@ static char	**rebuild_args_without_empty_strings(char **args)
 	return (new_args);
 }
 
-int	execute_ast(t_command_invocation *cmd_list, char **envp, t_data *data)
+int	execute_ast(t_command_invocation *cmd_list, t_data *data)
 {
 	int						status;
 	struct sigaction		sa_ign;
@@ -201,7 +200,7 @@ int	execute_ast(t_command_invocation *cmd_list, char **envp, t_data *data)
 	sa_ign.sa_flags = 0;
 	sigaction(SIGINT, &sa_ign, &sa_old_int);
 	sigaction(SIGQUIT, &sa_ign, &sa_old_quit);
-	status = execute_pipeline(cmd_list, envp, data);
+	status = execute_pipeline(cmd_list, data);
 	sigaction(SIGINT, &sa_old_int, NULL);
 	sigaction(SIGQUIT, &sa_old_quit, NULL);
 	return (status);

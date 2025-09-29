@@ -32,6 +32,8 @@ int	ft_unset(t_data *data, char *var)
 	if (!node_to_delete)
 		return (0);
 	prev_node = find_prev_node(data->env_head, node_to_delete);
+	if (node_to_delete == data->env_tail)
+		data->env_tail = prev_node;
 	if (prev_node == NULL)
 		data->env_head = node_to_delete->next;
 	else
