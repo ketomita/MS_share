@@ -41,10 +41,6 @@ int	check_status(int status)
 		{
 			ft_putstr_fd(" Broken pipe\n", STDERR_FILENO);
 		}
-		else if (WTERMSIG(status) == SIGINT || WTERMSIG(status) == SIGQUIT)
-		{
-			//なんらかの処理を入れる可能性あり
-		}
 		return (128 + WTERMSIG(status));
 	}
 	return (status);

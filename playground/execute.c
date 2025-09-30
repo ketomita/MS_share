@@ -32,6 +32,21 @@ static int	prepare_pipe(t_fds *fds)
 	return (0);
 }
 
+static pid_t	create_children()
+{
+	pid_t	pid;
+
+	fds.out_fd = STDOUT_FILENO;
+	if (current_cmd->piped_command && prepare_pipe(&fds))
+		return (free(pids), -1);
+	pid = fork();
+	if (pid == -1)
+		return (ft_close_fd(fds, PARENTS), put_fork_error(pids));
+	if (pid == 0)
+		prepro_execute_child_process(fds, current_cmd, data);
+	return (pid);
+}
+
 static pid_t	execute_current_cmd(t_command_invocation *current_cmd, \
 				pid_t *pids, t_data *data)
 {
@@ -49,17 +64,7 @@ static pid_t	execute_current_cmd(t_command_invocation *current_cmd, \
 			current_cmd = current_cmd->piped_command;
 			continue ;
 		}
-		fds.out_fd = STDOUT_FILENO;
-		if (current_cmd->piped_command && prepare_pipe(&fds))
-			return (free(pids), -1);
-		pid = fork();
-		if (pid == -1)
-		{
-			ft_close_fd(fds, PARENTS);
-			return (put_fork_error(pids));
-		}
-		if (pid == 0)
-			prepro_execute_child_process(fds, current_cmd, data);
+
 		pids[i++] = pid;
 		ft_close_fd(fds, PARENTS);
 		if (current_cmd->piped_command)
@@ -96,70 +101,83 @@ int	preprocess_heredocs(t_command_invocation *cmd_list)
 	return (0);
 }
 
+static int	save_last_cmd_status(int cmd_count, \
+			t_child_status *statuses, pid_t last_pid)
+{
+	int	i;
+	int	last_cmd_status;
+
+	i = 0;
+	last_cmd_status = 0;
+	while (i < cmd_count)
+	{
+		if (statuses[i].pid == last_pid)
+		{
+			last_cmd_status = statuses[i].status;
+			break ;
+		}
+		i++;
+	}
+	return (last_cmd_status);
+}
+
+static void	collect_status(int cmd_count, pid_t *pids, \
+			pid_t last_pid, int *final_status_code)
+{
+	int				last_cmd_status;
+	int				i;
+	int				last_cmd_failed;
+	t_child_status	*statuses;
+
+	statuses = malloc(sizeof(t_child_status) * cmd_count);
+	wait_and_collect_statuses(cmd_count, pids, statuses);
+	last_cmd_status = save_last_cmd_status(cmd_count, statuses, last_pid);
+	last_cmd_failed = (WIFSIGNALED(last_cmd_status) || \
+	(WIFEXITED(last_cmd_status) && WEXITSTATUS(last_cmd_status) != 0));
+	i = 0;
+	while (i < cmd_count)
+	{
+		if (!last_cmd_failed && WIFSIGNALED(statuses[i].status))
+			check_status(statuses[i].status);
+		i++;
+	}
+	free(statuses);
+	*final_status_code = check_status(last_cmd_status);
+}
+
 static int	execute_pipeline(t_command_invocation *cmd_list, t_data *data)
 {
 	t_command_invocation	*current_cmd;
 	pid_t					*pids;
 	pid_t					last_pid;
 	int						cmd_count;
-	t_child_status			*statuses;
-	int						final_status_code = 0;
+	int						final_status_code;
 
+	final_status_code = 0;
 	if (preprocess_heredocs(cmd_list) != 0)
 		return (1);
 	if (cmd_list && !cmd_list->piped_command && \
 		is_builtin(cmd_list->exec_and_args[0]) == BUILTIN_PARENT)
-		return (execute_builtin(cmd_list, *data));
+		return (execute_builtin(cmd_list, data));
 	current_cmd = cmd_list;
 	cmd_count = 0;
 	pids = prepare_pids(current_cmd, &cmd_count);
-	statuses = malloc(sizeof(t_child_status) * cmd_count);
 	if (!pids)
 		return (1);
 	current_cmd = cmd_list;
 	last_pid = execute_current_cmd(current_cmd, pids, data);
 	if (last_pid != -1)
-	{
-		wait_and_collect_statuses(cmd_count, pids, statuses);
-		int	last_cmd_status = 0;
-		for (int i = 0; i < cmd_count; i++)
-		{
-			if (statuses[i].pid == last_pid)
-			{
-				last_cmd_status = statuses[i].status;
-				break;
-			}
-		}
-		int	last_cmd_failed = (WIFSIGNALED(last_cmd_status) || (WIFEXITED(last_cmd_status) && WEXITSTATUS(last_cmd_status) != 0));
-		for (int i = 0; i < cmd_count; i++)
-		{
-			if (!last_cmd_failed && WIFSIGNALED(statuses[i].status))
-				check_status(statuses[i].status);
-		}
-		final_status_code = check_status(last_cmd_status);
-	}
+		collect_status(cmd_count, pids, last_pid, &final_status_code);
 	free(pids);
-	free(statuses);
 	return (final_status_code);
 }
 
-static char	**rebuild_args_without_empty_strings(char **args)
+static char	**rebuild_new_args(int non_empty_count, char **args)
 {
-	int		i;
-	int		non_empty_count;
 	char	**new_args;
+	int		i;
 	int		j;
 
-	if (!args)
-		return (NULL);
-	non_empty_count = 0;
-	i = 0;
-	while (args[i])
-	{
-		if (*args[i] != '\0')
-			non_empty_count++;
-		i++;
-	}
 	new_args = (char **)malloc(sizeof(char *) * (non_empty_count + 1));
 	if (!new_args)
 		return (NULL);
@@ -176,6 +194,24 @@ static char	**rebuild_args_without_empty_strings(char **args)
 	new_args[j] = NULL;
 	free(args);
 	return (new_args);
+}
+
+static char	**rebuild_args_without_empty_strings(char **args)
+{
+	int		i;
+	int		non_empty_count;
+
+	if (!args)
+		return (NULL);
+	non_empty_count = 0;
+	i = 0;
+	while (args[i])
+	{
+		if (*args[i] != '\0')
+			non_empty_count++;
+		i++;
+	}
+	return (rebuild_new_args(non_empty_count, args));
 }
 
 int	execute_ast(t_command_invocation *cmd_list, t_data *data)

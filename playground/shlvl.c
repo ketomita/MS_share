@@ -2,7 +2,6 @@
 
 void	set_shlvl(t_data *data)
 {
-
 	t_env		*node;
 	char		*new_value;
 	long long	level;
@@ -14,10 +13,7 @@ void	set_shlvl(t_data *data)
 		level++;
 		new_value = ft_itoa(level);
 		if (!new_value)
-		{
-			// ft_itoaが失敗した場合のエラー処理
 			return ;
-		}
 		free(node->value);
 		node->value = new_value;
 	}

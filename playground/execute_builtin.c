@@ -8,7 +8,7 @@ static void	restore_fds(int stdin_backup, int stdout_backup)
 	close(stdout_backup);
 }
 
-int	execute_builtin(t_command_invocation *cmd, t_data data)
+int	execute_builtin(t_command_invocation *cmd, t_data *data)
 {
 	int	stdin_backup;
 	int	stdout_backup;

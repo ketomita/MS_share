@@ -65,7 +65,6 @@ int	main(int argc, char **argv, char **envp)
 		data.input = input;
 		data.tokens = tokens;
 		g_status = execute_ast(cmd, &data);
-
 		free_command_invocation(cmd);
 		free_ast(ast);
 		free_tokens(tokens);

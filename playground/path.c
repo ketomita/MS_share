@@ -38,6 +38,7 @@ static char	*prepare_cmd_path(char *cmd, char **paths)
 	free_split(paths);
 	return (NULL);
 }
+
 char	*find_command_path(char *cmd, t_env *env_list)
 {
 	char	**paths;
