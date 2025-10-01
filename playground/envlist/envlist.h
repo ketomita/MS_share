@@ -18,4 +18,6 @@ void	ft_qsort(t_env **arr, int low, int high);
 
 char	**convert_env_list_to_array(t_env *head);
 
+t_env	**envcpy_and_get_size(t_env *head, size_t *size);
+
 #endif

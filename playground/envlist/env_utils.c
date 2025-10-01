@@ -50,3 +50,31 @@ t_env	*find_env_node(t_env *head, const char *name)
 	}
 	return (NULL);
 }
+
+t_env	**envcpy_and_get_size(t_env *head, size_t *size)
+{
+	t_env	**env_array;
+	t_env	*current;
+	size_t	i;
+
+	*size = 0;
+	current = head;
+	while (current)
+	{
+		(*size)++;
+		current = current->next;
+	}
+	if (*size == 0)
+		return (NULL);
+	env_array = (t_env **)malloc(sizeof(t_env *) * *size);
+	if (!env_array)
+		return (NULL);
+	i = 0;
+	current = head;
+	while (current)
+	{
+		env_array[i++] = current;
+		current = current->next;
+	}
+	return (env_array);
+}

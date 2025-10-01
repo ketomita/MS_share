@@ -44,30 +44,23 @@ void	free_all_resources(t_data *data)
 	rl_clear_history();
 }
 
-t_env	**envcpy_and_get_size(t_env *head, size_t *size)
+t_builtin	is_builtin(const char *cmd)
 {
-	t_env	**env_array;
-	t_env	*current;
-	size_t	i;
-
-	*size = 0;
-	current = head;
-	while (current)
-	{
-		(*size)++;
-		current = current->next;
-	}
-	if (*size == 0)
-		return (NULL);
-	env_array = (t_env **)malloc(sizeof(t_env *) * *size);
-	if (!env_array)
-		return (NULL);
-	i = 0;
-	current = head;
-	while (current)
-	{
-		env_array[i++] = current;
-		current = current->next;
-	}
-	return (env_array);
+	if (cmd == NULL)
+		return (NOR);
+	if (ft_strcmp(cmd, "echo") == 0)
+		return (BUILTIN);
+	if (ft_strcmp(cmd, "cd") == 0)
+		return (BUILTIN_PARENT);
+	if (ft_strcmp(cmd, "pwd") == 0)
+		return (BUILTIN);
+	if (ft_strcmp(cmd, "export") == 0)
+		return (BUILTIN_PARENT);
+	if (ft_strcmp(cmd, "unset") == 0)
+		return (BUILTIN_PARENT);
+	if (ft_strcmp(cmd, "env") == 0)
+		return (BUILTIN);
+	if (ft_strcmp(cmd, "exit") == 0)
+		return (BUILTIN_PARENT);
+	return (TRANSIENT);
 }

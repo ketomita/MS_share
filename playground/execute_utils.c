@@ -1,26 +1,27 @@
 #include "execute.h"
 
-void	ft_close_fd(t_fds fds, t_proctype type)
+void	ft_close_fd(t_fds *fds, t_proctype type)
 {
-	if (fds.in_fd != STDIN_FILENO)
+	if (fds->in_fd != STDIN_FILENO)
 	{
 		if (type == CHILDREN)
-			dup2(fds.in_fd, STDIN_FILENO);
-		close(fds.in_fd);
+			dup2(fds->in_fd, STDIN_FILENO);
+		close(fds->in_fd);
 	}
-	if (fds.out_fd != STDOUT_FILENO)
+	if (fds->out_fd != STDOUT_FILENO)
 	{
 		if (type == CHILDREN)
-			dup2(fds.out_fd, STDOUT_FILENO);
-		close(fds.out_fd);
+			dup2(fds->out_fd, STDOUT_FILENO);
+		close(fds->out_fd);
 	}
 }
 
-int	put_fork_error(pid_t *pids)
+int	put_fork_error(pid_t *pids, t_fds *fds)
 {
 	int	i;
 
 	perror("minishell: fork");
+	ft_close_fd(fds, PARENTS);
 	i = 0;
 	while (pids[i] != -1)
 	{
@@ -38,9 +39,7 @@ int	check_status(int status)
 	else if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGPIPE)
-		{
 			ft_putstr_fd(" Broken pipe\n", STDERR_FILENO);
-		}
 		return (128 + WTERMSIG(status));
 	}
 	return (status);
@@ -59,10 +58,13 @@ void	wait_and_collect_statuses(int cmd_count, pid_t *pids, \
 	}
 }
 
-pid_t	*prepare_pids(t_command_invocation *current_cmd, int *cmd_count)
+pid_t	*allocate_pid_array(t_command_invocation *cmd_list, int *cmd_count)
 {
-	pid_t	*pids;
+	t_command_invocation	*current_cmd;
+	pid_t					*pids;
 
+	*cmd_count = 0;
+	current_cmd = cmd_list;
 	while (current_cmd)
 	{
 		(*cmd_count)++;
