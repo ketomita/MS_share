@@ -8,7 +8,6 @@
 # include "../lexer_parser.h"
 
 void	free_env_list(t_env *head);
-t_env	*make_env_node(char *name, char *value);
 void	append_env_node(t_env **head, t_env **tail, t_env *node);
 t_env	*find_env_node(t_env *head, const char *name);
 

@@ -68,8 +68,8 @@ int	execute_ast(t_command_invocation *cmd_list, t_data *data)
 	current = cmd_list;
 	while (current)
 	{
-		current->exec_and_args = (const char **) \
-		remove_empty_arguments((char **)current->exec_and_args);
+		current->exec_and_args = remove_empty_arguments \
+		((char **)current->exec_and_args);
 		current = current->piped_command;
 	}
 	ignore_signals(&signal);

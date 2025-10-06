@@ -14,10 +14,14 @@ BUILT-IN_A = $(BUILT-IN)/built-in.a
 ENVLIST = ./envlist
 ENVLIST_A = $(ENVLIST)/envlist.a
 
-SRCS = input.c execute.c lexer.c main.c parser.c command_execution.c \
-		expander.c redirection.c signal.c path.c execute_builtin.c \
-		execute_utils.c execve.c shlvl.c pipe.c execute_pipe.c heredoc.c \
-		execve_utils.c
+SRCS = command_args.c command_execution.c command_free.c command_process_redir.c \
+		command_redirection.c execute.c execute_builtin.c execute_pipe.c \
+		execute_setup.c execute_utils.c execve.c execve_utils.c expander.c expander_calc.c \
+		expander_expand.c expander_utils.c heredoc.c input.c lexer.c lexer_handlers.c \
+		lexer_multiline.c lexer_token.c lexer_utils.c lexer_word.c \
+		lexer_word_process.c main.c parser.c parser_ast.c parser_command.c \
+		parser_command_handle.c parser_pipeline.c parser_print.c parser_print_utils.c \
+		parser_utils.c path.c pipe.c redirection.c shlvl.c signal.c easteregg.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

@@ -14,7 +14,7 @@ void	free_env_list(t_env *head)
 	}
 }
 
-t_env	*make_env_node(char *name, char *value)
+t_env	*make_env_node(char *name, t_constchar *value)
 {
 	t_env	*node;
 
@@ -22,7 +22,7 @@ t_env	*make_env_node(char *name, char *value)
 	if (!node)
 		return (NULL);
 	node->name = name;
-	node->value = value;
+	node->value = (char *)value;
 	node->prev = NULL;
 	node->next = NULL;
 	return (node);
