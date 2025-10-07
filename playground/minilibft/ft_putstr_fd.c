@@ -1,29 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/07 10:01:45 by ketomita          #+#    #+#             */
+/*   Updated: 2025/10/07 10:06:13 by ketomita         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minilibft.h"
 
 void	ft_putstr_fd(char *s, int fd)
 {
-	size_t		len;
-	size_t		buf1;
-	size_t		buf2;
-	size_t		i;
+	size_t	len;
+	ssize_t	bytes_written;
 
-	if (!s)
+	if (s == NULL)
 		return ;
 	len = ft_strlen(s);
-	i = 0;
-	if (len > INT_MAX)
+	while (len > 0)
 	{
-		buf1 = len / INT_MAX;
-		buf2 = len % INT_MAX;
-		while (i < buf1)
-		{
-			write(fd, s, INT_MAX);
-			s += INT_MAX;
-			i++;
-		}
-		write(fd, s, buf2);
-		return ;
+		bytes_written = write(fd, s, len);
+		if (bytes_written == -1)
+			return ;
+		len -= bytes_written;
+		s += bytes_written;
 	}
-	write(fd, s, len);
-	return ;
 }

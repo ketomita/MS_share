@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/07 10:27:54 by ketomita          #+#    #+#             */
+/*   Updated: 2025/10/07 12:38:35 by ketomita         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execute.h"
 #include "easter.h"
 
 volatile sig_atomic_t	g_status;
 
-static int is_empty_or_whitespace(const char *str)
+static int	is_empty_or_whitespace(const char *str)
 {
 	if (!str)
 		return (1);
@@ -28,13 +40,31 @@ static int	is_dot_only(const char *str)
 	return (0);
 }
 
-int	main(int argc, char **argv, char **envp)
+static void	main_roop(t_data *data)
 {
 	char	*input;
-	t_token	*tokens;
-	t_ast	*ast;
-	t_data	data;
 	char	*full_input;
+
+	while (1)
+	{
+		input = readline_input();
+		if (input == NULL)
+			break ;
+		if (is_empty_or_whitespace(input) || is_dot_only(input)
+			|| is_nyancat(input))
+		{
+			free(input);
+			continue ;
+		}
+		full_input = handle_multiline_input(input);
+		free(input);
+		parse_and_execute(full_input, data);
+	}
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_data	data;
 
 	(void)argc;
 	(void)argv;
@@ -44,57 +74,9 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	}
 	g_status = 0;
-	input = NULL;
 	set_signal_handler();
 	set_shlvl(&data);
-	while (1)
-	{
-		input = readline_input();
-		if (input == NULL)
-			break ;
-		if (is_empty_or_whitespace(input) || is_dot_only(input) || is_nyancat(input))
-		{
-			free(input);
-			continue ;
-		}
-		full_input = handle_multiline_input(input);
-		free(input);
-		input = full_input;
-		tokens = tokenize(input);
-		if (!tokens)
-		{
-			ft_putstr_fd("Tokenization failed!\n", STDERR_FILENO);
-			free(input);
-			continue ;
-		}
-		ast = parse(tokens);
-		if (!ast)
-		{
-			ft_putstr_fd("Parsing failed!\n", STDERR_FILENO);
-			free_tokens(tokens);
-			free(input);
-			continue ;
-		}
-		t_command_invocation	*cmd;
-		cmd = ast_to_command_invocation(ast, data.env_head);
-		if (!cmd)
-		{
-			ft_putstr_fd("AST to command_invocation conversion failed!\n", STDERR_FILENO);
-			free_ast(ast);
-			free_tokens(tokens);
-			free(input);
-			continue ;
-		}
-		data.ast = ast;
-		data.cmd = cmd;
-		data.input = input;
-		data.tokens = tokens;
-		g_status = execute_ast(cmd, &data);
-		free_command_invocation(cmd);
-		free_ast(ast);
-		free_tokens(tokens);
-		free(input);
-	}
+	main_roop(&data);
 	free_env_list(data.env_head);
 	rl_clear_history();
 	return (g_status);

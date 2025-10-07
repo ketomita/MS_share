@@ -21,7 +21,7 @@ SRCS = command_args.c command_execution.c command_free.c command_process_redir.c
 		lexer_multiline.c lexer_token.c lexer_utils.c lexer_word.c \
 		lexer_word_process.c main.c parser.c parser_ast.c parser_command.c \
 		parser_command_handle.c parser_pipeline.c parser_print.c parser_print_utils.c \
-		parser_utils.c path.c pipe.c redirection.c shlvl.c signal.c easteregg.c
+		parser_utils.c path.c pipe.c redirection.c shlvl.c signal.c easteregg.c main_execute.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hhayato <hhayato@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:00:15 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/04 14:29:43 by hhayato          ###   ########.fr       */
+/*   Updated: 2025/10/07 12:40:15 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,13 @@ typedef struct s_signal
 	struct sigaction			sa_old_quit;
 }								t_signal;
 
+typedef enum e_main_error
+{
+	TOKENS,
+	AST,
+	CMD
+}								t_main_error;
+
 int								apply_redirections(t_command_invocation *cmd);
 char							*find_command_path(char *cmd, t_env *env_list);
 
@@ -105,5 +112,7 @@ void							prepro_ft_put_error(char *command, char *path,
 									char **current_envp);
 void							ft_put_error(char *command, char *path,
 									char **env_array, t_execve_error type);
+
+void							parse_and_execute(char *input, t_data *data);
 
 #endif

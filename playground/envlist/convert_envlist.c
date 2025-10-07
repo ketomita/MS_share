@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   convert_envlist.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/07 10:11:00 by ketomita          #+#    #+#             */
+/*   Updated: 2025/10/07 10:12:02 by ketomita         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "envlist.h"
 
-static size_t	count_env_nodes(t_env *head)
+static int	count_env_nodes(t_env *head)
 {
-	size_t	count;
+	int	count;
 
 	count = 0;
 	while (head)
@@ -14,7 +26,7 @@ static size_t	count_env_nodes(t_env *head)
 	return (count);
 }
 
-static int	free_env_array(char **env_array, size_t i)
+static int	free_env_array(char **env_array, int i)
 {
 	while (i > 0)
 		free(env_array[--i]);
@@ -22,7 +34,7 @@ static int	free_env_array(char **env_array, size_t i)
 	return (1);
 }
 
-static int	convert_env_nodes(t_env *head, char **env_array, size_t *i)
+static int	convert_env_nodes(t_env *head, char **env_array, int *i)
 {
 	char	*temp;
 
@@ -43,8 +55,8 @@ static int	convert_env_nodes(t_env *head, char **env_array, size_t *i)
 char	**convert_env_list_to_array(t_env *head)
 {
 	char	**env_array;
-	size_t	i;
-	size_t	node_count;
+	int		i;
+	int		node_count;
 
 	node_count = count_env_nodes(head);
 	env_array = (char **)malloc(sizeof(char *) * (node_count + 1));

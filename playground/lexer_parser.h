@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_parser.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:59 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/06 19:18:46 by marvin           ###   ########.fr       */
+/*   Updated: 2025/10/07 09:53:15 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,8 @@ typedef struct s_data
 	t_ast						*ast;
 	t_token						*tokens;
 	char						*input;
+	int							stdin_backup;
+	int							stdout_backup;
 }								t_data;
 
 t_token						*tokenize(char *input);

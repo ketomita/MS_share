@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   envlist.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/07 10:08:33 by ketomita          #+#    #+#             */
+/*   Updated: 2025/10/07 10:17:47 by ketomita         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef ENVLIST_H
 # define ENVLIST_H
 
 # include <stdlib.h>
-# include "../minilibft/minilibft.h"
 # include <readline/readline.h>
 
+# include "../minilibft/minilibft.h"
 # include "../lexer_parser.h"
 
 void	free_env_list(t_env *head);
@@ -17,6 +29,6 @@ void	ft_qsort(t_env **arr, int low, int high);
 
 char	**convert_env_list_to_array(t_env *head);
 
-t_env	**envcpy_and_get_size(t_env *head, size_t *size);
+t_env	**envcpy_and_get_size(t_env *head, int *size);
 
 #endif

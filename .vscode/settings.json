@@ -14,6 +14,7 @@
 		"ranges": "c",
 		"span": "c",
 		"utility": "c",
-		"readline.h": "c"
+		"readline.h": "c",
+		"easter.h": "c"
 	}
 }

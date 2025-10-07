@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_calc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hhayato <hhayato@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:32 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/04 14:18:57 by hhayato          ###   ########.fr       */
+/*   Updated: 2025/10/07 10:21:17 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	calculate_expanded_length(char *str, t_env *env_list)
 			i += 2;
 		}
 		else if (str[i] == '$' && str[i + 1] && \
-(ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
+			(ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
 			total_len += calc_env_var_len(str, &i, env_list);
 		else
 		{

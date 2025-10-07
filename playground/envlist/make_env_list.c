@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   make_env_list.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/07 10:18:42 by ketomita          #+#    #+#             */
+/*   Updated: 2025/10/07 11:51:57 by ketomita         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "envlist.h"
 
 static t_env	*split_env(char *envp)
@@ -30,10 +42,12 @@ static t_env	*split_env(char *envp)
 int	init_env_list(t_data *data, char *envp[])
 {
 	t_env	*node;
-	size_t	i;
+	int		i;
 
 	data->env_head = NULL;
 	data->env_tail = NULL;
+	data->stdin_backup = -1;
+	data->stdout_backup = -1;
 	i = 0;
 	while (envp[i])
 	{
