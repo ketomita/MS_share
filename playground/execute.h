@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:00:15 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 12:40:15 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/07 15:26:27 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 # define EXECUTE_H
 
 # include "builtin.h"
-# include "lexer_parser.h"
+# include "minishell.h"
+# include "parser.h"
+
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
@@ -70,49 +72,37 @@ typedef enum e_main_error
 	CMD
 }								t_main_error;
 
-int								apply_redirections(t_command_invocation *cmd);
-char							*find_command_path(char *cmd, t_env *env_list);
+int		execute_pipeline(t_command_invocation *cmd_list, t_data *data);
+int		apply_redirections(t_command_invocation *cmd);
+pid_t	run_pipeline_commands(t_command_invocation *cmd_list, \
+				pid_t *pids, t_data *data, t_fds *fds);
 
-void							set_signal_handler(void);
-void							set_parent_signal_handlers(void);
+void	ft_close_fd(t_fds *fds, t_proctype type);
+int		put_fork_error(pid_t *pids, t_fds *fds);
+int		check_status(int status);
+void	wait_and_collect_statuses(int cmd_count, pid_t *pids, \
+		t_child_status *statuses);
+pid_t	*allocate_pid_array(t_command_invocation *cmd_list, int *cmd_count);
 
-void							prepro_execute_child_process(t_fds *fds,
-									t_command_invocation *current_cmd,
-									t_data *data);
+int		preprocess_heredocs(t_command_invocation *cmd_list);
+int		execute_builtin(t_command_invocation *cmd, t_data *data);
 
-int								execute_builtin(t_command_invocation *cmd,
-									t_data *data);
+char	*find_command_path(char *cmd, t_env *env_list);
 
-char							*readline_input(void);
-int								execute_ast(t_command_invocation *cmd_list,
-									t_data *data);
+void	prepro_ft_put_error(char *command, \
+			char *path, char **current_envp);
+void	ft_put_error(char *command, char *path, \
+							char **env_array, t_execve_error type);
 
-pid_t							\
-*allocate_pid_array(t_command_invocation *cmd_list,
-									int *cmd_count);
-int								check_status(int status);
-void							wait_and_collect_statuses(int cmd_count,
-									pid_t *pids, t_child_status *statuses);
-int								put_fork_error(pid_t *pids, t_fds *fds);
-void							ft_close_fd(t_fds *fds, t_proctype type);
+void	set_signal_handler(void);
+void	set_parent_signal_handlers(void);
 
-void							set_shlvl(t_data *data);
+char	*readline_input(void);
+void	parse_and_execute(char *input, t_data *data);
 
-pid_t							\
-run_pipeline_commands(t_command_invocation *cmd_list,
-									pid_t *pids, t_data *data, t_fds *fds);
+void	prepro_execute_child_process(t_fds *fds, \
+		t_command_invocation *current_cmd, t_data *data);
 
-int								execute_pipeline(t_command_invocation *cmd_list,
-									t_data *data);
-
-int								\
-preprocess_heredocs(t_command_invocation *cmd_list);
-
-void							prepro_ft_put_error(char *command, char *path,
-									char **current_envp);
-void							ft_put_error(char *command, char *path,
-									char **env_array, t_execve_error type);
-
-void							parse_and_execute(char *input, t_data *data);
+int		execute_ast(t_command_invocation *cmd_list, t_data *data);
 
 #endif

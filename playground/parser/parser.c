@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/07 10:03:20 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 14:36:37 by ketomita         ###   ########.fr       */
+/*   Created: 2025/10/04 14:06:55 by hhayato           #+#    #+#             */
+/*   Updated: 2025/10/07 12:56:43 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minilibft.h"
+#include "parser.h"
 
-size_t	ft_strlen(const char *s)
+t_ast	*parse(t_token *tokens)
 {
-	size_t	i;
+	t_parser	parser;
+	t_ast		*ast;
 
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
+	if (!tokens)
+		return (NULL);
+	parser.tokens = tokens;
+	parser.current = tokens;
+	if (parser.current->type == EOF_TOKEN)
+		return (NULL);
+	ast = parse_pipeline(&parser);
+	return (ast);
 }

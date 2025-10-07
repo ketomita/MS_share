@@ -15,6 +15,12 @@
 		"span": "c",
 		"utility": "c",
 		"readline.h": "c",
-		"easter.h": "c"
+		"easter.h": "c",
+		"parser.h": "c",
+		"minishell.h": "c",
+		"lexer.h": "c",
+		"ast.h": "c",
+		"expander.h": "c",
+		"errno.h": "c"
 	}
 }

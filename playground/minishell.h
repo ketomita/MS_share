@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/07 10:03:20 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 14:36:37 by ketomita         ###   ########.fr       */
+/*   Created: 2025/10/07 15:26:39 by ketomita          #+#    #+#             */
+/*   Updated: 2025/10/07 15:26:40 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minilibft.h"
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
-size_t	ft_strlen(const char *s)
+# include "./parser/parser.h"
+# include "./ast/ast.h"
+
+typedef struct s_data
 {
-	size_t	i;
+	t_env						*env_head;
+	t_env						*env_tail;
+	t_command_invocation		*cmd;
+	t_ast						*ast;
+	t_token						*tokens;
+	char						*input;
+	int							stdin_backup;
+	int							stdout_backup;
+}								t_data;
 
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
+#endif
