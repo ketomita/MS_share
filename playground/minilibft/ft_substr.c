@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:02:26 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:02:27 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:46:52 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibft.h"
+#include <stdlib.h>
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {

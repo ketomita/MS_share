@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:11:00 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:12:02 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:54:15 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "envlist.h"
+#include <stdlib.h>
 
 static int	count_env_nodes(t_env *head)
 {

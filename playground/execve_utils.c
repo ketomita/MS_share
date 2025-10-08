@@ -6,11 +6,15 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:19:22 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:19:23 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:02:37 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 static void	free_string_array(char **array)
 {

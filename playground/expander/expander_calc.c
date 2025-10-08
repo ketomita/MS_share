@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:32 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 14:27:51 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:56:34 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expander.h"
+#include <stdlib.h>
 
 static int	calc_status_len(void)
 {

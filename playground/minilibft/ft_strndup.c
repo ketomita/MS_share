@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:03:15 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:03:16 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:46:46 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibft.h"
+#include <stdlib.h>
 
 char	*ft_strdup(const char *s1)
 {

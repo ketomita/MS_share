@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 12:52:03 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 14:21:28 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:10:19 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define PARSER_H
 
 # include "../lexer/lexer.h"
+# include <stdbool.h>
+# include <stddef.h>
 
 typedef struct s_ast
 {

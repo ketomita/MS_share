@@ -6,12 +6,15 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:27:54 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 12:38:35 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:04:13 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "easter.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <readline/readline.h>
 
 volatile sig_atomic_t	g_status;
 
@@ -35,6 +38,7 @@ static int	is_dot_only(const char *str)
 	{
 		ft_putstr_fd("minishell: .: filename argument required\n", 2);
 		ft_putstr_fd(".: usage: . filename [arguments]\n", 2);
+		g_status = 2;
 		return (1);
 	}
 	return (0);

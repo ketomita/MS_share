@@ -6,17 +6,14 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:06:29 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:06:30 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:49:55 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINILIBFT_H
 # define MINILIBFT_H
 
-# include <unistd.h>
-# include <stdlib.h>
-# include <limits.h>
-# include <stdint.h>
+# include <stddef.h>
 
 long long	ft_atoll(const char *str);
 void		ft_bzero(void *s, size_t n);

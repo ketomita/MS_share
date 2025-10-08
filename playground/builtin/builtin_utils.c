@@ -6,11 +6,13 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:06:49 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:06:50 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:53:25 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
+#include <stdlib.h>
+#include <readline/readline.h>
 
 size_t	count_builtin_args(char **args)
 {

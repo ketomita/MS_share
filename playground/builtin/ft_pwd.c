@@ -6,11 +6,14 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:07:18 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:07:19 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:52:26 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 int	ft_pwd(void)
 {

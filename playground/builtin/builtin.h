@@ -6,17 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:06:55 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:06:56 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:39:01 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_H
 # define BUILTIN_H
-
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
-# include <stdbool.h>
 
 # include "../envlist/envlist.h"
 

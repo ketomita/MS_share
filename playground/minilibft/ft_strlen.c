@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:03:20 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 14:36:37 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:46:38 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibft.h"
+#include <stddef.h>
 
 size_t	ft_strlen(const char *s)
 {

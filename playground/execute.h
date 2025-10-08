@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:00:15 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 15:26:27 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:38:32 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,6 @@
 
 # include "builtin.h"
 # include "minishell.h"
-# include "parser.h"
-
-# include <errno.h>
-# include <fcntl.h>
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <signal.h>
-# include <stdio.h>
-# include <sys/stat.h>
-# include <sys/wait.h>
 
 # define STATUS_COMMAND_NOT_FOUND 127
 

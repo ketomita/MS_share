@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:42 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 14:27:44 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:56:49 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expander.h"
+#include <stdlib.h>
 
 static void	expand_status_var(t_expand_ctx *ctx)
 {

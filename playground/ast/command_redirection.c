@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:12 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 13:22:33 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:56:21 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
+#include <stdlib.h>
 
 static char	*allocate_and_copy_path(t_constchar *file_path)
 {

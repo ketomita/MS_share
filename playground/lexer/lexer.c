@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:06:22 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 13:37:12 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:54:41 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include <stdlib.h>
 
 static int	handle_pipe(int pos, char **value, t_token_type *type)
 {

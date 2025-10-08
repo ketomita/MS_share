@@ -12,10 +12,9 @@
 
 #ifndef EASTER_H
 # define EASTER_H
-# include <fcntl.h>
-# include <unistd.h>
-# include <signal.h>
+
 # include "minilibft.h"
+# include <signal.h>
 
 extern volatile sig_atomic_t	g_status;
 

@@ -6,11 +6,16 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:19:54 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:19:55 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:03:12 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdio.h>
+#include <readline/readline.h>
 
 static void	readline_in_heredoc(int pipe_fd[], const char *delimiter)
 {

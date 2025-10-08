@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:50 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 14:05:37 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:56:27 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expander.h"
+#include <stdlib.h>
 
 char	*expand_token_value(char *value, t_token_type type, t_env *env_list)
 {

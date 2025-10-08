@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:00:20 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:00:21 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:46:05 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibft.h"
+#include <stdlib.h>
 
 static int	word_count(char c, char *str)
 {

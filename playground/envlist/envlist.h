@@ -6,15 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:08:33 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 14:17:51 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:39:10 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENVLIST_H
 # define ENVLIST_H
-
-# include <stdlib.h>
-# include <readline/readline.h>
 
 # include "../minilibft/minilibft.h"
 # include "../minishell.h"

@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:22:35 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:22:36 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:57:36 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <unistd.h>
 
 static void	restore_fds(int stdin_backup, int stdout_backup)
 {

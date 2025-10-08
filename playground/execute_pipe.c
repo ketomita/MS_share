@@ -6,11 +6,13 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:49 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:20:50 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:57:49 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 static pid_t	execute_current_cmd(t_command_invocation *cmd_list, \
 				pid_t *pids, t_data *data)

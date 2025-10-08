@@ -6,11 +6,13 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 12:05:22 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 12:05:23 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:04:29 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 static void	free_split(char **str)
 {

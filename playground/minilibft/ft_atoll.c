@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:00:28 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:00:29 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:42:05 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibft.h"
+#include <limits.h>
 
 long long	ft_atoll(const char *str)
 {

@@ -6,11 +6,14 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:07:00 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:07:01 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:50:43 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
 
 static void	put_error_message(int *result, t_error_type type)
 {

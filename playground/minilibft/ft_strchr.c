@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:03:45 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:03:46 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:46:09 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibft.h"
+#include <stddef.h>
 
 char	*ft_strchr(const char *s, int c)
 {

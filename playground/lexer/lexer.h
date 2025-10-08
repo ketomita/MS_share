@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:59 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 15:24:21 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:49:32 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,8 @@
 # define LEXER_H
 
 # include "../minilibft/minilibft.h"
-# include <signal.h>
 # include <stdbool.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <sys/types.h>
-# include <unistd.h>
-# include <readline/readline.h>
+# include <signal.h>
 
 extern volatile sig_atomic_t	g_status;
 

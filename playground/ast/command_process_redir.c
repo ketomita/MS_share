@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:08 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 13:22:37 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:56:13 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
+#include <stdlib.h>
 
 static t_redirect_type	token_to_redirect_type(t_token_type type)
 {

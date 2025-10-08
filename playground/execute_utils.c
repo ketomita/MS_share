@@ -6,11 +6,15 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:21 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:20:22 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:58:32 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdio.h>
 
 void	ft_close_fd(t_fds *fds, t_proctype type)
 {

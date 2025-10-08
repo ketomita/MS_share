@@ -6,11 +6,13 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:36 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:20:37 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:01:05 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 static void	execute_child_process(t_command_invocation *cmd, t_data *data)
 {

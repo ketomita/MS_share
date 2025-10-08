@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "easter.h"
+#include <fcntl.h>
+#include <unistd.h>
 
 static int	write_nyancat(int fd)
 {

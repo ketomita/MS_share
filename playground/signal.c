@@ -6,11 +6,16 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:23:25 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:23:26 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:05:49 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <signal.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <readline/readline.h>
 
 static void	handle_sigint(int signo)
 {

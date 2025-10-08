@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:19:35 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 14:18:34 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:54:33 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "envlist.h"
+#include <stdlib.h>
 
 static void	make_shlvl_node(t_data *data)
 {

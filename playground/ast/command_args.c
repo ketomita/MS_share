@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:04:48 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 13:22:51 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:55:53 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
+#include <stdlib.h>
 
 static int	count_args(t_ast *node)
 {

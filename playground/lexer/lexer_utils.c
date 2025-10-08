@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:06:11 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 13:15:03 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:55:39 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include <stdlib.h>
 
 bool	is_quote(char c)
 {

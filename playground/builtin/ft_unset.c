@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:07:21 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:07:22 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:52:57 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
+#include <stdlib.h>
 
 static void	free_env_node(t_env *node)
 {

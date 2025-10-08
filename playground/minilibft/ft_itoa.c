@@ -6,11 +6,13 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:01:37 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:01:38 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:45:33 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibft.h"
+#include <stdlib.h>
+#include <limits.h>
 
 static int	ft_checkdigits(int n)
 {

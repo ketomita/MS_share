@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:03:41 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:03:42 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:46:12 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibft.h"
+#include <stddef.h>
 
 int	ft_strcmp(const char *s1, const char *s2)
 {

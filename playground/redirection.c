@@ -6,11 +6,14 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:00:08 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:00:09 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:05:07 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
 
 static void	apply_redirection(t_cmd_redirection *redir, \
 			int *last_input_fd, int *last_output_fd)

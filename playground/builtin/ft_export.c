@@ -6,11 +6,14 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:07:14 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:14:38 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:52:38 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 static int	print_env_list(t_env *head)
 {

@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:06:26 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 12:56:09 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:55:47 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+#include <stdlib.h>
 
 static char	*allocate_value(t_constchar *value, t_ast *node)
 {

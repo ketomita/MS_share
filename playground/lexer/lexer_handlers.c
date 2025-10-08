@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:54 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 13:14:49 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:54:50 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include <stdlib.h>
 
 static int	extract_quoted_value(char *input, int start, int end, char **value)
 {

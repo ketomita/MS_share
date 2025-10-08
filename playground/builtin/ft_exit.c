@@ -6,11 +6,14 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:07:09 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 12:04:12 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:51:58 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
+#include <unistd.h>
+#include <stdlib.h>
+#include <readline/readline.h>
 
 static bool	is_numeric_string(const char *str)
 {

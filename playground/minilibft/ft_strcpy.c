@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:03:36 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 10:03:37 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:46:19 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minilibft.h"
+#include <stddef.h>
 
 char	*ft_strcpy(char *dest, const char *src)
 {

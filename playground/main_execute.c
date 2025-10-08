@@ -6,11 +6,13 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 12:40:23 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 12:40:24 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:06:37 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 static void	put_error_and_free(t_ast *ast, t_token *tokens, \
 			char *input, t_main_error type)

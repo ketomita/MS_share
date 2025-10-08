@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:47 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 14:27:57 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:56:58 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expander.h"
+#include <stdlib.h>
 
 int	get_var_name_length(char *str)
 {

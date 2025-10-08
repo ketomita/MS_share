@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 09:58:55 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 09:58:58 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:57:05 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <stdlib.h>
 
 static char	**rebuild_arguments(int non_empty_count, char **args)
 {

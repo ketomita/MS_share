@@ -6,11 +6,13 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:59 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 13:14:58 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:55:30 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include <stdlib.h>
+#include <readline/readline.h>
 
 static bool	has_unclosed_quote(char *str)
 {

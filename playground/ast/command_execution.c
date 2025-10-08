@@ -6,11 +6,12 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:00 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/07 13:22:47 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:56:00 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
+#include <stdlib.h>
 
 static t_command_invocation	*convert_simple_command(t_ast *ast, t_env *env_list)
 {
