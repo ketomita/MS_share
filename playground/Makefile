@@ -26,8 +26,8 @@ AST_A = $(AST)/ast.a
 EXPANDER = ./expander
 EXPANDER_A = $(EXPANDER)/expander.a
 
-SRCS = execute.c execute_builtin.c execute_pipe.c execute_setup.c execute_utils.c \
-		execve.c execve_utils.c heredoc.c input.c main.c path.c pipe.c redirection.c \
+SRCS = execute.c execute_builtin.c execute_pipe.c execute_utils.c execve.c \
+		execve_utils.c heredoc.c input.c main.c path.c pipe.c redirection.c \
 		signal.c easteregg.c main_execute.c
 OBJS = $(SRCS:.c=.o)
 
