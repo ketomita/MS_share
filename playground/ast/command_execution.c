@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:00 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/08 13:56:00 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 11:22:14 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,11 @@ static t_command_invocation	*convert_simple_command(t_ast *ast, t_env *env_list)
 	cmd->pid = -1;
 	cmd->exec_and_args = create_args_array(ast->left, env_list);
 	process_redirections(ast->right, cmd, env_list);
-	if (!cmd->exec_and_args || !cmd->exec_and_args[0])
-	{
-		if (!cmd->redirections)
-			free_command_invocation(cmd);
-		return (NULL);
-	}
+	if (cmd->exec_and_args && cmd->exec_and_args[0])
+		return (cmd);
+	if (cmd->redirections)
+		return (cmd);
+	free_command_invocation(cmd);
 	return (cmd);
 }
 

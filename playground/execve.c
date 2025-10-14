@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:36 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/14 10:18:16 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 11:23:09 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ static void	execute_child_process(t_command_invocation *cmd, t_data *data)
 	current_envp = convert_env_list_to_array(data->env_head);
 	if (apply_redirections(cmd))
 		exit(1);
+	if (!cmd->exec_and_args || !cmd->exec_and_args[0])
+		exit(0);
 	command = (char *)cmd->exec_and_args[0];
 	if (is_builtin(command) != TRANSIENT)
 		exit(dispatch_builtin((char **)cmd->exec_and_args, data));

@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:49 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 13:57:49 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 11:33:55 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,28 @@ static void	collect_status(int cmd_count, pid_t *pids, \
 	*final_status_code = check_status(last_cmd_status);
 }
 
+static void	cleanup_heredocs(t_command_invocation *cmd_list)
+{
+	t_command_invocation	*current_cmd;
+	t_cmd_redirection		*redir;
+
+	current_cmd = cmd_list;
+	while (current_cmd)
+	{
+		redir = current_cmd->redirections;
+		while (redir)
+		{
+			if (redir->type == REDIR_HEREDOC && redir->fd != -1)
+			{
+				close(redir->fd);
+				redir->fd = -1;
+			}
+			redir = redir->next;
+		}
+		current_cmd = current_cmd->piped_command;
+	}
+}
+
 int	execute_pipeline(t_command_invocation *cmd_list, t_data *data)
 {
 	t_command_invocation	*current_cmd;
@@ -95,5 +117,6 @@ int	execute_pipeline(t_command_invocation *cmd_list, t_data *data)
 	if (last_pid != -1)
 		collect_status(cmd_count, pids, last_pid, &final_status_code);
 	free(pids);
+	cleanup_heredocs(cmd_list);
 	return (final_status_code);
 }
