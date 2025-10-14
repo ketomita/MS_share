@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:36 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/14 10:02:13 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 10:18:16 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+
+static void	ft_put_command_not_found(char *command, int status)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(command, STDERR_FILENO);
+	ft_putstr_fd(": command not found\n", STDERR_FILENO);
+	exit(status);
+}
 
 static void	execute_child_process(t_command_invocation *cmd, t_data *data)
 {
@@ -35,11 +43,11 @@ static void	execute_child_process(t_command_invocation *cmd, t_data *data)
 	if (path == NULL)
 	{
 		free_string_array(current_envp);
-		ft_put_error_and_exit(command, "command not found", 127);
+		ft_put_command_not_found(command, 127);
 	}
 	execve(path, (char **)cmd->exec_and_args, current_envp);
 	_errno = errno;
-	ft_execve_error(path, _errno);
+	ft_execve_error(path, current_envp, _errno);
 }
 
 static void	reset_default_signal(void)

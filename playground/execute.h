@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:00:15 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/14 09:58:10 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 10:18:59 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,7 @@ int		execute_builtin(t_command_invocation *cmd, t_data *data);
 char	*find_command_path(char *cmd, t_env *env_list);
 
 void	free_string_array(char **array);
-void	ft_put_error_and_exit(char *command, char *msg, int status);
-void	ft_execve_error(char *path, int _errno);
+void	ft_execve_error(char *path, char **envp, int _errno);
 
 void	set_signal_handler(void);
 void	set_parent_signal_handlers(void);
