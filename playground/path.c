@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 12:05:22 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 14:04:29 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 09:29:53 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static char	*prepare_cmd_path(char *cmd, char **paths)
 		tmp = full_path;
 		full_path = ft_strjoin(full_path, cmd);
 		free(tmp);
-		if (access(full_path, X_OK) == 0)
+		if (access(full_path, F_OK) == 0)
 		{
 			free_split(paths);
 			return (full_path);

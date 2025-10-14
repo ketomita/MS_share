@@ -6,17 +6,19 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:19:22 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 14:02:37 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 10:00:27 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
-#include <sys/stat.h>
-#include <unistd.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <errno.h>
 
-static void	free_string_array(char **array)
+void	free_string_array(char **array)
 {
 	int	i;
 
@@ -31,46 +33,29 @@ static void	free_string_array(char **array)
 	free(array);
 }
 
-void	ft_put_error(char *command, char *path, \
-							char **env_array, t_execve_error type)
+void	ft_put_error_and_exit(char *command, char *msg, int status)
 {
-	if (env_array)
-		free_string_array(env_array);
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	if (type == COMMAND_NOT_FOUND)
-	{
-		ft_putstr_fd(command, STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		exit(127);
-	}
-	else if (type == COMMAND_NOT_FOUND_PATH)
-	{
-		perror(path);
-		free(path);
-		exit(127);
-	}
-	else if (type == IS_A_DIRECTORY)
-	{
-		ft_putstr_fd(path, STDERR_FILENO);
-		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
-	}
-	else if (type == PERMISSION_DENIED || type == EXECVE_ERROR)
-		perror(path);
-	free(path);
-	exit(126);
+	ft_putstr_fd(command, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(msg, STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
+	exit(status);
 }
 
-void	prepro_ft_put_error(char *command, \
-			char *path, char **current_envp)
+void	ft_execve_error(char *path, int _errno)
 {
 	struct stat	s;
 
-	if (!path)
-		ft_put_error(command, path, current_envp, COMMAND_NOT_FOUND);
-	if (access(path, F_OK) != 0)
-		ft_put_error(command, path, current_envp, COMMAND_NOT_FOUND_PATH);
-	if (stat(path, &s) == 0 && S_ISDIR(s.st_mode))
-		ft_put_error(command, path, current_envp, IS_A_DIRECTORY);
-	if (access(path, X_OK) != 0)
-		ft_put_error(command, path, current_envp, PERMISSION_DENIED);
+	if (stat(path, &s) == 0)
+	{
+		if (S_ISDIR(s.st_mode))
+			ft_put_error_and_exit(path, "Is a directory", 126);
+	}
+	if (_errno == EACCES)
+		ft_put_error_and_exit(path, "Permission denied", 126);
+	if (_errno == ENOENT)
+		ft_put_error_and_exit(path, "No such file or directory", 127);
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_put_error_and_exit(path, strerror(_errno), 1);
 }

@@ -6,33 +6,40 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:36 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 14:01:05 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 10:02:13 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 
 static void	execute_child_process(t_command_invocation *cmd, t_data *data)
 {
-	char		*command;
-	char		*path;
-	char		**current_envp;
+	char	*command;
+	char	*path;
+	char	**current_envp;
+	int		_errno;
 
 	current_envp = convert_env_list_to_array(data->env_head);
 	if (apply_redirections(cmd))
 		exit(1);
-	if (is_builtin(cmd->exec_and_args[0]) != TRANSIENT)
-		exit(dispatch_builtin((char **)cmd->exec_and_args, data));
 	command = (char *)cmd->exec_and_args[0];
+	if (is_builtin(command) != TRANSIENT)
+		exit(dispatch_builtin((char **)cmd->exec_and_args, data));
 	if (ft_strchr(command, '/'))
 		path = ft_strdup(command);
 	else
 		path = find_command_path(command, data->env_head);
-	prepro_ft_put_error(command, path, current_envp);
+	if (path == NULL)
+	{
+		free_string_array(current_envp);
+		ft_put_error_and_exit(command, "command not found", 127);
+	}
 	execve(path, (char **)cmd->exec_and_args, current_envp);
-	ft_put_error(command, path, current_envp, EXECVE_ERROR);
+	_errno = errno;
+	ft_execve_error(path, _errno);
 }
 
 static void	reset_default_signal(void)
