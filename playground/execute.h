@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:00:15 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/14 10:18:59 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:16:34 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 # include "builtin.h"
 # include "minishell.h"
-
-# define STATUS_COMMAND_NOT_FOUND 127
 
 extern volatile sig_atomic_t	g_status;
 

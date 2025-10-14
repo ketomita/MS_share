@@ -26,7 +26,7 @@ static int	write_nyancat(int fd)
 			break ;
 		if (write(STDOUT_FILENO, buf, bytes_read) != bytes_read)
 		{
-			ft_putstr_fd("nyancat: write error\n", 2);
+			ft_putstr_fd("nyancat: write error\n", STDERR_FILENO);
 			close(fd);
 			return (1);
 		}
@@ -34,7 +34,7 @@ static int	write_nyancat(int fd)
 	close(fd);
 	if (bytes_read == -1)
 	{
-		ft_putstr_fd("nyancat: read error\n", 2);
+		ft_putstr_fd("nyancat: read error\n", STDERR_FILENO);
 		return (1);
 	}
 	return (0);

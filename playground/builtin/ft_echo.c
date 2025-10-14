@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:06:44 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 13:48:34 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:14:29 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ int	ft_echo(char **str)
 	{
 		ft_putstr_fd(str[i], STDOUT_FILENO);
 		if (str[i + 1])
-			write(1, " ", STDOUT_FILENO);
+			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (start == 0)
-		write(1, "\n", STDOUT_FILENO);
+		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }

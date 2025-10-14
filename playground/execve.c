@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:36 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/14 11:23:09 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:11:53 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	execute_child_process(t_command_invocation *cmd, t_data *data)
 
 	current_envp = convert_env_list_to_array(data->env_head);
 	if (apply_redirections(cmd))
-		exit(1);
+		exit(GENERAL_ERROR_STATUS);
 	if (!cmd->exec_and_args || !cmd->exec_and_args[0])
 		exit(0);
 	command = (char *)cmd->exec_and_args[0];
@@ -45,7 +45,7 @@ static void	execute_child_process(t_command_invocation *cmd, t_data *data)
 	if (path == NULL)
 	{
 		free_string_array(current_envp);
-		ft_put_command_not_found(command, 127);
+		ft_put_command_not_found(command, COMMAND_NOT_FOUND_STATUS);
 	}
 	execve(path, (char **)cmd->exec_and_args, current_envp);
 	_errno = errno;

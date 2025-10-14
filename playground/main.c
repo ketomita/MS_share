@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:27:54 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 14:04:13 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:19:41 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,11 @@ static int	is_dot_only(const char *str)
 {
 	if (!ft_strcmp(str, "."))
 	{
-		ft_putstr_fd("minishell: .: filename argument required\n", 2);
-		ft_putstr_fd(".: usage: . filename [arguments]\n", 2);
-		g_status = 2;
+		ft_putstr_fd("minishell: .: filename argument required\n", \
+			STDERR_FILENO);
+		ft_putstr_fd(".: usage: . filename [arguments]\n", \
+			STDERR_FILENO);
+		g_status = BUILTIN_ERROR_STATUS;
 		return (1);
 	}
 	return (0);

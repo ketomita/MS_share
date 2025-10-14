@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:19:22 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/14 10:19:52 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:18:58 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,14 @@ void	ft_execve_error(char *path, char **envp, int _errno)
 
 	free_string_array(envp);
 	if (stat(path, &s) == 0 && S_ISDIR(s.st_mode))
-		ft_put_error_and_exit(path, "Is a directory", 126);
+		ft_put_error_and_exit(path, "Is a directory", \
+			COMMAND_NOT_EXECUTABLE_STATUS);
 	if (_errno == EACCES)
-		ft_put_error_and_exit(path, "Permission denied", 126);
+		ft_put_error_and_exit(path, "Permission denied", \
+			COMMAND_NOT_EXECUTABLE_STATUS);
 	if (_errno == ENOENT)
-		ft_put_error_and_exit(path, "No such file or directory", 127);
+		ft_put_error_and_exit(path, "No such file or directory", \
+			COMMAND_NOT_FOUND_STATUS);
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_put_error_and_exit(path, strerror(_errno), 1);
+	ft_put_error_and_exit(path, strerror(_errno), GENERAL_ERROR_STATUS);
 }

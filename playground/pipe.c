@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 09:59:28 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/14 12:16:55 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:19:18 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,10 @@ static pid_t	process_one_command(t_command_invocation *current_cmd, \
 		if (current_cmd->exec_and_args && current_cmd->exec_and_args[0] && \
 			ft_strcmp(current_cmd->exec_and_args[0], ".") == 0)
 		{
-			ft_putstr_fd("minishell: .: filename argument required\n", 2);
-			ft_putstr_fd(".: usage: . filename [arguments]\n", 2);
-			exit(2);
+			ft_putstr_fd("minishell: .: filename argument required\n", \
+				STDERR_FILENO);
+			ft_putstr_fd(".: usage: . filename [arguments]\n", STDERR_FILENO);
+			exit(BUILTIN_ERROR_STATUS);
 		}
 		prepro_execute_child_process(fds, current_cmd, data);
 	}

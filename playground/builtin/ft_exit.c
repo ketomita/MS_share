@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:07:09 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 13:51:58 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:11:33 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	ft_exit(t_data *data, char **args)
 	if (arg_count == 1)
 		exit_minishell(data, g_status);
 	if (!is_numeric_string(args[1]))
-		put_exit_error(data, args[1], 2);
+		put_exit_error(data, args[1], BUILTIN_ERROR_STATUS);
 	if (arg_count > 2)
 	{
 		if (isatty(STDIN_FILENO))
