@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:00:08 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 14:05:07 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 11:41:05 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	apply_redirection(t_cmd_redirection *redir, \
 	}
 }
 
-static void	restore_std_fd(int last_input_fd, int last_output_fd)
+static void	redirect_std_fd(int last_input_fd, int last_output_fd)
 {
 	if (last_input_fd != -1)
 	{
@@ -79,6 +79,6 @@ int	apply_redirections(t_command_invocation *cmd)
 		}
 		redir = redir->next;
 	}
-	restore_std_fd(last_input_fd, last_output_fd);
+	redirect_std_fd(last_input_fd, last_output_fd);
 	return (0);
 }

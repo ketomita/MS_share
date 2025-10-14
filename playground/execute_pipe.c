@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:49 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/14 11:33:55 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 12:26:06 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static void	collect_status(int cmd_count, pid_t *pids, \
 	*final_status_code = check_status(last_cmd_status);
 }
 
-static void	cleanup_heredocs(t_command_invocation *cmd_list)
+static int	cleanup_heredocs(t_command_invocation *cmd_list)
 {
 	t_command_invocation	*current_cmd;
 	t_cmd_redirection		*redir;
@@ -93,6 +93,7 @@ static void	cleanup_heredocs(t_command_invocation *cmd_list)
 		}
 		current_cmd = current_cmd->piped_command;
 	}
+	return (1);
 }
 
 int	execute_pipeline(t_command_invocation *cmd_list, t_data *data)
@@ -105,13 +106,14 @@ int	execute_pipeline(t_command_invocation *cmd_list, t_data *data)
 
 	final_status_code = 0;
 	if (preprocess_heredocs(cmd_list) != 0)
-		return (1);
+		return (cleanup_heredocs(cmd_list));
 	if (cmd_list && !cmd_list->piped_command && \
+		cmd_list->exec_and_args && cmd_list->exec_and_args[0] && \
 		is_builtin(cmd_list->exec_and_args[0]) == BUILTIN_PARENT)
 		return (execute_builtin(cmd_list, data));
 	pids = allocate_pid_array(cmd_list, &cmd_count);
 	if (!pids)
-		return (1);
+		return (cleanup_heredocs(cmd_list));
 	current_cmd = cmd_list;
 	last_pid = execute_current_cmd(current_cmd, pids, data);
 	if (last_pid != -1)

@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:00 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/14 11:22:14 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 11:43:25 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static t_command_invocation	*convert_simple_command(t_ast *ast, t_env *env_list)
 	if (cmd->redirections)
 		return (cmd);
 	free_command_invocation(cmd);
-	return (cmd);
+	return (NULL);
 }
 
 static t_command_invocation	*find_last_command(t_command_invocation *cmd)

@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 12:40:23 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 14:06:37 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/14 11:47:12 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,5 @@ void	parse_and_execute(char *input, t_data *data)
 		return ;
 	}
 	cmd = ast_to_command_invocation(data->ast, data->env_head);
-	if (!cmd)
-	{
-		put_error_and_free(data->ast, data->tokens, input, CMD);
-		return ;
-	}
 	run_and_cleanup(data, cmd);
 }
