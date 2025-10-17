@@ -21,7 +21,6 @@ typedef struct s_env					t_env;
 
 typedef const char						t_constchar;
 
-/* 共通列挙（トークン列挙等は lexer/lexer.h に置く） */
 typedef enum e_redirect_type
 {
 	REDIR_INPUT,

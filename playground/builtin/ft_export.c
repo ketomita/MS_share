@@ -57,7 +57,7 @@ static int	is_valid_identifier(const char *name)
 	return (1);
 }
 
-static int	put_error_and_free(char *name, char *value, char *var)
+static void	put_error_and_free(char *name, char *value, char *var, int *exit_status)
 {
 	if (var)
 	{
@@ -67,10 +67,10 @@ static int	put_error_and_free(char *name, char *value, char *var)
 	}
 	free(name);
 	free(value);
-	return (1);
+	*exit_status = 1;
 }
 
-static int	update_or_add_env(t_data *data, char *name, char *value)
+static void	update_or_add_env(t_data *data, char *name, char *value, int *exit_status)
 {
 	t_env	*node;
 
@@ -91,35 +91,43 @@ static int	update_or_add_env(t_data *data, char *name, char *value)
 		{
 			free(name);
 			free(value);
-			return (1);
+			*exit_status = 1;
 		}
 		append_env_node(&data->env_head, &data->env_tail, node);
 	}
-	return (0);
 }
 
-int	ft_export(t_data *data, char *var)
+int	ft_export(t_data *data, char **args)
 {
+	int		i;
 	char	*name;
 	char	*value;
 	char	*eq_ptr;
+	int		exit_status;
 
-	if (!var)
+	exit_status = 0;
+	if (args[1] == NULL)
 		return (print_env_list(data->env_head));
-	eq_ptr = ft_strchr(var, '=');
-	if (eq_ptr)
+	i = 1;
+	while (args[i])
 	{
-		name = ft_substr(var, 0, eq_ptr - var);
-		value = ft_strdup(eq_ptr + 1);
+		eq_ptr = ft_strchr(args[i], '=');
+		if (eq_ptr)
+		{
+			name = ft_substr(args[i], 0, eq_ptr - args[i]);
+			value = ft_strdup(eq_ptr + 1);
+		}
+		else
+		{
+			name = ft_strdup(args[i]);
+			value = NULL;
+		}
+		if (!name || (eq_ptr && !value))
+			put_error_and_free(name, value, NULL, &exit_status);
+		else if (!is_valid_identifier(name))
+			put_error_and_free(name, value, args[i], &exit_status);
+		update_or_add_env(data, name, value, &exit_status);
+		i++;
 	}
-	else
-	{
-		name = ft_strdup(var);
-		value = NULL;
-	}
-	if (!name || (eq_ptr && !value))
-		return (put_error_and_free(name, value, NULL));
-	if (!is_valid_identifier(name))
-		return (put_error_and_free(name, value, var));
-	return (update_or_add_env(data, name, value));
+	return (exit_status);
 }

@@ -38,9 +38,9 @@ int	dispatch_builtin(char **args, t_data *data)
 	if (ft_strcmp(cmd, "pwd") == 0)
 		return (ft_pwd());
 	if (ft_strcmp(cmd, "export") == 0)
-		return (ft_export(data, args[1]));
+		return (ft_export(data, args));
 	if (ft_strcmp(cmd, "unset") == 0)
-		return (ft_unset(data, args[1]));
+		return (ft_unset(data, args));
 	if (ft_strcmp(cmd, "env") == 0)
 		return (ft_env(data->env_head));
 	if (ft_strcmp(cmd, "exit") == 0)

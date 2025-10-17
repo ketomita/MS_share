@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "execute.h"
-#
 #include <stdlib.h>
 #include <unistd.h>
 #include <readline/readline.h>
@@ -52,7 +51,10 @@ static void	main_roop(t_data *data)
 
 	while (1)
 	{
+		g_signal = 0;
 		input = readline_input();
+		if (g_signal == SIGINT)
+			data->exit_status = 128 + SIGINT;
 		if (input == NULL)
 			break ;
 		if (is_empty_or_whitespace(input) || \
@@ -63,6 +65,12 @@ static void	main_roop(t_data *data)
 		}
 		full_input = handle_multiline_input(input);
 		free(input);
+		if (full_input == NULL)
+		{
+			ft_putstr_fd("minishell: unexpected EOF while looking for matching `\"'\n", STDERR_FILENO);
+			data->exit_status = 2;
+			continue;
+		}
 		parse_and_execute(full_input, data);
 	}
 }

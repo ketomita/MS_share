@@ -12,13 +12,32 @@
 
 #include "builtin.h"
 #include <unistd.h>
+#include <stdbool.h>
+
+static bool	is_n(const char *arg)
+{
+	int	i;
+
+	if (!arg || arg[0] != '-')
+		return (false);
+	i = 1;
+	if (arg[i] == '\0')
+		return (false);
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (false);
+		i++;
+	}
+	return (true);
+}
 
 static int	check_opt(char **str)
 {
 	int	i;
 
 	i = 0;
-	while (str[i] && ft_strcmp(str[i], "-n") == 0)
+	while (str[i] && is_n(str[i]))
 		i++;
 	return (i);
 }

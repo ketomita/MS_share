@@ -35,9 +35,13 @@ static int	change_pwd_oldpwd(t_data *data, char *old_path)
 	char	*pwd;
 	char	*oldpwd;
 	char	*current_path;
+	char	*export_args[3];
 
 	oldpwd = ft_strjoin("OLDPWD=", old_path);
-	ft_export(data, oldpwd);
+	export_args[0] = "export";
+	export_args[1] = oldpwd;
+	export_args[2] = NULL;
+	ft_export(data, export_args);
 	free(oldpwd);
 	current_path = getcwd(NULL, 0);
 	if (!current_path)
@@ -46,7 +50,8 @@ static int	change_pwd_oldpwd(t_data *data, char *old_path)
 		return (1);
 	}
 	pwd = ft_strjoin("PWD=", current_path);
-	ft_export(data, pwd);
+	export_args[1] = pwd;
+	ft_export(data, export_args);
 	free(current_path);
 	free(pwd);
 	return (0);

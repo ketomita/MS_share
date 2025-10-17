@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 
-volatile sig_atomic_t	g_signal = 0;
+volatile sig_atomic_t	g_signal;
 
 static void	handle_sigint(int signo)
 {
@@ -22,7 +22,7 @@ static void	handle_sigint(int signo)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-	g_signal = (128 + signo);
+	g_signal = signo;
 }
 
 void	set_signal_handler(void)

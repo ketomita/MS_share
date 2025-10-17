@@ -53,11 +53,7 @@ int	check_status(int status)
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
-	{
-		if (WTERMSIG(status) == SIGPIPE)
-			ft_putstr_fd(" Broken pipe\n", STDERR_FILENO);
 		return (128 + WTERMSIG(status));
-	}
 	return (status);
 }
 
