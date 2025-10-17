@@ -41,13 +41,13 @@ static int	is_valid_arg_type(t_token_type type)
 		|| type == NON_EXPANDABLE);
 }
 
-static int	process_arg_node(t_ast *node, char **args, int *i, t_env *env_list)
+static int	process_arg_node(t_ast *node, char **args, int *i, t_data *data)
 {
 	char	*expanded_value;
 
 	if (!is_valid_arg_type(node->type))
 		return (1);
-	expanded_value = expand_token_value(node->value, node->type, env_list);
+	expanded_value = expand_token_value(node->value, node->type, data);
 	if (!expanded_value)
 		return (0);
 	args[*i] = expanded_value;
@@ -55,12 +55,14 @@ static int	process_arg_node(t_ast *node, char **args, int *i, t_env *env_list)
 	return (1);
 }
 
-char	**create_args_array(t_ast *node, t_env *env_list)
+char	**create_args_array(t_data *data)
 {
 	char	**args;
 	int		count;
 	int		i;
+	t_ast	*node;
 
+	node = data->ast->left;
 	count = count_args(node);
 	args = malloc(sizeof(char *) * (count + 1));
 	if (!args)
@@ -68,7 +70,7 @@ char	**create_args_array(t_ast *node, t_env *env_list)
 	i = 0;
 	while (node && i < count)
 	{
-		if (!process_arg_node(node, args, &i, env_list))
+		if (!process_arg_node(node, args, &i, data))
 		{
 			free_args_on_error(args, i);
 			return (NULL);

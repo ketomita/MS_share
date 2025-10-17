@@ -13,11 +13,10 @@
 #ifndef LEXER_H
 # define LEXER_H
 
+# include "../types.h"
 # include "../minilibft/minilibft.h"
 # include <stdbool.h>
 # include <signal.h>
-
-extern volatile sig_atomic_t	g_status;
 
 typedef const char				t_constchar;
 
@@ -41,38 +40,6 @@ typedef struct s_token
 	char						*value;
 	struct s_token				*next;
 }								t_token;
-
-typedef enum e_redirect_type
-{
-	REDIR_INPUT,
-	REDIR_OUTPUT,
-	REDIR_APPEND,
-	REDIR_HEREDOC
-}								t_redirect_type;
-
-typedef struct s_cmd_redirection
-{
-	t_redirect_type				type;
-	char						*file_path;
-	int							fd;
-	struct s_cmd_redirection	*next;
-}								t_cmd_redirection;
-
-typedef struct s_command_invocation
-{
-	t_cmd_redirection			*redirections;
-	struct s_command_invocation	*piped_command;
-	char						**exec_and_args;
-	pid_t						pid;
-}								t_command_invocation;
-
-typedef struct s_env
-{
-	struct s_env				*prev;
-	char						*name;
-	char						*value;
-	struct s_env				*next;
-}								t_env;
 
 typedef struct s_expand_ctx
 {

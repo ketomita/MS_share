@@ -26,9 +26,13 @@ AST_A = $(AST)/ast.a
 EXPANDER = ./expander
 EXPANDER_A = $(EXPANDER)/expander.a
 
-SRCS = execute.c execute_builtin.c execute_pipe.c execute_utils.c execve.c \
-		execve_utils.c heredoc.c input.c main.c path.c pipe.c redirection.c \
-		signal.c easteregg.c main_execute.c
+EXECUTE = ./execute
+EXECUTE_A = $(EXECUTE)/execute.a
+
+INCLUDES = -I. -I$(BUILTIN) -I$(LIBFT) -I$(ENVLIST) -I$(LEXER) -I$(PARSER) -I$(AST) -I$(EXPANDER) -I$(EXECUTE)
+
+SRCS = heredoc.c input.c main.c path.c pipe.c redirection.c \
+		signal.c main_execute.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
@@ -54,11 +58,14 @@ $(AST_A):
 $(EXPANDER_A):
 	make -C $(EXPANDER)
 
-%.o: %.c
-	$(CC) $(FLAGS) -I$(BUILTIN) -I$(LIBFT) -I$(ENVLIST) -I $(LEXER) -I$(PARSER) -I$(AST) -I$(EXPANDER) -c $< -o $@
+$(EXECUTE_A):
+	make -C $(EXECUTE)
 
-$(NAME): $(BUILTIN_A) $(LIBFT-A) $(ENVLIST_A) $(LEXER_A) $(PARSER_A) $(AST_A) $(EXPANDER_A) $(OBJS)
-	$(CC) $(FLAGS) $(OBJS) -o $(NAME) $(BUILTIN_A) $(ENVLIST_A) $(LEXER_A) $(PARSER_A) $(AST_A) $(EXPANDER_A) $(LIBFT-A) $(LIBS)
+%.o: %.c
+	$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
+
+$(NAME):  $(EXECUTE_A) $(BUILTIN_A) $(LIBFT-A) $(ENVLIST_A) $(LEXER_A) $(PARSER_A) $(AST_A) $(EXPANDER_A) $(OBJS)
+	$(CC) $(FLAGS) $(OBJS) -o $(NAME) $(EXECUTE_A) $(BUILTIN_A) $(ENVLIST_A) $(LEXER_A) $(PARSER_A) $(AST_A) $(EXPANDER_A) $(LIBFT-A) $(LIBS)
 
 clean:
 	rm -f $(OBJS)
@@ -69,6 +76,7 @@ clean:
 	make -C $(PARSER) clean
 	make -C $(AST) clean
 	make -C $(EXPANDER) clean
+	make -C $(EXECUTE) clean
 
 fclean:
 	rm -f $(OBJS)
@@ -80,6 +88,7 @@ fclean:
 	make -C $(PARSER) fclean
 	make -C $(AST) fclean
 	make -C $(EXPANDER) fclean
+	make -C $(EXECUTE) fclean
 
 re: fclean all
 

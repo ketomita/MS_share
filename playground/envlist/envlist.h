@@ -13,8 +13,17 @@
 #ifndef ENVLIST_H
 # define ENVLIST_H
 
-# include "../minilibft/minilibft.h"
+# include "../types.h"
 # include "../minishell.h"
+# include "../minilibft/minilibft.h"
+
+typedef struct s_env
+{
+	struct s_env				*prev;
+	char						*name;
+	char						*value;
+	struct s_env				*next;
+}								t_env;
 
 void	free_env_list(t_env *head);
 void	append_env_node(t_env **head, t_env **tail, t_env *node);

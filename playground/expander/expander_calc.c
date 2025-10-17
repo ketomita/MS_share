@@ -13,12 +13,12 @@
 #include "expander.h"
 #include <stdlib.h>
 
-static int	calc_status_len(void)
+static int	calc_status_len(int exit_status)
 {
 	char	*status_str;
 	int		len;
 
-	status_str = ft_itoa(g_status);
+	status_str = ft_itoa(exit_status);
 	if (!status_str)
 		return (0);
 	len = ft_strlen(status_str);
@@ -44,7 +44,7 @@ static int	calc_env_var_len(char *str, int *i, t_env *env_list)
 	return (len);
 }
 
-int	calculate_expanded_length(char *str, t_env *env_list)
+int	calculate_expanded_length(char *str, t_env *env_list, t_data *data)
 {
 	int	total_len;
 	int	i;
@@ -55,7 +55,7 @@ int	calculate_expanded_length(char *str, t_env *env_list)
 	{
 		if (str[i] == '$' && str[i + 1] == '?')
 		{
-			total_len += calc_status_len();
+			total_len += calc_status_len(data->exit_status);
 			i += 2;
 		}
 		else if (str[i] == '$' && str[i + 1] && \

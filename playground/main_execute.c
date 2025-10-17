@@ -41,7 +41,7 @@ static void	put_error_and_free(t_ast *ast, t_token *tokens, \
 static void	run_and_cleanup(t_data *data, t_command_invocation *cmd)
 {
 	data->cmd = cmd;
-	g_status = execute_ast(cmd, data);
+	data->exit_status = execute_ast(cmd, data);
 	free_command_invocation(cmd);
 	free_ast(data->ast);
 	free_tokens(data->tokens);
@@ -65,6 +65,6 @@ void	parse_and_execute(char *input, t_data *data)
 		put_error_and_free(NULL, data->tokens, input, AST);
 		return ;
 	}
-	cmd = ast_to_command_invocation(data->ast, data->env_head);
+	cmd = ast_to_command_invocation(data);
 	run_and_cleanup(data, cmd);
 }

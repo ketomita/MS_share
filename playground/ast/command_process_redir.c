@@ -27,7 +27,7 @@ static t_redirect_type	token_to_redirect_type(t_token_type type)
 }
 
 static void	process_single_redirection(t_ast *node, t_command_invocation *cmd,
-		t_env *env_list)
+		t_data *data)
 {
 	t_cmd_redirection	*redir;
 	t_redirect_type		redir_type;
@@ -39,7 +39,7 @@ static void	process_single_redirection(t_ast *node, t_command_invocation *cmd,
 	if (node->left && node->left->value)
 	{
 		expanded_path = expand_token_value(node->left->value, node->left->type,
-				env_list);
+				data);
 		if (expanded_path)
 		{
 			redir = create_redirection(redir_type, expanded_path);
@@ -51,11 +51,11 @@ static void	process_single_redirection(t_ast *node, t_command_invocation *cmd,
 }
 
 void	process_redirections(t_ast *node, t_command_invocation *cmd,
-		t_env *env_list)
+		t_data *data)
 {
 	while (node)
 	{
-		process_single_redirection(node, cmd, env_list);
+		process_single_redirection(node, cmd, data);
 		node = node->right;
 	}
 }

@@ -13,7 +13,11 @@
 #ifndef BUILTIN_H
 # define BUILTIN_H
 
+# include "../types.h"
 # include "../envlist/envlist.h"
+# include "../lexer/lexer.h"
+# include "../parser/parser.h"
+# include "../ast/ast.h"
 
 typedef enum e_builtin
 {

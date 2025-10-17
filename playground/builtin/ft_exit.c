@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <readline/readline.h>
+#include <stdbool.h>
 
 static bool	is_numeric_string(const char *str)
 {
@@ -60,7 +61,7 @@ int	ft_exit(t_data *data, char **args)
 
 	arg_count = count_builtin_args(args);
 	if (arg_count == 1)
-		exit_minishell(data, g_status);
+		exit_minishell(data, data->exit_status);
 	if (!is_numeric_string(args[1]))
 		put_exit_error(data, args[1], BUILTIN_ERROR_STATUS);
 	if (arg_count > 2)

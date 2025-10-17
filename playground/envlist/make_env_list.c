@@ -49,6 +49,7 @@ int	init_env_list(t_data *data, char *envp[])
 	data->env_tail = NULL;
 	data->stdin_backup = -1;
 	data->stdout_backup = -1;
+	data->exit_status = 0;
 	i = 0;
 	while (envp[i])
 	{

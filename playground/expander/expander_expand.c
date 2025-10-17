@@ -13,11 +13,11 @@
 #include "expander.h"
 #include <stdlib.h>
 
-static void	expand_status_var(t_expand_ctx *ctx)
+static void	expand_status_var(t_expand_ctx *ctx, t_data *data)
 {
 	char	*status_str;
 
-	status_str = ft_itoa(g_status);
+	status_str = ft_itoa(data->exit_status);
 	if (status_str)
 	{
 		ft_strcpy(&ctx->result[ctx->j], status_str);
@@ -46,7 +46,7 @@ static void	expand_env_var(t_expand_ctx *ctx)
 	ctx->i += var_name_len + 1;
 }
 
-static void	expand_loop(char *str, char *result, t_env *env_list)
+static void	expand_loop(char *str, char *result, t_env *env_list, t_data *data)
 {
 	t_expand_ctx	ctx;
 
@@ -58,7 +58,7 @@ static void	expand_loop(char *str, char *result, t_env *env_list)
 	while (ctx.str[ctx.i])
 	{
 		if (ctx.str[ctx.i] == '$' && ctx.str[ctx.i + 1] == '?')
-			expand_status_var(&ctx);
+			expand_status_var(&ctx, data);
 		else if (ctx.str[ctx.i] == '$' && ctx.str[ctx.i + 1]
 			&& (ft_isalnum(ctx.str[ctx.i + 1]) || ctx.str[ctx.i + 1] == '_'))
 			expand_env_var(&ctx);
@@ -72,15 +72,15 @@ static void	expand_loop(char *str, char *result, t_env *env_list)
 	ctx.result[ctx.j] = '\0';
 }
 
-char	*expand_variables(char *str, t_env *env_list)
+char	*expand_variables(char *str, t_env *env_list, t_data *data)
 {
 	char	*result;
 
 	if (!str)
 		return (NULL);
-	result = malloc(calculate_expanded_length(str, env_list) + 1);
+	result = malloc(calculate_expanded_length(str, env_list + 1, data));
 	if (!result)
 		return (NULL);
-	expand_loop(str, result, env_list);
+	expand_loop(str, result, env_list, data);
 	return (result);
 }

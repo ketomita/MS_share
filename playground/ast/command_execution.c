@@ -13,7 +13,7 @@
 #include "ast.h"
 #include <stdlib.h>
 
-static t_command_invocation	*convert_simple_command(t_ast *ast, t_env *env_list)
+static t_command_invocation	*convert_simple_command(t_data *data, t_ast *ast)
 {
 	t_command_invocation	*cmd;
 
@@ -25,8 +25,8 @@ static t_command_invocation	*convert_simple_command(t_ast *ast, t_env *env_list)
 	cmd->redirections = NULL;
 	cmd->piped_command = NULL;
 	cmd->pid = -1;
-	cmd->exec_and_args = create_args_array(ast->left, env_list);
-	process_redirections(ast->right, cmd, env_list);
+	cmd->exec_and_args = create_args_array(data);
+	process_redirections(ast->right, cmd, data);
 	if (cmd->exec_and_args && cmd->exec_and_args[0])
 		return (cmd);
 	if (cmd->redirections)
@@ -47,16 +47,16 @@ static t_command_invocation	*find_last_command(t_command_invocation *cmd)
 	return (current);
 }
 
-static t_command_invocation	*handle_pipe_ast(t_ast *ast, t_env *env_list)
+static t_command_invocation	*handle_pipe_ast(t_data *data)
 {
 	t_command_invocation	*cmd;
 	t_command_invocation	*piped_cmd;
 	t_command_invocation	*last_cmd;
 
-	cmd = ast_to_command_invocation(ast->left, env_list);
+	cmd = ast_to_command_invocation(data);
 	if (!cmd)
 		return (NULL);
-	piped_cmd = ast_to_command_invocation(ast->right, env_list);
+	piped_cmd = ast_to_command_invocation(data);
 	if (!piped_cmd)
 	{
 		free_command_invocation(cmd);
@@ -67,13 +67,16 @@ static t_command_invocation	*handle_pipe_ast(t_ast *ast, t_env *env_list)
 	return (cmd);
 }
 
-t_command_invocation	*ast_to_command_invocation(t_ast *ast, t_env *env_list)
+t_command_invocation	*ast_to_command_invocation(t_data *data)
 {
+	t_ast	*ast;
+
+	ast = data->ast;
 	if (!ast)
 		return (NULL);
 	if (ast->type == PIPE)
-		return (handle_pipe_ast(ast, env_list));
+		return (handle_pipe_ast(data));
 	else if (ast->type == NODE_COMMAND)
-		return (convert_simple_command(ast, env_list));
+		return (convert_simple_command(data, ast));
 	return (NULL);
 }

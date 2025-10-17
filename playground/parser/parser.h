@@ -13,17 +13,11 @@
 #ifndef PARSER_H
 # define PARSER_H
 
+# include "../types.h"
 # include "../lexer/lexer.h"
+# include "../ast/ast.h"
 # include <stdbool.h>
 # include <stddef.h>
-
-typedef struct s_ast
-{
-	t_token_type				type;
-	char						*value;
-	struct s_ast				*left;
-	struct s_ast				*right;
-}								t_ast;
 
 typedef struct s_parser
 {

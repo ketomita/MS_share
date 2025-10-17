@@ -13,52 +13,10 @@
 #ifndef EXECUTE_H
 # define EXECUTE_H
 
-# include "builtin.h"
-# include "minishell.h"
-
-extern volatile sig_atomic_t	g_status;
-
-typedef enum e_proctype
-{
-	PARENTS,
-	CHILDREN
-}								t_proctype;
-
-typedef struct s_fds
-{
-	int							in_fd;
-	int							out_fd;
-	int							pipe_fd[2];
-}								t_fds;
-
-typedef struct s_child_status
-{
-	pid_t						pid;
-	int							status;
-}								t_child_status;
-
-typedef enum e_execve_error
-{
-	COMMAND_NOT_FOUND,
-	COMMAND_NOT_FOUND_PATH,
-	IS_A_DIRECTORY,
-	PERMISSION_DENIED,
-	EXECVE_ERROR
-}								t_execve_error;
-
-typedef struct s_signal
-{
-	struct sigaction			sa_ign;
-	struct sigaction			sa_old_int;
-	struct sigaction			sa_old_quit;
-}								t_signal;
-
-typedef enum e_main_error
-{
-	TOKENS,
-	AST,
-	CMD
-}								t_main_error;
+# include "../types.h"
+# include "../builtin/builtin.h"
+# include "../ast/ast.h"
+# include "../signal_handler.h"
 
 int		execute_pipeline(t_command_invocation *cmd_list, t_data *data);
 int		apply_redirections(t_command_invocation *cmd);
@@ -79,9 +37,6 @@ char	*find_command_path(char *cmd, t_env *env_list);
 
 void	free_string_array(char **array);
 void	ft_execve_error(char *path, char **envp, int _errno);
-
-void	set_signal_handler(void);
-void	set_parent_signal_handlers(void);
 
 char	*readline_input(void);
 void	parse_and_execute(char *input, t_data *data);

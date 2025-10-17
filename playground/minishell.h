@@ -13,8 +13,8 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "./parser/parser.h"
-# include "./ast/ast.h"
+# include "types.h"
+# include "signal_handler.h"
 
 # define GENERAL_ERROR_STATUS 1
 # define BUILTIN_ERROR_STATUS 2
@@ -31,6 +31,7 @@ typedef struct s_data
 	char						*input;
 	int							stdin_backup;
 	int							stdout_backup;
+	int							exit_status;
 }								t_data;
 
 #endif

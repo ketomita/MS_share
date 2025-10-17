@@ -16,7 +16,7 @@
 # include "minilibft.h"
 # include <signal.h>
 
-extern volatile sig_atomic_t	g_status;
+extern volatile sig_atomic_t	g_signal;
 
 int	is_nyancat(const char *str);
 #endif

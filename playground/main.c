@@ -11,12 +11,10 @@
 /* ************************************************************************** */
 
 #include "execute.h"
-#include "easter.h"
+#
 #include <stdlib.h>
 #include <unistd.h>
 #include <readline/readline.h>
-
-volatile sig_atomic_t	g_status;
 
 static int	is_empty_or_whitespace(const char *str)
 {
@@ -32,7 +30,7 @@ static int	is_empty_or_whitespace(const char *str)
 	return (1);
 }
 
-static int	is_dot_only(const char *str)
+static int	is_dot_only(const char *str, int exit_status)
 {
 	if (!ft_strcmp(str, "."))
 	{
@@ -40,9 +38,10 @@ static int	is_dot_only(const char *str)
 			STDERR_FILENO);
 		ft_putstr_fd(".: usage: . filename [arguments]\n", \
 			STDERR_FILENO);
-		g_status = BUILTIN_ERROR_STATUS;
+		exit_status = BUILTIN_ERROR_STATUS;
 		return (1);
 	}
+	(void)exit_status;
 	return (0);
 }
 
@@ -56,8 +55,8 @@ static void	main_roop(t_data *data)
 		input = readline_input();
 		if (input == NULL)
 			break ;
-		if (is_empty_or_whitespace(input) || is_dot_only(input)
-			|| is_nyancat(input))
+		if (is_empty_or_whitespace(input) || \
+			is_dot_only(input, data->exit_status))
 		{
 			free(input);
 			continue ;
@@ -79,11 +78,10 @@ int	main(int argc, char **argv, char **envp)
 		ft_putstr_fd("環境変数の初期化に失敗しました\n", STDERR_FILENO);
 		return (1);
 	}
-	g_status = 0;
 	set_signal_handler();
 	set_shlvl(&data);
 	main_roop(&data);
 	free_env_list(data.env_head);
 	rl_clear_history();
-	return (g_status);
+	return (data.exit_status);
 }

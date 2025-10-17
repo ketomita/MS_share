@@ -50,9 +50,9 @@ int	is_nyancat(const char *str)
 	if (fd == -1)
 	{
 		ft_putstr_fd("nyancat: ./nyancat: No such file or directory\n", 2);
-		g_status = 1;
+		g_signal = 1;
 		return (1);
 	}
-	g_status = write_nyancat(fd);
+	g_signal = write_nyancat(fd);
 	return (1);
 }
