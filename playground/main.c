@@ -47,7 +47,7 @@ static int	is_dot_only(const char *str, int exit_status)
 static void	ft_put_eof_error(t_data *data)
 {
 	ft_putstr_fd("minishell: unexpected EOF while looking for \
-				matching `\"'\n", STDERR_FILENO);
+		matching `\"'\n", STDERR_FILENO);
 	data->exit_status = 2;
 }
 

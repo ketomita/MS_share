@@ -13,47 +13,47 @@
 #include "execute.h"
 #include <stdlib.h>
 
-static char	**rebuild_arguments(int non_empty_count, char **args)
-{
-	char	**new_args;
-	int		i;
-	int		j;
+// static char	**rebuild_arguments(int non_empty_count, char **args)
+// {
+// 	char	**new_args;
+// 	int		i;
+// 	int		j;
 
-	new_args = (char **)malloc(sizeof(char *) * (non_empty_count + 1));
-	if (!new_args)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (args[i])
-	{
-		if (*args[i] != '\0')
-			new_args[j++] = args[i];
-		else
-			free(args[i]);
-		i++;
-	}
-	new_args[j] = NULL;
-	free(args);
-	return (new_args);
-}
+// 	new_args = (char **)malloc(sizeof(char *) * (non_empty_count + 1));
+// 	if (!new_args)
+// 		return (NULL);
+// 	i = 0;
+// 	j = 0;
+// 	while (args[i])
+// 	{
+// 		if (*args[i] != '\0')
+// 			new_args[j++] = args[i];
+// 		else
+// 			free(args[i]);
+// 		i++;
+// 	}
+// 	new_args[j] = NULL;
+// 	free(args);
+// 	return (new_args);
+// }
 
-static char	**remove_empty_arguments(char **args)
-{
-	int		i;
-	int		non_empty_count;
+// static char	**remove_empty_arguments(char **args)
+// {
+// 	int		i;
+// 	int		non_empty_count;
 
-	if (!args)
-		return (NULL);
-	non_empty_count = 0;
-	i = 0;
-	while (args[i])
-	{
-		if (*args[i] != '\0')
-			non_empty_count++;
-		i++;
-	}
-	return (rebuild_arguments(non_empty_count, args));
-}
+// 	if (!args)
+// 		return (NULL);
+// 	non_empty_count = 0;
+// 	i = 0;
+// 	while (args[i])
+// 	{
+// 		if (*args[i] != '\0')
+// 			non_empty_count++;
+// 		i++;
+// 	}
+// 	return (rebuild_arguments(non_empty_count, args));
+// }
 
 static void	ignore_signals(t_signal *signal)
 {
@@ -74,17 +74,17 @@ int	execute_ast(t_command_invocation *cmd_list, t_data *data)
 {
 	int						status;
 	t_signal				signal;
-	t_command_invocation	*current;
+	// t_command_invocation	*current;
 
 	if (!cmd_list)
 		return (0);
-	current = cmd_list;
-	while (current)
-	{
-		current->exec_and_args = remove_empty_arguments \
-		((char **)current->exec_and_args);
-		current = current->piped_command;
-	}
+	// current = cmd_list;
+	// while (current)
+	// {
+	// 	current->exec_and_args = remove_empty_arguments \
+	// 	((char **)current->exec_and_args);
+	// 	current = current->piped_command;
+	// }
 	ignore_signals(&signal);
 	status = execute_pipeline(cmd_list, data);
 	restore_signals(&signal);
