@@ -18,15 +18,15 @@
 static void	put_error_message(int *result, t_error_type type)
 {
 	if (type == HOME)
-		ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: cd: HOME not set\n", STDERR_FILENO);
 	else if (type == ARGS)
 		ft_putstr_fd("minishell: cd: too many arguments\n", STDERR_FILENO);
 	else if (type == OLDPWD)
-		ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: cd: OLDPWD not set\n", STDERR_FILENO);
 	else if (type == GETCWD)
-		perror("cd: getcwd");
+		perror("minishell: cd: getcwd");
 	else if (type == CHDIR)
-		perror("cd: chdir");
+		perror("minishell: cd: chdir");
 	*result = 1;
 }
 

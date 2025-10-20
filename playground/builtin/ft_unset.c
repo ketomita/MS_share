@@ -22,6 +22,14 @@ static void	free_env_node(t_env *node)
 	free(node);
 }
 
+static void ft_put_error(char *args, int *exit_status)
+{
+	ft_putstr_fd("minishell: unset: `", STDERR_FILENO);
+	ft_putstr_fd(args, STDERR_FILENO);
+	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+	*exit_status = 1;
+}
+
 static void	delete_node(t_data *data, t_env *node_to_delete)
 {
 	if (node_to_delete->prev)
@@ -48,7 +56,7 @@ int	ft_unset(t_data *data, char **args)
 	while (args[i])
 	{
 		if (!is_valid_identifier(args[i]))
-			exit_status = 1;
+			ft_put_error(args[i], &exit_status);
 		else
 		{
 			node_to_delete = find_env_node(data->env_head, args[i]);

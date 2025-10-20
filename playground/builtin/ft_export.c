@@ -45,7 +45,7 @@ static void	put_error_and_free(char *name, char *value, \
 {
 	if (var)
 	{
-		ft_putstr_fd("export: `", STDERR_FILENO);
+		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
 		ft_putstr_fd(var, STDERR_FILENO);
 		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 	}
