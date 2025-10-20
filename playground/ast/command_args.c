@@ -55,14 +55,12 @@ static int	process_arg_node(t_ast *node, char **args, int *i, t_data *data)
 	return (1);
 }
 
-char	**create_args_array(t_data *data)
+char	**create_args_array(t_ast *node, t_data *data)
 {
 	char	**args;
 	int		count;
 	int		i;
-	t_ast	*node;
 
-	node = data->ast->left;
 	count = count_args(node);
 	args = malloc(sizeof(char *) * (count + 1));
 	if (!args)

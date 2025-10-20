@@ -26,6 +26,20 @@ size_t	count_builtin_args(char **args)
 	return (i);
 }
 
+int	is_valid_identifier(const char *name)
+{
+	if (!name || (!ft_isalpha(*name) && *name != '_'))
+		return (0);
+	name++;
+	while (*name)
+	{
+		if (!ft_isalnum(*name) && *name != '_')
+			return (0);
+		name++;
+	}
+	return (1);
+}
+
 int	dispatch_builtin(char **args, t_data *data)
 {
 	const char	*cmd;
@@ -58,23 +72,14 @@ void	free_all_resources(t_data *data)
 	rl_clear_history();
 }
 
-t_builtin	is_builtin(const char *cmd)
+bool	is_builtin(char *cmd)
 {
-	if (cmd == NULL)
-		return (NOR);
-	if (ft_strcmp(cmd, "echo") == 0)
-		return (BUILTIN);
-	if (ft_strcmp(cmd, "cd") == 0)
-		return (BUILTIN_PARENT);
-	if (ft_strcmp(cmd, "pwd") == 0)
-		return (BUILTIN);
-	if (ft_strcmp(cmd, "export") == 0)
-		return (BUILTIN_PARENT);
-	if (ft_strcmp(cmd, "unset") == 0)
-		return (BUILTIN_PARENT);
-	if (ft_strcmp(cmd, "env") == 0)
-		return (BUILTIN);
-	if (ft_strcmp(cmd, "exit") == 0)
-		return (BUILTIN_PARENT);
-	return (TRANSIENT);
+	if (!cmd)
+		return (false);
+	if (ft_strcmp(cmd, "echo") == 0 || ft_strcmp(cmd, "cd") == 0 || \
+		ft_strcmp(cmd, "pwd") == 0 || ft_strcmp(cmd, "export") == 0 || \
+		ft_strcmp(cmd, "unset") == 0 || ft_strcmp(cmd, "env") == 0 || \
+		ft_strcmp(cmd, "exit") == 0)
+		return (true);
+	return (false);
 }

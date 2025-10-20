@@ -65,6 +65,6 @@ void	parse_and_execute(char *input, t_data *data)
 		put_error_and_free(NULL, data->tokens, input, AST);
 		return ;
 	}
-	cmd = ast_to_command_invocation(data);
+	cmd = ast_to_command_invocation(data->ast, data);
 	run_and_cleanup(data, cmd);
 }

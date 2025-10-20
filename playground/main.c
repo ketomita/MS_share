@@ -44,6 +44,13 @@ static int	is_dot_only(const char *str, int exit_status)
 	return (0);
 }
 
+static void	ft_put_eof_error(t_data *data)
+{
+	ft_putstr_fd("minishell: unexpected EOF while looking for \
+				matching `\"'\n", STDERR_FILENO);
+	data->exit_status = 2;
+}
+
 static void	main_roop(t_data *data)
 {
 	char	*input;
@@ -67,9 +74,8 @@ static void	main_roop(t_data *data)
 		free(input);
 		if (full_input == NULL)
 		{
-			ft_putstr_fd("minishell: unexpected EOF while looking for matching `\"'\n", STDERR_FILENO);
-			data->exit_status = 2;
-			continue;
+			ft_put_eof_error(data);
+			continue ;
 		}
 		parse_and_execute(full_input, data);
 	}

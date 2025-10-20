@@ -107,9 +107,7 @@ int	execute_pipeline(t_command_invocation *cmd_list, t_data *data)
 	final_status_code = 0;
 	if (preprocess_heredocs(cmd_list) != 0)
 		return (cleanup_heredocs(cmd_list));
-	if (cmd_list && !cmd_list->piped_command && \
-		cmd_list->exec_and_args && cmd_list->exec_and_args[0] && \
-		is_builtin(cmd_list->exec_and_args[0]) == BUILTIN_PARENT)
+	if (!cmd_list->piped_command && is_builtin(cmd_list->exec_and_args[0]))
 		return (execute_builtin(cmd_list, data));
 	pids = allocate_pid_array(cmd_list, &cmd_count);
 	if (!pids)

@@ -44,8 +44,8 @@ typedef struct s_command_invocation
 }								t_command_invocation;
 
 void					free_command_invocation(t_command_invocation *cmd);
-t_command_invocation	*ast_to_command_invocation(t_data *data);
-char					**create_args_array(t_data *data);
+t_command_invocation	*ast_to_command_invocation(t_ast *ast, t_data *data);
+char					**create_args_array(t_ast *node, t_data *data);
 void					process_redirections(t_ast *node, \
 						t_command_invocation *cmd, t_data *data);
 

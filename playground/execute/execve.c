@@ -36,7 +36,7 @@ static void	execute_child_process(t_command_invocation *cmd, t_data *data)
 	if (!cmd->exec_and_args || !cmd->exec_and_args[0])
 		exit(0);
 	command = (char *)cmd->exec_and_args[0];
-	if (is_builtin(command) != TRANSIENT)
+	if (is_builtin(command))
 		exit(dispatch_builtin((char **)cmd->exec_and_args, data));
 	if (ft_strchr(command, '/'))
 		path = ft_strdup(command);

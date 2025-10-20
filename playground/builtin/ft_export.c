@@ -40,24 +40,8 @@ static int	print_env_list(t_env *head)
 	return (0);
 }
 
-static int	is_valid_identifier(const char *name)
-{
-	const char	*p;
-
-	p = name;
-	if (!p || (!ft_isalpha(*p) && *p != '_'))
-		return (0);
-	p++;
-	while (*p)
-	{
-		if (!ft_isalnum(*p) && *p != '_')
-			return (0);
-		p++;
-	}
-	return (1);
-}
-
-static void	put_error_and_free(char *name, char *value, char *var, int *exit_status)
+static void	put_error_and_free(char *name, char *value, \
+								char *var, int *exit_status)
 {
 	if (var)
 	{
@@ -70,7 +54,8 @@ static void	put_error_and_free(char *name, char *value, char *var, int *exit_sta
 	*exit_status = 1;
 }
 
-static void	update_or_add_env(t_data *data, char *name, char *value, int *exit_status)
+static void	update_or_add_env(t_data *data, char *name, \
+								char *value, int *exit_status)
 {
 	t_env	*node;
 
@@ -97,12 +82,34 @@ static void	update_or_add_env(t_data *data, char *name, char *value, int *exit_s
 	}
 }
 
-int	ft_export(t_data *data, char **args)
+static void	apply_export(t_data *data, char *args, int *exit_status)
 {
-	int		i;
 	char	*name;
 	char	*value;
 	char	*eq_ptr;
+
+	eq_ptr = ft_strchr(args, '=');
+	if (eq_ptr)
+	{
+		name = ft_substr(args, 0, eq_ptr - args);
+		value = ft_strdup(eq_ptr + 1);
+	}
+	else
+	{
+		name = ft_strdup(args);
+		value = NULL;
+	}
+	if (!name || (eq_ptr && !value))
+		put_error_and_free(name, value, NULL, exit_status);
+	else if (!is_valid_identifier(name))
+		put_error_and_free(name, value, args, exit_status);
+	else
+		update_or_add_env(data, name, value, exit_status);
+}
+
+int	ft_export(t_data *data, char **args)
+{
+	int		i;
 	int		exit_status;
 
 	exit_status = 0;
@@ -110,24 +117,6 @@ int	ft_export(t_data *data, char **args)
 		return (print_env_list(data->env_head));
 	i = 1;
 	while (args[i])
-	{
-		eq_ptr = ft_strchr(args[i], '=');
-		if (eq_ptr)
-		{
-			name = ft_substr(args[i], 0, eq_ptr - args[i]);
-			value = ft_strdup(eq_ptr + 1);
-		}
-		else
-		{
-			name = ft_strdup(args[i]);
-			value = NULL;
-		}
-		if (!name || (eq_ptr && !value))
-			put_error_and_free(name, value, NULL, &exit_status);
-		else if (!is_valid_identifier(name))
-			put_error_and_free(name, value, args[i], &exit_status);
-		update_or_add_env(data, name, value, &exit_status);
-		i++;
-	}
+		apply_export(data, args[i++], &exit_status);
 	return (exit_status);
 }

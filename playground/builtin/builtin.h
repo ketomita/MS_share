@@ -19,14 +19,6 @@
 # include "../parser/parser.h"
 # include "../ast/ast.h"
 
-typedef enum e_builtin
-{
-	BUILTIN,
-	BUILTIN_PARENT,
-	TRANSIENT,
-	NOR
-}	t_builtin;
-
 typedef enum e_error
 {
 	HOME,
@@ -45,8 +37,9 @@ int			ft_export(t_data *data, char **args);
 int			ft_unset(t_data *data, char **args);
 
 size_t		count_builtin_args(char **args);
+int			is_valid_identifier(const char *name);
 int			dispatch_builtin(char **args, t_data *data);
 void		free_all_resources(t_data *data);
-t_builtin	is_builtin(const char *cmd);
+bool		is_builtin(char *cmd);
 
 #endif

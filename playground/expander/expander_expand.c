@@ -78,7 +78,7 @@ char	*expand_variables(char *str, t_env *env_list, t_data *data)
 
 	if (!str)
 		return (NULL);
-	result = malloc(calculate_expanded_length(str, env_list + 1, data));
+	result = malloc(calculate_expanded_length(str, env_list, data) + 1);
 	if (!result)
 		return (NULL);
 	expand_loop(str, result, env_list, data);

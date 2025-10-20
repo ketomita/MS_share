@@ -20,18 +20,18 @@
 static bool	is_numeric_string(const char *str)
 {
 	if (!str || !*str)
-		return (true);
+		return (false);
 	if (*str == '+' || *str == '-')
 		str++;
 	if (!*str)
-		return (true);
+		return (false);
 	while (*str)
 	{
 		if (!ft_isdigit(*str))
-			return (true);
+			return (false);
 		str++;
 	}
-	return (false);
+	return (true);
 }
 
 static bool	is_longlong_overflow(const char *str)
@@ -53,14 +53,11 @@ static bool	is_longlong_overflow(const char *str)
 	while (*str >= '0' && *str <= '9')
 	{
 		digit = *str - '0';
-		if (sign == 1)
-		{
-			if (result > LLONG_MAX / 10 || \
-				(result == LLONG_MAX / 10 && digit > LLONG_MAX % 10))
-				return (true);
-		}
-		else if (result > -(LLONG_MIN / 10) || \
-				(result == -(LLONG_MIN / 10) && digit > -(LLONG_MIN % 10)))
+		if (sign == 1 && (result > LLONG_MAX / 10 || \
+				(result == LLONG_MAX / 10 && digit > LLONG_MAX % 10)))
+			return (true);
+		else if (sign == -1 && (result > -(LLONG_MIN / 10) || \
+				(result == -(LLONG_MIN / 10) && digit > -(LLONG_MIN % 10))))
 			return (true);
 		result = result * 10 + digit;
 		str++;
@@ -97,7 +94,7 @@ int	ft_exit(t_data *data, char **args)
 	arg_count = count_builtin_args(args);
 	if (arg_count == 1)
 		exit_minishell(data, data->exit_status);
-	if (is_numeric_string(args[1]) || is_longlong_overflow(args[1]))
+	if (!is_numeric_string(args[1]) || is_longlong_overflow(args[1]))
 		put_exit_error(data, args[1], BUILTIN_ERROR_STATUS);
 	if (arg_count > 2)
 	{
