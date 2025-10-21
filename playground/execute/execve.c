@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:36 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/21 15:02:56 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 15:45:08 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 
 static void	ft_put_command_not_found(char *command, int status)
 {
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(command, STDERR_FILENO);
 	ft_putstr_fd(": command not found\n", STDERR_FILENO);
 	exit(status);
