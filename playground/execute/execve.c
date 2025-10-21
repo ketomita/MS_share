@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:36 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/14 15:11:53 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 13:00:22 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,12 @@ static void	execute_child_process(t_command_invocation *cmd, t_data *data)
 	ft_execve_error(path, current_envp, _errno);
 }
 
-static void	reset_default_signal(void)
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	signal(SIGPIPE, SIG_DFL);
-}
-
 void	prepro_execute_child_process(t_fds *fds, \
 		t_command_invocation *current_cmd, t_data *data)
 {
 	if (current_cmd->piped_command)
 		close(fds->pipe_fd[0]);
-	reset_default_signal();
+	set_child_signal_handlers();
 	ft_close_fd(fds, CHILDREN);
 	execute_child_process(current_cmd, data);
 }

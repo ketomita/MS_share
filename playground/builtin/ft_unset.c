@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:07:21 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 13:52:57 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 10:53:20 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	free_env_node(t_env *node)
 	free(node);
 }
 
-static void ft_put_error(char *args, int *exit_status)
+static void	ft_put_error(char *args, int *exit_status)
 {
 	ft_putstr_fd("minishell: unset: `", STDERR_FILENO);
 	ft_putstr_fd(args, STDERR_FILENO);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal_handler.h                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/21 10:53:46 by ketomita          #+#    #+#             */
+/*   Updated: 2025/10/21 10:53:46 by ketomita         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SIGNAL_HANDLER_H
 # define SIGNAL_HANDLER_H
 
@@ -15,5 +27,6 @@ typedef struct s_signal
 
 void	set_signal_handler(void);
 void	set_parent_signal_handlers(void);
+void	set_child_signal_handlers(void);
 
 #endif

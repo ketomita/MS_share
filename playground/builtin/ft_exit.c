@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:07:09 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/14 15:11:33 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 11:35:27 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,28 @@ static bool	is_numeric_string(const char *str)
 	return (true);
 }
 
+static bool	check_overflow(int sign, unsigned long long result, int digit)
+{
+	const unsigned long long	max_limit = LLONG_MAX;
+	const unsigned long long	min_limit = (unsigned long long)LLONG_MAX + 1;
+
+	if (sign == 1 && (result > max_limit / 10 || \
+		(result == max_limit / 10 && (unsigned long long)digit \
+		> max_limit % 10)))
+		return (true);
+	else if (sign == -1 && (result > min_limit / 10 || \
+			(result == min_limit / 10 && (unsigned long long)digit \
+			> min_limit % 10)))
+		return (true);
+	else
+		return (false);
+}
+
 static bool	is_longlong_overflow(const char *str)
 {
-	long long	result;
-	int			sign;
-	int			digit;
+	unsigned long long	result;
+	int					sign;
+	int					digit;
 
 	result = 0;
 	sign = 1;
@@ -53,11 +70,7 @@ static bool	is_longlong_overflow(const char *str)
 	while (*str >= '0' && *str <= '9')
 	{
 		digit = *str - '0';
-		if (sign == 1 && (result > LLONG_MAX / 10 || \
-				(result == LLONG_MAX / 10 && digit > LLONG_MAX % 10)))
-			return (true);
-		else if (sign == -1 && (result > -(LLONG_MIN / 10) || \
-				(result == -(LLONG_MIN / 10) && digit > -(LLONG_MIN % 10))))
+		if (check_overflow(sign, result, digit))
 			return (true);
 		result = result * 10 + digit;
 		str++;
@@ -78,14 +91,6 @@ static void	exit_minishell(t_data *data, int status)
 	exit((unsigned char)status);
 }
 
-static void	put_exit_error(t_data *data, char *str, int exit_status)
-{
-	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-	ft_putstr_fd(str, STDERR_FILENO);
-	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-	exit_minishell(data, exit_status);
-}
-
 int	ft_exit(t_data *data, char **args)
 {
 	int			arg_count;
@@ -95,7 +100,12 @@ int	ft_exit(t_data *data, char **args)
 	if (arg_count == 1)
 		exit_minishell(data, data->exit_status);
 	if (!is_numeric_string(args[1]) || is_longlong_overflow(args[1]))
-		put_exit_error(data, args[1], BUILTIN_ERROR_STATUS);
+	{
+		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+		ft_putstr_fd(args[1], STDERR_FILENO);
+		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+		exit_minishell(data, BUILTIN_ERROR_STATUS);
+	}
 	if (arg_count > 2)
 	{
 		if (isatty(STDIN_FILENO))

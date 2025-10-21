@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:27:54 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/14 15:19:41 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 11:04:35 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,17 @@ static int	is_dot_only(const char *str, int exit_status)
 	return (0);
 }
 
-static void	ft_put_eof_error(t_data *data)
+static bool	ft_put_eof_error(char *full_input, t_data *data)
 {
-	ft_putstr_fd("minishell: unexpected EOF while looking for \
-		matching `\"'\n", STDERR_FILENO);
-	data->exit_status = 2;
+	if (full_input == NULL)
+	{
+		ft_putstr_fd("minishell: unexpected EOF ", STDERR_FILENO);
+		ft_putstr_fd("while looking for matching ", STDERR_FILENO);
+		ft_putstr_fd("`\"'\n", STDERR_FILENO);
+		data->exit_status = 2;
+		return (true);
+	}
+	return (false);
 }
 
 static void	main_roop(t_data *data)
@@ -72,11 +78,8 @@ static void	main_roop(t_data *data)
 		}
 		full_input = handle_multiline_input(input);
 		free(input);
-		if (full_input == NULL)
-		{
-			ft_put_eof_error(data);
+		if (ft_put_eof_error(full_input, data))
 			continue ;
-		}
 		parse_and_execute(full_input, data);
 	}
 }

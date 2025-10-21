@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   types.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/21 10:53:29 by ketomita          #+#    #+#             */
+/*   Updated: 2025/10/21 10:53:29 by ketomita         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef TYPES_H
 # define TYPES_H
 
 # include <signal.h>
 
-/* 前方宣言（構造体本体は各モジュールヘッダに置く） */
 struct									s_data;
 struct									s_ast;
 struct									s_token;
@@ -11,7 +22,6 @@ struct									s_cmd_redirection;
 struct									s_command_invocation;
 struct									s_env;
 
-/* 公開 typedef */
 typedef struct s_data					t_data;
 typedef struct s_ast					t_ast;
 typedef struct s_token					t_token;

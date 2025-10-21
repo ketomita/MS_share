@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:59 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/08 13:55:30 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 12:35:44 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static char	*read_next_line(char *result)
 {
 	char	*line;
 
-	line = readline("dquote> ");
+	line = readline("> ");
 	if (!line)
 	{
 		free(result);

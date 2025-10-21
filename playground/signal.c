@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:23:25 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 14:05:49 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 13:09:05 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,29 @@ void	set_parent_signal_handlers(void)
 	struct sigaction	sa;
 
 	sa.sa_handler = SIG_IGN;
+	if (sigemptyset(&sa.sa_mask) != 0)
+	{
+		perror("sigemptyset");
+		exit(EXIT_FAILURE);
+	}
+	sa.sa_flags = 0;
+	if (sigaction(SIGINT, &sa, NULL) == -1)
+	{
+		perror("sigaction");
+		exit(EXIT_FAILURE);
+	}
+	if (sigaction(SIGQUIT, &sa, NULL) == -1)
+	{
+		perror("sigaction");
+		exit(EXIT_FAILURE);
+	}
+}
+
+void	set_child_signal_handlers(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_handler = SIG_DFL;
 	if (sigemptyset(&sa.sa_mask) != 0)
 	{
 		perror("sigemptyset");

@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:21 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 13:58:32 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 13:14:10 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,19 @@ int	put_fork_error(pid_t *pids, t_fds *fds)
 
 int	check_status(int status)
 {
+	int	termsig;
+
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
+	{
+		termsig = WTERMSIG(status);
+		if (termsig == SIGINT)
+			write(STDOUT_FILENO, "\n", 1);
+		else if (termsig == SIGQUIT)
+			ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+		return (128 + termsig);
+	}
 	return (status);
 }
 
