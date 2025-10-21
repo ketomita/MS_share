@@ -2,6 +2,12 @@
 	"files.associations": {
 		"readline.h": "c",
 		"signal_handler.h": "c",
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"ast.h": "c",
+		"expander.h": "c",
+		"minishell.h": "c",
+		"types.h": "c",
+		"lexer.h": "c",
+		"execute.h": "c"
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:59 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/08 13:49:32 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 15:11:40 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,12 @@ typedef struct s_expand_ctx
 	t_env						*env_list;
 }								t_expand_ctx;
 
+typedef struct s_expand_type
+{
+	bool						expandable;
+	bool						quotes;
+}								t_expand_type;
+
 void	free_tokens(t_token *head);
 int		handle_redirect(char *input, int pos, char **value, t_token_type *type);
 int		handle_concatenated_word(char *input, \
@@ -62,8 +68,7 @@ bool	is_quote(char c);
 bool	is_whitespace(char c);
 bool	is_special_char(char c);
 
-int		process_word_part(char *input, int pos, \
-		char **temp, bool *has_expandable);
+int		process_word_part(char *input, int pos, char **temp, t_expand_type *ex);
 int		handle_quotes(char *input, int pos, char **value, t_token_type *type);
 char	*handle_multiline_input(char *initial_input);
 

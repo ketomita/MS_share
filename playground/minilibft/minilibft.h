@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:06:29 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/08 13:49:55 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 14:54:32 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 # define MINILIBFT_H
 
 # include <stddef.h>
+
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}								t_list;
 
 long long	ft_atoll(const char *str);
 void		ft_bzero(void *s, size_t n);
@@ -37,4 +43,9 @@ char		**ft_split(char *str, char c);
 char		*ft_itoa(int n);
 size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize);
 
+t_list		*ft_lstnew(void *content);
+t_list		*ft_lstlast(t_list *lst);
+void		ft_lstadd_back(t_list **lst, t_list *new_node);
+int			ft_lstsize(t_list *lst);
+void		ft_lstclear(t_list **lst, void (*del)(void *));
 #endif

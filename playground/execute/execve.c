@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 10:20:36 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/21 13:00:22 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 15:02:56 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/stat.h>
+#include <string.h>
 
 static void	ft_put_command_not_found(char *command, int status)
 {
@@ -21,6 +23,35 @@ static void	ft_put_command_not_found(char *command, int status)
 	ft_putstr_fd(command, STDERR_FILENO);
 	ft_putstr_fd(": command not found\n", STDERR_FILENO);
 	exit(status);
+}
+
+static void	ft_put_error_and_exit(char *path, char *msg, int status)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(path, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(msg, STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
+	free(path);
+	exit(status);
+}
+
+static void	ft_execve_error(char *path, char **envp, int _errno)
+{
+	struct stat	s;
+
+	free_string_array(envp);
+	if (stat(path, &s) == 0 && S_ISDIR(s.st_mode))
+		ft_put_error_and_exit(path, "Is a directory", \
+			COMMAND_NOT_EXECUTABLE_STATUS);
+	if (_errno == EACCES)
+		ft_put_error_and_exit(path, "Permission denied", \
+			COMMAND_NOT_EXECUTABLE_STATUS);
+	if (_errno == ENOENT)
+		ft_put_error_and_exit(path, "No such file or directory", \
+			COMMAND_NOT_FOUND_STATUS);
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_put_error_and_exit(path, strerror(_errno), GENERAL_ERROR_STATUS);
 }
 
 static void	execute_child_process(t_command_invocation *cmd, t_data *data)

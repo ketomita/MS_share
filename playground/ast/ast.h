@@ -6,7 +6,7 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 15:25:47 by ketomita          #+#    #+#             */
-/*   Updated: 2025/10/07 15:25:48 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 14:59:31 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_command_invocation
 	pid_t						pid;
 }								t_command_invocation;
 
+void					free_string_array(char **array);
 void					free_command_invocation(t_command_invocation *cmd);
 t_command_invocation	*ast_to_command_invocation(t_ast *ast, t_data *data);
 char					**create_args_array(t_ast *node, t_data *data);

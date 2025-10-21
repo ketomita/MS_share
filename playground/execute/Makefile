@@ -1,6 +1,6 @@
 NAME = execute.a
 SRCS = execute_builtin.c execute_pipe.c execute_utils.c execve.c \
-		execve_utils.c execute.c
+		execute.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

@@ -6,12 +6,27 @@
 /*   By: ketomita <ketomita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:04 by hhayato           #+#    #+#             */
-/*   Updated: 2025/10/08 13:56:07 by ketomita         ###   ########.fr       */
+/*   Updated: 2025/10/21 14:59:18 by ketomita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include <stdlib.h>
+
+void	free_string_array(char **array)
+{
+	int	i;
+
+	if (!array)
+		return ;
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
 
 void	free_redirections(t_cmd_redirection *head)
 {
